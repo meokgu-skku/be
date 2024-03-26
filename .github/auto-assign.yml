@@ -1,0 +1,11 @@
+addReviewers: true
+
+addAssignees: author
+
+reviewers:
+  - sinkyoungdeok
+
+numberOfReviewers: 0
+
+skipKeywords:
+  - wip

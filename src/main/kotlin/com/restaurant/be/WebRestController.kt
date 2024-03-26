@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class WebRestController(
-    private val env: Environment,
+    private val env: Environment
 ) {
 
     @GetMapping("/profile")
