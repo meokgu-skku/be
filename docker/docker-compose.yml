@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  skku-api-1:
+    depends_on:
+      - skku-db
+    image: sinkyoungdeok/skku-api
+    ports:
+      - "8081:8081"
+    environment:
+      - USE_PROFILE=prod1
+    env_file:
+      - .env
+    restart: always
+  skku-api-2:
+    depends_on:
+      - skku-db
+    image: sinkyoungdeok/skku-api
+    ports:
+      - "8082:8082"
+    environment:
+      - USE_PROFILE=prod2
+    env_file:
+      - .env
+    restart: always
+  skku-db:
+    image: mysql:8.0
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=skku
+      - MYSQL_ROOT_PASSWORD=skku-be
+      - MYSQL_USER=skku-user
+      - MYSQL_PASSWORD=skku-pw
+      - TZ=UTC
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --lower_case_table_names=1
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./mysql:/var/lib/mysql
+  skku-redis:
+    image: redis:6.0.2
+    command: redis-server /usr/local/etc/redis/redis.conf --port 6379
+    ports:
+      - 6379:6379
+    platform: linux/amd64
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:rw
+      - ./redis/users.acl:/usr/local/etc/redis/users.acl:rw
