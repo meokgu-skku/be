@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: be
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
