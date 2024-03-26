@@ -21,13 +21,13 @@ jobs:
         run: chmod +x gradlew
       - name: Make Prod1 Yml
         run: |
-          cd ./server/src/main/resources
+          cd ./src/main/resources
           touch ./application-prod1.yml
           echo "${{ secrets.PROPERTIES_PROD1 }}" > ./application-prod1.yml
         shell: bash
       - name: Make Prod2 Yml
         run: |
-          cd ./server/src/main/resources
+          cd ./src/main/resources
           touch ./application-prod2.yml
           echo "${{ secrets.PROPERTIES_PROD2 }}" > ./application-prod2.yml
       - name: Build With Gradle
