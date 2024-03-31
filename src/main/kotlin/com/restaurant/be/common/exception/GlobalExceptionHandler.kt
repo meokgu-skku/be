@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.ServerWebInputException
+import java.security.SignatureException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -68,6 +69,15 @@ class GlobalExceptionHandler {
             CommonResponse
                 .fail(errors.toString(), ErrorCode.COMMON_INVALID_PARAMETER)
 
+        return errorResponse
+    }
+
+    @ExceptionHandler(SignatureException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun handleSignatureException(
+        e: SignatureException
+    ): CommonResponse<String?> {
+        val errorResponse = CommonResponse.fail(e.message, e::class.java.simpleName)
         return errorResponse
     }
 

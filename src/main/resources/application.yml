@@ -22,6 +22,16 @@ spring:
         use_sql_comments: true
         format_sql: false
         show_sql: false
+  redis:
+    host: localhost
+    port: 6379
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+jwt:
+  header: Authorization
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
+  token-validity-in-seconds: 86400
+  access-token-validity-in-seconds: 7200
+  refresh-token-validity-in-seconds: 1209600
