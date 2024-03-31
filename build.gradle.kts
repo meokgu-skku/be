@@ -1,4 +1,6 @@
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
     id("org.springframework.boot") version "2.7.5"
@@ -10,6 +12,8 @@ plugins {
 
     kotlin("jvm") version "1.7.0"
     kotlin("plugin.spring") version "1.7.0"
+    kotlin("plugin.jpa") version "1.7.0"
+    kotlin("kapt") version "1.5.30"
 }
 
 group = "com.restaurant"
@@ -31,13 +35,45 @@ repositories {
 }
 
 dependencies {
+    // Jpa
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
     // Swagger
     implementation("io.springfox:springfox-boot-starter:3.0.0")
+
+    // Query DSL
+    api("com.querydsl:querydsl-jpa:")
+    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
+
+    // Mysql
+    implementation("mysql:mysql-connector-java")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("junit", "junit", "4.13.2")
+    testImplementation("io.kotest:kotest-runner-junit5:5.5.4")
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
+    testImplementation("io.mockk:mockk:1.12.0")
+
+    // TestContainers
+    testImplementation("org.testcontainers:testcontainers:1.17.1")
+    testImplementation("org.testcontainers:junit-jupiter:1.17.1")
+    testImplementation("org.testcontainers:mysql:1.17.1")
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
+// Q파일 생성 경로
+sourceSets["main"].withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+    kotlin.srcDir("$buildDir/generated/source/kapt/main")
 }
 
 tasks {
