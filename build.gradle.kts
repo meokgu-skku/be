@@ -1,6 +1,5 @@
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
 plugins {
     id("org.springframework.boot") version "2.7.5"
@@ -91,6 +90,10 @@ tasks {
     withType<Test> {
         useJUnitPlatform()
         systemProperty("file.encoding", "UTF-8")
+    }
+
+    runKtlintCheckOverMainSourceSet {
+        dependsOn("kaptKotlin")
     }
 }
 
