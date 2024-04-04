@@ -18,7 +18,7 @@ import java.security.SignatureException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
- // asdasdsa
+    // asdasdsa
     @ExceptionHandler(ServerException::class)
     fun handleServerException(
         ex: ServerException,
