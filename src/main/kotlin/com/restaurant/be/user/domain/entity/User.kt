@@ -18,10 +18,10 @@ class User(
     var id: Long? = null,
 
     @Column(unique = true)
-    var email: String = "",
+    var email: String = "", // asdqwe
 
     @Column(unique = true)
-    var nickname: String = "",
+    var nickname: String = "", // qwe
 
     var password: String = "",
 
