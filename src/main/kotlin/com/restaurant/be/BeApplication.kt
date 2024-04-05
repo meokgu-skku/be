@@ -8,4 +8,5 @@ class BeApplication
 
 fun main(args: Array<String>) {
     runApplication<BeApplication>(*args)
+    println("Hello, world!")
 }
