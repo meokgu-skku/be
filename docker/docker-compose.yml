@@ -1,5 +1,10 @@
 version: "3.7"
 services:
+  skku-autocomplete:
+    image: sinkyoungdeok/skku-autocomplete
+    ports:
+      - "3000:3000"
+    restart: always
   skku-api-1:
     depends_on:
       - skku-db
