@@ -1,6 +1,10 @@
 version: "3.7"
 services:
+  skku-autocomplete-batch:
+    image: sinkyoungdeok/skku-autocomplete-batch
   skku-autocomplete:
+    depends_on:
+      - skku-redis
     image: sinkyoungdeok/skku-autocomplete
     ports:
       - "3000:3000"
