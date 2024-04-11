@@ -8,8 +8,8 @@ import com.restaurant.be.user.presentation.dto.SignUpUserRequest
 import com.restaurant.be.user.presentation.dto.SignUpUserResponse
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.concurrent.TimeUnit
-import javax.transaction.Transactional
 
 @Service
 class SignUpUserService(
