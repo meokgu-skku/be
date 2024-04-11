@@ -18,7 +18,6 @@ import java.security.SignatureException
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = [ServerException::class])
     fun handleServerException(
         ex: ServerException
