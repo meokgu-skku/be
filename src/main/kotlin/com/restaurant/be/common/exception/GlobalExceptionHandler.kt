@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
-import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.ServerWebInputException
 import java.security.SignatureException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
 
-    @ExceptionHandler(ServerException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = [ServerException::class])
     fun handleServerException(
-        ex: ServerException,
-        exchange: ServerWebExchange
+        ex: ServerException
     ): ResponseEntity<Any> {
         val response = CommonResponse.fail(ex.message, ex.javaClass.simpleName)
         return ResponseEntity(response, null, ex.code)
@@ -31,8 +30,7 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [ServerWebInputException::class])
     fun methodArgumentNotValidException(
-        e: ServerWebInputException,
-        exchange: ServerWebExchange
+        e: ServerWebInputException
     ): CommonResponse<String?> {
         val data =
             if (e.cause?.cause is MissingKotlinParameterException) {
@@ -51,8 +49,7 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [WebExchangeBindException::class])
     fun methodArgumentNotValidException(
-        e: WebExchangeBindException,
-        exchange: ServerWebExchange
+        e: WebExchangeBindException
     ): CommonResponse<String> {
         val errors = mutableListOf<Error>()
         e.allErrors.forEach {
@@ -84,8 +81,7 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = [Exception::class])
     fun exception(
-        e: Exception,
-        exchange: ServerWebExchange
+        e: Exception
     ): CommonResponse<String?> {
         val errorResponse = CommonResponse.fail(e.message, e::class.java.simpleName)
         return errorResponse
