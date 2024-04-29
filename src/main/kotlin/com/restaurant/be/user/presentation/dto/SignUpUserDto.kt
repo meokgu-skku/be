@@ -24,7 +24,14 @@ data class SignUpUserRequest(
 
     @field:NotBlank(message = "닉네임을 입력해 주세요.")
     @ApiModelProperty(value = "닉네임", example = "닉네임", required = true)
-    val nickname: String = ""
+    val nickname: String = "",
+
+    @ApiModelProperty(
+        value = "프로필 이미지 URL",
+        example = "https://test.com/test.jpg",
+        required = true
+    )
+    val profileImageUrl: String = ""
 ) {
 
     fun toEntity() = User(
