@@ -38,6 +38,9 @@ class SecurityConfig(
             .antMatchers(
                 "/v1/users/email/sign-up",
                 "/v1/users/email/sign-in",
+                "/v1/users/email/send",
+                "/v1/users/email/validate",
+                "/v1/users/password",
 
                 "/hello",
                 "/profile",
