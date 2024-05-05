@@ -70,11 +70,11 @@ jobs:
             echo "> 배포"
             if [ "$IDLE_PROFILE" == "prod1" ]
             then
-              docker-compose build skku-api-1
-              docker-compose up -d skku-api-1
+              docker compose build skku-api-1
+              docker compose up -d skku-api-1
             else
-              docker-compose build skku-api-2
-              docker-compose up -d skku-api-2
+              docker compose build skku-api-2
+              docker compose up -d skku-api-2
             fi
 
             sleep 60
