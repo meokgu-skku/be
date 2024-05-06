@@ -16,7 +16,6 @@ data class ValidateEmailRequest(
         value = "이메일 전송 타입",
         example = "EMAIL_VALIDATION",
         required = true,
-        allowableValues = "EMAIL_VALIDATION, UPDATE_PASSWORD"
     )
     val sendType: EmailSendType
 )

@@ -33,7 +33,7 @@ class ValidateEmailService(
         try {
             val code = emailRepository.generateRandomCode()
             val email = request.email
-            if (request.sendType == EmailSendType.EMAIL_VALIDATION) {
+            if (request.sendType == EmailSendType.SIGN_UP) {
                 val message = software.amazon.awssdk.services.ses.model.SendEmailRequest
                     .builder()
                     .source(emailSource)
