@@ -2,7 +2,6 @@ package com.restaurant.be.user.domain.entity
 
 import com.restaurant.be.common.converter.SeparatorConverter
 import com.restaurant.be.common.password.PasswordService
-import com.restaurant.be.user.presentation.dto.UpdateUserRequest
 import javax.persistence.Column
 import javax.persistence.Convert
 import javax.persistence.Entity
@@ -15,7 +14,7 @@ import javax.persistence.Table
 @Table(name = "users")
 class User(
     @Id
-    @Column
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long? = null,
 
@@ -31,17 +30,9 @@ class User(
     var withdrawal: Boolean = false,
 
     @Convert(converter = SeparatorConverter::class)
-    var roles: List<String> = listOf(),
-
-    @Column
-    var profileImageUrl: String
+    var roles: List<String> = listOf()
 ) {
     fun updatePassword(password: String) {
         this.password = password.run(PasswordService::hashPassword)
-    }
-
-    fun updateUser(request: UpdateUserRequest) {
-        this.nickname = request.nickname
-        this.profileImageUrl = request.profileImageUrl
     }
 }
