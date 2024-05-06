@@ -1,6 +1,7 @@
 package com.restaurant.be.user.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.user.domain.service.ValidateEmailService
 import com.restaurant.be.user.presentation.dto.SendEmailRequest
 import com.restaurant.be.user.presentation.dto.ValidateEmailRequest
 import com.restaurant.be.user.presentation.dto.ValidateEmailResponse
@@ -18,7 +19,9 @@ import javax.validation.Valid
 @Api(tags = ["01. User Info"], description = "유저 서비스")
 @RestController
 @RequestMapping("/v1/users/email")
-class ValidateEmailController {
+class ValidateEmailController(
+    private val validateEmailService: ValidateEmailService
+) {
     @PostMapping("/send")
     @ApiOperation(value = "이메일 전송 API")
     @ApiResponse(
@@ -29,6 +32,7 @@ class ValidateEmailController {
         @Valid @RequestBody
         request: SendEmailRequest
     ): CommonResponse<Unit> {
+        validateEmailService.sendValidateCode(request)
         return CommonResponse.success()
     }
 

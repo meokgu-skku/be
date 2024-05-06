@@ -68,6 +68,17 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.hibernate.validator:hibernate-validator:6.1.2.Final")
 
+    // AWS SES
+    implementation("software.amazon.awssdk:ses:2.20.114")
+
+    // Kotlin
+    val coroutineVersion = "1.6.3"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutineVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$coroutineVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$coroutineVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutineVersion")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("junit", "junit", "4.13.2")
