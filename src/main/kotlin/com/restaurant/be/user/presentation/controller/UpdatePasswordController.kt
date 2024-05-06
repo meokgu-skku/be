@@ -1,6 +1,7 @@
 package com.restaurant.be.user.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.user.domain.service.UpdateUserService
 import com.restaurant.be.user.presentation.dto.UpdatePasswordRequest
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -13,8 +14,10 @@ import javax.validation.Valid
 
 @Api(tags = ["01. User Info"], description = "유저 서비스")
 @RestController
-@RequestMapping("/api/v1/users/password")
-class UpdatePasswordController {
+@RequestMapping("/v1/users/password")
+class UpdatePasswordController(
+    private val updateUserService: UpdateUserService
+) {
 
     @PatchMapping
     @ApiOperation(value = "비밀번호 변경 API")
@@ -26,6 +29,7 @@ class UpdatePasswordController {
         @Valid @RequestBody
         request: UpdatePasswordRequest
     ): CommonResponse<Unit> {
+        updateUserService.updatePassword(request)
         return CommonResponse.success()
     }
 }

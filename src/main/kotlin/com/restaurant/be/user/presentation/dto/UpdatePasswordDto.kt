@@ -3,10 +3,15 @@
 package com.restaurant.be.user.presentation.dto
 
 import io.swagger.annotations.ApiModelProperty
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Pattern
 
 data class UpdatePasswordRequest(
+    @field:NotEmpty(message = "이메일은 필수 값 입니다.")
+    @field:Email(message = "유효하지 않는 이메일 입니다.")
+    @ApiModelProperty(value = "이메일", example = "test@test.com", required = true)
+    val email: String,
     @field:NotEmpty(message = "비밀번호는 필수 값 입니다.")
     @field:Pattern(
         regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[\\W_])[A-Za-z\\d\\W_]{8,16}\$",

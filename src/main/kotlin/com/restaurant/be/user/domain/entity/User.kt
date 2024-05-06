@@ -1,6 +1,7 @@
 package com.restaurant.be.user.domain.entity
 
 import com.restaurant.be.common.converter.SeparatorConverter
+import com.restaurant.be.common.password.PasswordService
 import javax.persistence.Column
 import javax.persistence.Convert
 import javax.persistence.Entity
@@ -30,4 +31,8 @@ class User(
 
     @Convert(converter = SeparatorConverter::class)
     var roles: List<String> = listOf()
-)
+) {
+    fun updatePassword(password: String) {
+        this.password = password.run(PasswordService::hashPassword)
+    }
+}
