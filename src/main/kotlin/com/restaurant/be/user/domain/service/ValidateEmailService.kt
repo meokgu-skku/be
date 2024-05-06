@@ -6,9 +6,9 @@ import com.restaurant.be.common.redis.RedisRepository
 import com.restaurant.be.user.presentation.dto.SendEmailRequest
 import com.restaurant.be.user.presentation.dto.common.EmailSendType
 import com.restaurant.be.user.repository.EmailRepository
-import java.util.concurrent.TimeUnit
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.util.concurrent.TimeUnit
 
 @Service
 class ValidateEmailService(
