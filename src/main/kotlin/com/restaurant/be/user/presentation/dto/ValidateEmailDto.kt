@@ -14,7 +14,7 @@ data class ValidateEmailRequest(
     val code: String,
     @ApiModelProperty(
         value = "이메일 전송 타입",
-        example = "EMAIL_VALIDATION",
+        example = "SIGN_UP",
         required = true,
     )
     val sendType: EmailSendType
