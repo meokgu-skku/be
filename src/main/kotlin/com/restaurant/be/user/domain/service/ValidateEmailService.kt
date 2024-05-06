@@ -16,13 +16,13 @@ class ValidateEmailService(
     @Value("\${aws.sender-email}") private val emailSource: String,
     private val redisRepository: RedisRepository
 ) {
-    private val emailTemplate =
+    private val signUpTemplate =
         EmailRepository::class.java.classLoader
-            .getResource("email-template.html")!!
+            .getResource("sign-up-template.html")!!
             .readText()
-    private val passwordTemplate =
+    private val resetPasswordTemplate =
         EmailRepository::class.java.classLoader
-            .getResource("password-template.html")!!
+            .getResource("reset-password-template.html")!!
             .readText()
 
     fun sendValidateCode(request: SendEmailRequest) {
@@ -46,12 +46,12 @@ class ValidateEmailService(
                         }
                         it.body {
                             it.html {
-                                it.data(emailTemplate.replace("AUTHENTICATION_CODE", code))
+                                it.data(signUpTemplate.replace("AUTHENTICATION_CODE", code))
                             }
                         }
                     }.build()
 
-                redisRepository.setValue("user:$email:emailCode", code, 3, TimeUnit.MINUTES)
+                redisRepository.setValue("user:$email:signUpCode", code, 3, TimeUnit.MINUTES)
                 emailRepository.sendEmail(message)
             } else {
                 val message = software.amazon.awssdk.services.ses.model.SendEmailRequest
@@ -66,12 +66,12 @@ class ValidateEmailService(
                         }
                         it.body {
                             it.html {
-                                it.data(passwordTemplate.replace("AUTHENTICATION_CODE", code))
+                                it.data(resetPasswordTemplate.replace("AUTHENTICATION_CODE", code))
                             }
                         }
                     }.build()
 
-                redisRepository.setValue("user:$email:passwordCode", code, 3, TimeUnit.MINUTES)
+                redisRepository.setValue("user:$email:resetPasswordCode", code, 3, TimeUnit.MINUTES)
                 emailRepository.sendEmail(message)
             }
         } catch (e: Exception) {
