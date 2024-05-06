@@ -35,3 +35,8 @@ jwt:
   token-validity-in-seconds: 86400
   access-token-validity-in-seconds: 7200
   refresh-token-validity-in-seconds: 1209600
+
+aws:
+  accessKey: ${AWS_ACCESS_KEY:test}
+  secretKey: ${AWS_SECRET_KEY:test}
+  sender-email: ${SENDER_EMAIL:tlsrudejr123@g.skku.edu}
