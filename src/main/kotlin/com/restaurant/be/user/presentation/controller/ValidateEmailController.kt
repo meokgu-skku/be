@@ -47,6 +47,7 @@ class ValidateEmailController(
         @Valid @RequestBody
         request: ValidateEmailRequest
     ): CommonResponse<ValidateEmailResponse> {
-        return CommonResponse.success(ValidateEmailResponse("test"))
+        val response = validateEmailService.validateEmail(request)
+        return CommonResponse.success(response)
     }
 }

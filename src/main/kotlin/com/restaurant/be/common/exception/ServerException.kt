@@ -36,3 +36,7 @@ data class SendEmailException(
 data class SkkuEmailException(
     override val message: String = "성균관대 이메일이 아닙니다."
 ) : ServerException(400, message)
+
+data class InvalidEmailCodeException(
+    override val message: String = "인증 코드가 일치 하지 않습니다."
+) : ServerException(400, message)
