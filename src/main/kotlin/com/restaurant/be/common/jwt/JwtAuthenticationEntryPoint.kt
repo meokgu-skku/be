@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Component
-class JwtAuthenticationEntryPoint(
+class   JwtAuthenticationEntryPoint(
     @Qualifier("handlerExceptionResolver")
     private val resolver: HandlerExceptionResolver
 ) : AuthenticationEntryPoint {
