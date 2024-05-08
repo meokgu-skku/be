@@ -40,3 +40,11 @@ data class SkkuEmailException(
 data class InvalidEmailCodeException(
     override val message: String = "인증 코드가 일치 하지 않습니다."
 ) : ServerException(400, message)
+
+data class InvalidUserResetPasswordStateException(
+    override val message: String = "유저가 비밀번호 초기화 상태가 아닙니다."
+) : ServerException(400, message)
+
+data class NotEqualTokenException(
+    override val message: String = "토큰이 일치 하지 않습니다."
+) : ServerException(400, message)
