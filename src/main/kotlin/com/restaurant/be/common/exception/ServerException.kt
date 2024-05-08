@@ -28,3 +28,11 @@ data class DuplicateUserEmailException(
 data class DuplicateUserNickNameException(
     override val message: String = "이미 존재 하는 닉네임 입니다."
 ) : ServerException(400, message)
+
+data class SendEmailException(
+    override val message: String = "이메일 전송에 실패 했습니다."
+) : ServerException(500, message)
+
+data class SkkuEmailException(
+    override val message: String = "성균관대 이메일이 아닙니다."
+) : ServerException(400, message)
