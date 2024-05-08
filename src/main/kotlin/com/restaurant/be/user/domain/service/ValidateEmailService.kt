@@ -1,13 +1,17 @@
 package com.restaurant.be.user.domain.service
 
+import com.restaurant.be.common.exception.InvalidEmailCodeException
 import com.restaurant.be.common.exception.SendEmailException
 import com.restaurant.be.common.exception.SkkuEmailException
 import com.restaurant.be.common.redis.RedisRepository
 import com.restaurant.be.user.presentation.dto.SendEmailRequest
+import com.restaurant.be.user.presentation.dto.ValidateEmailRequest
+import com.restaurant.be.user.presentation.dto.ValidateEmailResponse
 import com.restaurant.be.user.presentation.dto.common.EmailSendType
 import com.restaurant.be.user.repository.EmailRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -51,7 +55,12 @@ class ValidateEmailService(
                         }
                     }.build()
 
-                redisRepository.setValue("user:$email:signUpCode", code, 3, TimeUnit.MINUTES)
+                redisRepository.setValue(
+                    "user:$email:${request.sendType.name.lowercase(Locale.getDefault())}_code",
+                    code,
+                    3,
+                    TimeUnit.MINUTES
+                )
                 emailRepository.sendEmail(message)
             } else {
                 val message = software.amazon.awssdk.services.ses.model.SendEmailRequest
@@ -71,11 +80,37 @@ class ValidateEmailService(
                         }
                     }.build()
 
-                redisRepository.setValue("user:$email:resetPasswordCode", code, 3, TimeUnit.MINUTES)
+                redisRepository.setValue(
+                    "user:$email:${request.sendType.name.lowercase(Locale.getDefault())}_code",
+                    code,
+                    3,
+                    TimeUnit.MINUTES
+                )
                 emailRepository.sendEmail(message)
             }
         } catch (e: Exception) {
             throw SendEmailException()
         }
+    }
+
+    fun validateEmail(request: ValidateEmailRequest): ValidateEmailResponse {
+        if (!isValidCode(request.email, request.code, request.sendType)) {
+            throw InvalidEmailCodeException()
+        }
+
+        val token = (UUID.randomUUID().toString() + UUID.randomUUID().toString()).replace("-", "")
+        redisRepository.setValue(
+            "user:${request.email}:${request.sendType.name.lowercase(Locale.getDefault())}_token",
+            token,
+            3,
+            TimeUnit.MINUTES
+        )
+
+        return ValidateEmailResponse(token)
+    }
+
+    private fun isValidCode(email: String, code: String, sendType: EmailSendType): Boolean {
+        val key = "user:$email:${sendType.name.lowercase(Locale.getDefault())}_code"
+        return redisRepository.getValue(key) == code
     }
 }
