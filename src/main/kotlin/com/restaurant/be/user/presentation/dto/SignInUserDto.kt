@@ -30,7 +30,8 @@ data class SignInUserResponse(
     constructor(user: User, token: Token) : this(
         userDto = UserDto(
             email = user.email,
-            nickname = user.nickname
+            nickname = user.nickname,
+            profileImageUrl = user.profileImageUrl
         ),
         token = token
     )
