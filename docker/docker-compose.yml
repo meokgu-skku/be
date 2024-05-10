@@ -60,7 +60,7 @@ services:
       - ./redis/users.acl:/usr/local/etc/redis/users.acl:rw
 
   es-singlenode:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.0
+    image: sinkyoungdeok/elasticsearch-with-nori:8.2.0
     container_name: es-singlenode
     environment:
       - xpack.security.enabled=false
