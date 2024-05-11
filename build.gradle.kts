@@ -30,6 +30,11 @@ java {
 
 repositories {
     mavenCentral()
+    maven("https://maven.tryformation.com/releases") {
+        content {
+            includeGroup("com.jillesvangurp")
+        }
+    }
 }
 
 dependencies {
@@ -78,6 +83,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$coroutineVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutineVersion")
+
+    // Es
+    implementation("com.jillesvangurp:search-client:2.1.29")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

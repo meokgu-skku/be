@@ -40,5 +40,29 @@ data class RestaurantDetailDto(
     @Schema(description = "식당 전화번호")
     val contactNumber: String,
     @Schema(description = "식당 주소")
-    val address: String
+    val address: String,
+    @Schema(description = "메뉴 정보")
+    val menus: List<MenuDto>,
+    @Schema(description = "영업 정보")
+    val operatingInfos: List<OperatingInfoDto>
+)
+
+data class MenuDto(
+    @Schema(description = "메뉴 이름")
+    val name: String,
+    @Schema(description = "메뉴 가격")
+    val price: Int,
+    @Schema(description = "메뉴 설명")
+    val description: String,
+    @Schema(description = "대표 메뉴 여부")
+    val isRepresentative: Boolean
+)
+
+data class OperatingInfoDto(
+    @Schema(description = "영업 요일")
+    val day: String,
+    @Schema(description = "영업 시작 시간")
+    val startTime: String,
+    @Schema(description = "영업 종료 시간")
+    val endTime: String
 )
