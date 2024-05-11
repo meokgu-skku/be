@@ -188,7 +188,7 @@ complexity:
     thresholdInInterfaces: 11
     thresholdInObjects: 11
     thresholdInEnums: 11
-    ignoreDeprecated: true
+    ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false
 
@@ -369,6 +369,7 @@ naming:
     active: true
     excludes:
       [
+        "**/entity/**",
         "**/test/**",
         "**/androidTest/**",
         "**/commonTest/**",

@@ -4,24 +4,24 @@ plugins {
     id("org.springframework.boot") version "2.7.5"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
+//    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("org.jetbrains.dokka") version "1.7.20"
     id("org.jetbrains.kotlinx.kover") version "0.7.3"
 
-    kotlin("jvm") version "1.7.0"
-    kotlin("plugin.spring") version "1.7.0"
-    kotlin("plugin.jpa") version "1.7.0"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.spring") version "1.9.0"
+    kotlin("plugin.jpa") version "1.9.0"
     kotlin("kapt") version "1.5.30"
 }
 
 group = "com.restaurant"
 version = "0.0.1-SNAPSHOT"
 
-detekt {
-    toolVersion = "1.20.0"
-    config = files("config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-}
+// detekt {
+//    toolVersion = "1.23.1"
+//    config = files("config/detekt/detekt.yml")
+//    buildUponDefaultConfig = true
+// }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -92,7 +92,7 @@ dependencies {
     testImplementation("junit", "junit", "4.13.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.5.4")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
-    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("io.mockk:mockk:1.12.4")
 
     // TestContainers
     testImplementation("org.testcontainers:testcontainers:1.17.1")
