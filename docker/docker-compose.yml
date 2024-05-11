@@ -7,7 +7,7 @@ services:
       - skku-redis
     image: sinkyoungdeok/skku-autocomplete
     ports:
-      - "3000:3000"
+      - "8090:8090"
     restart: always
   skku-api-1:
     depends_on:
@@ -17,6 +17,8 @@ services:
       - "8081:8081"
     environment:
       - USE_PROFILE=prod1
+    env_file:
+      - .env
     restart: always
   skku-api-2:
     depends_on:
@@ -26,6 +28,8 @@ services:
       - "8082:8082"
     environment:
       - USE_PROFILE=prod2
+    env_file:
+      - .env
     restart: always
   skku-db:
     image: mysql:8.0
@@ -54,3 +58,27 @@ services:
     volumes:
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf:rw
       - ./redis/users.acl:/usr/local/etc/redis/users.acl:rw
+
+  es-singlenode:
+    image: sinkyoungdeok/elasticsearch-with-nori:8.2.0
+    container_name: es-singlenode
+    environment:
+      - xpack.security.enabled=false
+      - node.name=single-node
+      - cluster.name=kdsin
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.2.0
+    container_name: docker-kibana
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://es-singlenode:9200"]'
+    ports:
+      - 5601:5601
+    expose:
+      - 5601
+    volumes:
+      - ./kibana-config.yml:/usr/share/kibana/config/kibana.yml
+    restart: always

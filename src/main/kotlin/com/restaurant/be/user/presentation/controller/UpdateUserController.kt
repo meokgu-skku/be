@@ -1,6 +1,7 @@
 package com.restaurant.be.user.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.user.domain.service.UpdateUserService
 import com.restaurant.be.user.presentation.dto.UpdateUserRequest
 import com.restaurant.be.user.presentation.dto.UpdateUserResponse
 import io.swagger.annotations.Api
@@ -19,7 +20,9 @@ import javax.validation.Valid
 @Api(tags = ["01. User Info"], description = "유저 서비스")
 @RestController
 @RequestMapping("/api/v1/users")
-class UpdateUserController {
+class UpdateUserController(
+    private val updateUserService: UpdateUserService
+) {
 
     @PatchMapping
     @PreAuthorize("hasRole('USER')")
@@ -34,6 +37,7 @@ class UpdateUserController {
         @Valid @RequestBody
         request: UpdateUserRequest
     ): CommonResponse<UpdateUserResponse> {
+        updateUserService.updateUser(request, principal.name)
         return CommonResponse.success()
     }
 }

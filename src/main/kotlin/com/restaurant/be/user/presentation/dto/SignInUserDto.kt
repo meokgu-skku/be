@@ -19,13 +19,7 @@ data class SignInUserRequest(
     @NotBlank(message = "비밀번호를 입력해 주세요.")
     @ApiModelProperty(value = "비밀번호", example = "test12!@", required = true)
     val password: String
-) {
-
-    fun toEntity() = User(
-        email = email,
-        password = password
-    )
-}
+)
 
 data class SignInUserResponse(
     @Schema(description = "유저 정보")
@@ -36,7 +30,8 @@ data class SignInUserResponse(
     constructor(user: User, token: Token) : this(
         userDto = UserDto(
             email = user.email,
-            nickname = user.nickname
+            nickname = user.nickname,
+            profileImageUrl = user.profileImageUrl
         ),
         token = token
     )

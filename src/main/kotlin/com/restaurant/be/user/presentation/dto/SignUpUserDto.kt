@@ -38,7 +38,8 @@ data class SignUpUserRequest(
         email = email,
         password = password.run(PasswordService::hashPassword),
         nickname = nickname,
-        roles = listOf(Role.ROLE_USER.toString())
+        roles = listOf(Role.ROLE_USER.toString()),
+        profileImageUrl = profileImageUrl
     )
 }
 
@@ -50,8 +51,10 @@ data class SignUpUserResponse(
 ) {
     constructor(user: User, token: Token) : this(
         userDto = UserDto(
+            id = user.id ?: 0,
             email = user.email,
-            nickname = user.nickname
+            nickname = user.nickname,
+            profileImageUrl = user.profileImageUrl
         ),
         token = token
     )

@@ -45,3 +45,5 @@ docker/redis/**
 
 ### IDEA run ###
 /.run
+.env
+
