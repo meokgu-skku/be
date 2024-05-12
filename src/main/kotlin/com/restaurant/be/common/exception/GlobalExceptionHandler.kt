@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import org.springframework.web.server.ServerWebInputException
 import java.security.SignatureException
+import org.springframework.web.bind.MethodArgumentNotValidException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -46,7 +47,7 @@ class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = [WebExchangeBindException::class])
+    @ExceptionHandler(value = [WebExchangeBindException::class, MethodArgumentNotValidException::class])
     fun methodArgumentNotValidException(
         e: WebExchangeBindException
     ): CommonResponse<String> {

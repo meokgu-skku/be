@@ -80,7 +80,7 @@ class ReviewIntegrationTest(
             MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
-        ) // 400 수정 예정
-            .andExpect(MockMvcResultMatchers.status().isInternalServerError)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 }
