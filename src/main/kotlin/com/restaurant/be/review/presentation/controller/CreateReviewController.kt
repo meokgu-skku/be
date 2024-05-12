@@ -2,7 +2,6 @@ package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.CreateReviewService
-import com.restaurant.be.review.presentation.dto.CreateReviewRequest
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import io.swagger.annotations.Api
@@ -22,9 +21,9 @@ import javax.validation.Valid
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
 @RequestMapping("/api/v1/restaurants")
-class CreateReviewController (
+class CreateReviewController(
     private val createReviewService: CreateReviewService
-){
+) {
 
     @PostMapping("/{restaurantId}/reviews")
     @PreAuthorize("hasRole('USER')")
@@ -37,7 +36,8 @@ class CreateReviewController (
     fun createReview(
         principal: Principal,
         @PathVariable restaurantId: Long,
-        @Valid @RequestBody createReview: ReviewRequestDto
+        @Valid @RequestBody
+        createReview: ReviewRequestDto
     ): CommonResponse<CreateReviewResponse> {
         val response = createReviewService.createReviewOf(restaurantId, createReview, principal.name)
         return CommonResponse.success(response)

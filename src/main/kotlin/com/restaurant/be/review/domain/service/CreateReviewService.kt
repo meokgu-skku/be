@@ -7,8 +7,8 @@ import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
-import javax.transaction.Transactional
 import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 @Service
 class CreateReviewService(
@@ -30,11 +30,11 @@ class CreateReviewService(
 
         val reviewImages = reviewRequest.imageUrls.map { imageUrl ->
             ReviewImage(
-                imageUrl = imageUrl,
+                imageUrl = imageUrl
             )
         }
         reviewImages.forEach { review.addImage(it) }
 
-        return CreateReviewResponse(review = reviewRepository.save(review));
+        return CreateReviewResponse(review = reviewRepository.save(review))
     }
 }

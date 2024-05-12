@@ -58,7 +58,6 @@ dependencies {
     // Security
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-
     // Logging
     implementation("io.github.microutils:kotlin-logging:1.12.5")
 

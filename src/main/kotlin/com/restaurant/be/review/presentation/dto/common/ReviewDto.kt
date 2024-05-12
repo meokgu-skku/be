@@ -1,11 +1,8 @@
 package com.restaurant.be.review.presentation.dto.common
 
-import com.restaurant.be.review.domain.entity.Review
-import com.restaurant.be.user.domain.entity.User
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 data class ReviewRequestDto(
