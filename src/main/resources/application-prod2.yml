@@ -28,3 +28,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+es:
+  host: es-singlenode
+  port: 9200

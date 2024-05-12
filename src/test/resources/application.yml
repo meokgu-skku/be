@@ -40,3 +40,7 @@ aws:
   accessKey: ${AWS_ACCESS_KEY:test}
   secretKey: ${AWS_SECRET_KEY:test}
   sender-email: ${SENDER_EMAIL:tlsrudejr123@g.skku.edu}
+
+es:
+  host: localhost
+  port: 9200
