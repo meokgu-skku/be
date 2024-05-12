@@ -43,7 +43,7 @@ class ReviewIntegrationTest(
             )
         )
         val reviewRequest = ReviewRequestDto(
-            rating = 3,
+            rating = 4.0,
             comment = "맛있어요",
             imageUrls = listOf(),
             isLike = true
@@ -62,15 +62,15 @@ class ReviewIntegrationTest(
             object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
         )
 
-        actualResult.data!!.review.content shouldBe "맛있어요"
-        actualResult.data!!.review.images.size shouldBe 0
+        actualResult.data!!.review.comment shouldBe "맛있어요"
+        actualResult.data!!.review.imageUrls.size shouldBe 0
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
     @Test
     fun`comment가 없으면 오류 반환`() {
         val reviewRequest = ReviewRequestDto(
-            rating = 3,
+            rating = 3.0,
             comment = "",
             imageUrls = listOf(),
             isLike = true

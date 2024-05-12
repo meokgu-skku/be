@@ -1,6 +1,7 @@
 package com.restaurant.be.review.domain.entity
 
 import com.restaurant.be.common.entity.BaseEntity
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.user.domain.entity.User
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -25,13 +26,11 @@ class Review(
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
-    @Column(nullable = true)
-    val restaurantId: Long? = null,
+    val restaurantId: Long,
 
-    @Column(nullable = false)
     val content: String,
     @Column(nullable = false)
-    val rating: Int,
+    val rating: Double,
 
     @Column(nullable = false)
     val isLike: Boolean,
@@ -44,5 +43,16 @@ class Review(
 ) : BaseEntity() {
     fun addImage(reviewImage: ReviewImage) {
         images.add(reviewImage)
+    }
+
+    fun toResponseDTO(): ReviewResponseDto {
+        return ReviewResponseDto(
+            userId = user.id,
+            restaurantId = restaurantId,
+            rating = rating,
+            comment = content,
+            imageUrls = images.map { it.imageUrl },
+            isLike = isLike
+        )
     }
 }
