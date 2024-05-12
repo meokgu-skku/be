@@ -4,7 +4,6 @@ plugins {
     id("org.springframework.boot") version "2.7.5"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
-//    id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("org.jetbrains.dokka") version "1.7.20"
     id("org.jetbrains.kotlinx.kover") version "0.7.3"
 
@@ -16,12 +15,6 @@ plugins {
 
 group = "com.restaurant"
 version = "0.0.1-SNAPSHOT"
-
-// detekt {
-//    toolVersion = "1.23.1"
-//    config = files("config/detekt/detekt.yml")
-//    buildUponDefaultConfig = true
-// }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
