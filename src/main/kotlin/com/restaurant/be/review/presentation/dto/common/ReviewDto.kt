@@ -26,8 +26,7 @@ data class ReviewRequestDto(
     @field:NotNull(message = "식당 추천 여부를 선택해주세요")
     @ApiModelProperty(value = "리뷰 내용", example = "true", required = true)
     val isLike: Boolean
-){
-}
+)
 
 data class ReviewResponseDto(
     @Schema(description = "유저 id")
