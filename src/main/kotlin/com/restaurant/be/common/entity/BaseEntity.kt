@@ -12,10 +12,8 @@ import javax.persistence.MappedSuperclass
 open class BaseEntity {
 
     @CreatedDate
-    final var createdAt: LocalDateTime = LocalDateTime.now()
-        private set
+    var createdAt: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate
-    final var modifiedAt: LocalDateTime = LocalDateTime.now()
-        private set
+    var modifiedAt: LocalDateTime = LocalDateTime.now()
 }

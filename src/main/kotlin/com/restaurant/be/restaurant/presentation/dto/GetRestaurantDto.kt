@@ -5,16 +5,8 @@ import io.swagger.annotations.ApiModelProperty
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class GetRestaurantRequest(
-    @ApiModelProperty(value = "식당 이름 검색", example = "맛집", required = false)
-    val query: String,
-    @ApiModelProperty(value = "카테고리 필터", example = "[1, 2, 3]", required = false)
-    val categoryIds: List<Long>,
-    @ApiModelProperty(value = "킹고패스 할인 여부 필터", example = "false", required = false)
-    val discountForSkku: Boolean,
-    @ApiModelProperty(value = "평점 필터", example = "4.5", required = false)
-    val rating: Long,
-    @ApiModelProperty(value = "리뷰 개수 필터", example = "100", required = false)
-    val reviewCount: Long
+    @ApiModelProperty(value = "유저 아아디", example = "1", required = false)
+    val userId: Long
 )
 
 data class GetRestaurantsResponse(
