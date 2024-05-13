@@ -12,7 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "review_likes")
-class ReviewLikes (
+class ReviewLikes(
     @Id
     @Column(name = "review_likes_id")
     @GeneratedValue(strategy = GenerationType.AUTO)

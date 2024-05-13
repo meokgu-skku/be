@@ -47,7 +47,7 @@ class Review(
 
     fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
         return ReviewResponseDto(
-            userId = user.id?:0,
+            userId = user.id ?: 0,
             username = user.nickname,
             profileImageUrl = user.profileImageUrl,
             restaurantId = restaurantId,

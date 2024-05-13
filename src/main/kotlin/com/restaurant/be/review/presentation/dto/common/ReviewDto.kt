@@ -19,7 +19,7 @@ data class ReviewRequestDto(
     val comment: String,
 
     @Schema(description = "이미지 url 리스트")
-    val imageUrls: List<String>,
+    val imageUrls: List<String>
 ) {
     fun toEntity(user: User, restaurantId: Long) = Review(
         user = user,

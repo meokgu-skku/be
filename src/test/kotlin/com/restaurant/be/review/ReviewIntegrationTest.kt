@@ -45,7 +45,7 @@ class ReviewIntegrationTest(
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
             comment = "맛있어요",
-            imageUrls = listOf(),
+            imageUrls = listOf()
         )
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
@@ -72,7 +72,7 @@ class ReviewIntegrationTest(
         val reviewRequest = ReviewRequestDto(
             rating = 3.0,
             comment = "",
-            imageUrls = listOf(),
+            imageUrls = listOf()
         )
 
         mockMvc.perform(
