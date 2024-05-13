@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -31,7 +30,7 @@ class GetCategoryController(
         content = [Content(schema = Schema(implementation = GetCategoryResponse::class))]
     )
     fun getCategory(
-        principal: Principal,
+        principal: Principal
     ): CommonResponse<GetCategoryResponse> {
         val response = getCategoryService.getCategory(principal.name)
         return CommonResponse.success(response)
