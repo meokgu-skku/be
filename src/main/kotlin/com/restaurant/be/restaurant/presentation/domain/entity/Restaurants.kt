@@ -21,35 +21,38 @@ class Restaurants(
     @Column(name = "name", nullable = false, length = 64)
     var name: String,
 
-    @Column(name = "category", nullable = true, length = 64)
+    @Column(name = "category", length = 64)
     var category: String,
 
-    @Column(name = "custom_category", nullable = true, length = 64)
+    @Column(name = "custom_category", nullable = false, length = 64)
     var customCategory: String,
 
     @Column(name = "review_count", nullable = false)
-    var reviewCount: Long,
+    var reviewCount: Long = 0,
 
     @Column(name = "like_count", nullable = false)
-    var likeCount: Long,
+    var likeCount: Long = 0,
 
-    @Column(name = "address", nullable = true, length = 256)
+    @Column(name = "address", length = 256)
     var address: String,
 
-    @Column(name = "contact_num", nullable = true, length = 32)
+    @Column(name = "contact_num", length = 32)
     var contactNum: String,
 
-    @Column(name = "rating_avg", nullable = true)
+    @Column(name = "rating_avg")
     var ratingAvg: Double,
 
-    @Column(name = "representative_image_url", nullable = true)
+    @Column(name = "representative_image_url", length = 300)
     var representativeImageUrl: String,
 
-    @Column(name = "representative_menu", nullable = true)
+    @Column(name = "representative_menu")
     var representativeMenu: String,
 
-    @Column(name = "kingo_pass", nullable = true)
-    var kingoPass: Boolean
+    @Column(name = "kingo_pass")
+    var kingoPass: Boolean,
+
+    @Column(name = "view_count", nullable = false)
+    var viewCount: Long = 0
 
 ) {
     fun toDto(): RestaurantDto {
@@ -75,6 +78,31 @@ class Restaurants(
             )
         )
     }
+
+    fun toDto(isLike: Boolean): RestaurantDto {
+        return RestaurantDto(
+            id = this.id,
+            representativeImageUrl = this.representativeImageUrl,
+            name = this.name,
+            ratingAvg = this.ratingAvg,
+            reviewCount = this.reviewCount,
+            likeCount = this.likeCount,
+            category = this.category,
+            customCategory = this.customCategory,
+            representativeMenu = this.representativeMenu,
+            operatingStartTime = "",
+            operatingEndTime = "",
+            representativeReviewContent = "",
+            isLike = isLike,
+            isDiscountForSkku = false,
+            discountContent = "",
+            detailInfo = RestaurantDetailDto(
+                contactNumber = this.contactNum,
+                address = this.address
+            )
+        )
+    }
+
     fun plusReviewCount() {
         this.reviewCount += this.reviewCount
     }

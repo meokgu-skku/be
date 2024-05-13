@@ -19,10 +19,7 @@ class RestaurantLikes(
     @Column(name = "restaurant_id", nullable = false)
     var restaurantId: Long,
 
-    @Column(name = "user_id", nullable = false)
-    var userId: Long,
-
-    @Column(name = "like", nullable = false)
-    var like: Boolean
+    @Column(name = "user_name", nullable = false)
+    var userName: String
 
 )

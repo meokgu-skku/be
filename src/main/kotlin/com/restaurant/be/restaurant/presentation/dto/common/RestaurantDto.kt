@@ -15,7 +15,7 @@ data class RestaurantDto(
     val reviewCount: Long,
     @Schema(description = "식당 좋아요 수")
     val likeCount: Long,
-    @Schema(description = "식당 대표 카테고리")
+    @Schema(description = "오리지널 카테고리")
     val category: String,
     @Schema(description = "카테고리")
     val customCategory: String,
@@ -36,36 +36,11 @@ data class RestaurantDto(
 
     @Schema(description = "식당 상세 정보")
     val detailInfo: RestaurantDetailDto
-) {
-
-    constructor() : this(
-        id = 0L,
-        representativeImageUrl = "",
-        name = "",
-        ratingAvg = 0.0,
-        reviewCount = 0L,
-        likeCount = 0L,
-        category = "",
-        customCategory = "",
-        representativeMenu = "",
-        operatingStartTime = "",
-        operatingEndTime = "",
-        representativeReviewContent = "",
-        isLike = false,
-        isDiscountForSkku = false,
-        discountContent = "",
-        detailInfo = RestaurantDetailDto()
-    )
-}
+)
 
 data class RestaurantDetailDto(
     @Schema(description = "식당 전화번호")
     val contactNumber: String,
     @Schema(description = "식당 주소")
     val address: String
-) {
-    constructor() : this(
-        contactNumber = "",
-        address = ""
-    )
-}
+)
