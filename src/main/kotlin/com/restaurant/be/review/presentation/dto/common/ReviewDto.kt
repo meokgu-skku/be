@@ -20,17 +20,11 @@ data class ReviewRequestDto(
 
     @Schema(description = "이미지 url 리스트")
     val imageUrls: List<String>,
-
-    @Schema(description = "좋아요 여부")
-    @field:NotNull(message = "식당 추천 여부를 선택해주세요")
-    @ApiModelProperty(value = "좋아요 여부", example = "true", required = true)
-    val isLike: Boolean
 ) {
     fun toEntity(user: User, restaurantId: Long) = Review(
         user = user,
         rating = rating,
         content = comment,
-        isLike = isLike,
         restaurantId = restaurantId
     )
 }

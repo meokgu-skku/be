@@ -46,7 +46,6 @@ class ReviewIntegrationTest(
             rating = 4.0,
             comment = "맛있어요",
             imageUrls = listOf(),
-            isLike = true
         )
         val result = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
@@ -63,6 +62,7 @@ class ReviewIntegrationTest(
         )
 
         actualResult.data!!.review.comment shouldBe "맛있어요"
+        actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
     }
 
@@ -73,7 +73,6 @@ class ReviewIntegrationTest(
             rating = 3.0,
             comment = "",
             imageUrls = listOf(),
-            isLike = true
         )
 
         mockMvc.perform(

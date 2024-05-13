@@ -35,9 +35,6 @@ class Review(
     @Column(nullable = false)
     val rating: Double,
 
-    @Column(nullable = false)
-    val isLike: Boolean,
-
     // 부모 (Review Entity)가 주인이되어 Image참조 가능. 반대는 불가능
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "review_id")
@@ -48,7 +45,7 @@ class Review(
         images.add(reviewImage)
     }
 
-    fun toResponseDTO(): ReviewResponseDto {
+    fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
         return ReviewResponseDto(
             userId = user.id?:0,
             username = user.nickname,
@@ -57,7 +54,7 @@ class Review(
             rating = rating,
             comment = content,
             imageUrls = images.map { it.imageUrl },
-            isLike = isLike
+            isLike = doesUserLike
         )
     }
 }
