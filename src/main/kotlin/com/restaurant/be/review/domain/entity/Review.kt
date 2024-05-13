@@ -22,13 +22,16 @@ class Review(
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
+    @Column(nullable = false)
     val restaurantId: Long,
 
+    @Column(nullable = false)
     val content: String,
+
     @Column(nullable = false)
     val rating: Double,
 

@@ -13,6 +13,7 @@ class ReviewImage(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
-    @Column(length = 350)
+
+    @Column(nullable = false, length = 300)
     val imageUrl: String
 )

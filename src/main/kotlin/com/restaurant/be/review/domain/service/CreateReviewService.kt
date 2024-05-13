@@ -21,13 +21,13 @@ class CreateReviewService(
 
         val review = reviewRequest.toEntity(user, restaurantId)
 
-        val reviewImages = reviewRequest.imageUrls.map { imageUrl ->
-            ReviewImage(
-                imageUrl = imageUrl
+        reviewRequest.imageUrls.forEach {
+            review.addImage(
+                ReviewImage(
+                    imageUrl = it
+                )
             )
         }
-
-        reviewImages.forEach { review.addImage(it) }
 
         return CreateReviewResponse(review = reviewRepository.save(review).toResponseDTO())
     }
