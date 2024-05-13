@@ -4,24 +4,17 @@ plugins {
     id("org.springframework.boot") version "2.7.5"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
-    id("io.gitlab.arturbosch.detekt") version "1.21.0"
     id("org.jetbrains.dokka") version "1.7.20"
     id("org.jetbrains.kotlinx.kover") version "0.7.3"
 
-    kotlin("jvm") version "1.7.0"
-    kotlin("plugin.spring") version "1.7.0"
-    kotlin("plugin.jpa") version "1.7.0"
+    kotlin("jvm") version "1.9.0"
+    kotlin("plugin.spring") version "1.9.0"
+    kotlin("plugin.jpa") version "1.9.0"
     kotlin("kapt") version "1.5.30"
 }
 
 group = "com.restaurant"
 version = "0.0.1-SNAPSHOT"
-
-detekt {
-    toolVersion = "1.20.0"
-    config = files("config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -30,6 +23,11 @@ java {
 
 repositories {
     mavenCentral()
+    maven("https://maven.tryformation.com/releases") {
+        content {
+            includeGroup("com.jillesvangurp")
+        }
+    }
 }
 
 dependencies {
@@ -78,6 +76,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
     runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$coroutineVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutineVersion")
+
+    // Es
+    implementation("com.jillesvangurp:search-client:2.1.29")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
