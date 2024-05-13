@@ -37,7 +37,11 @@ data class ReviewRequestDto(
 
 data class ReviewResponseDto(
     @Schema(description = "유저 id")
-    val userId: Long?,
+    val userId: Long,
+    @Schema(description = "유저 닉네임")
+    val username: String,
+    @Schema(description = "유저 프로필 이미지")
+    val profileImageUrl: String,
     @Schema(description = "식당 id")
     val restaurantId: Long,
     @Schema(description = "평가 점수")

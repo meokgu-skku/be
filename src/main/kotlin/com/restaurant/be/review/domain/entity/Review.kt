@@ -50,7 +50,9 @@ class Review(
 
     fun toResponseDTO(): ReviewResponseDto {
         return ReviewResponseDto(
-            userId = user.id,
+            userId = user.id?:0,
+            username = user.nickname,
+            profileImageUrl = user.profileImageUrl,
             restaurantId = restaurantId,
             rating = rating,
             comment = content,
