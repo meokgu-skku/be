@@ -18,15 +18,15 @@ class GetRestaurantByIdService(
         val restaurant: Restaurants? = restaurantRepository.findById(restaurantId)
 
         // Restaurants Entity 를 RestaurantDto 로 변환하여 GetRestaurantResponse 에 저장 후 반환
-        return if (restaurant != null) {
+        if (restaurant != null) {
             // restaurant_likes(RestaurantLikes Entity)테이블에서 유저 좋아요 여부 조회
             val isLike = restaurantLikeRepository
                 .findByUserNameAndRestaurantId(userName, restaurantId)?.let { true } ?: false
 
             val restaurantDto = restaurant.toDto(isLike)
-            GetRestaurantResponse(restaurantDto)
+            return GetRestaurantResponse(restaurantDto)
         } else {
-            throw Exception()
+            throw Exception("레스토랑 정보가 존재하지 않습니다.")
         }
     }
 }
