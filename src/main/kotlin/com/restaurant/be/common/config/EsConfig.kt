@@ -43,8 +43,9 @@ fun ktorClientWithJavaEngine(
         requestTimeoutMillis = timeoutMillis
     }
 
-    install(Logging) {
-        logger = Logger.DEFAULT
-        level = LogLevel.ALL
-    }
+//    로컬 환경에서만 enable해서 사용
+//    install(Logging) {
+//        logger = Logger.DEFAULT
+//        level = LogLevel.ALL
+//    }
 }
