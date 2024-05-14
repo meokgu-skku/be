@@ -37,9 +37,9 @@ class CreateReviewController(
         principal: Principal,
         @PathVariable restaurantId: Long,
         @Valid @RequestBody
-        request: ReviewRequestDto
+        createReview: ReviewRequestDto
     ): CommonResponse<CreateReviewResponse> {
-        val response = createReviewService.createReview(restaurantId, request, principal.name)
+        val response = createReviewService.createReviewOf(restaurantId, createReview, principal.name)
         return CommonResponse.success(response)
     }
 }
