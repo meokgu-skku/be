@@ -3,23 +3,20 @@ package com.restaurant.be.review.domain.service
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.common.exception.NotFoundUserEmailException
-import com.restaurant.be.common.principal.PrincipalUtils
 import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReviewLikes
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
-import com.restaurant.be.review.repository.ReviewLikesRepository
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.repository.UserRepository
-import org.springframework.transaction.annotation.Transactional
 import kotlinx.serialization.json.JsonNull.content
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class GetReviewService(
