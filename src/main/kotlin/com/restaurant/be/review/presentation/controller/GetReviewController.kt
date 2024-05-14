@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
+import org.springframework.data.domain.Pageable
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
@@ -33,11 +34,10 @@ class GetReviewController(
     )
     fun getReview(
         principal: Principal?,
-        @RequestParam page: Int,
-        size: Int
+        pageable: Pageable
     ): CommonResponse<GetReviewResponse> {
         val email = PrincipalUtils.getUsername(principal)
-        val response = getReviewService.getReviewListOf(page, size, email)
+        val response = getReviewService.getReviewList(pageable, email)
         return CommonResponse.success(response)
     }
 }
