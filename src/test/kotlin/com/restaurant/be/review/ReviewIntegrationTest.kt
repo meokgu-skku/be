@@ -10,6 +10,7 @@ import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
@@ -17,19 +18,27 @@ import com.restaurant.be.user.domain.service.SignUpUserService
 import com.restaurant.be.user.presentation.dto.SignUpUserRequest
 import com.restaurant.be.user.repository.UserRepository
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password
 import java.nio.charset.StandardCharsets
+import javax.persistence.EntityManager
 import javax.transaction.Transactional
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.web.JsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @IntegrationTest
 class ReviewIntegrationTest(
@@ -42,7 +51,7 @@ class ReviewIntegrationTest(
     @Autowired
     private val signUpUserRepository: UserRepository,
     @Autowired
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
 ) : CustomDescribeSpec() {
     private val mockRestaurantID = "1"
     private val resource = "reviews"
