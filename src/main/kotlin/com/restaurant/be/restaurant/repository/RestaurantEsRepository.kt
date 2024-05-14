@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class RestaurantEsRepository(
-    private val client: SearchClient,
+    private val client: SearchClient
 ) {
 
     private val searchIndex = "restaurant"
@@ -88,7 +88,6 @@ class RestaurantEsRepository(
             )
         }
 
-
         val result = runBlocking {
             client.search(
                 target = searchIndex,
@@ -117,7 +116,7 @@ class RestaurantEsRepository(
                                             },
                                             match("menus.description", request.query) {
                                                 boost = 0.01
-                                            },
+                                            }
                                         )
                                     }
                                 }
@@ -127,7 +126,7 @@ class RestaurantEsRepository(
                     }
                 },
                 size = pageable.pageSize,
-                from = pageable.offset.toInt(),
+                from = pageable.offset.toInt()
             ).parseHits<RestaurantEsDocument>()
         }
 

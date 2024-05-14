@@ -1,8 +1,8 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
+import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.service.GetRestaurantService
 import io.swagger.annotations.Api
@@ -23,7 +23,7 @@ import java.security.Principal
 @RestController
 @RequestMapping("/api/v1/restaurants")
 class GetRestaurantController(
-    private val getRestaurantService: GetRestaurantService,
+    private val getRestaurantService: GetRestaurantService
 ) {
 
     @GetMapping
@@ -37,7 +37,7 @@ class GetRestaurantController(
     fun getRestaurants(
         principal: Principal,
         @ModelAttribute request: GetRestaurantsRequest,
-        pageable: Pageable,
+        pageable: Pageable
     ): CommonResponse<GetRestaurantsResponse> {
         val response = getRestaurantService.getRestaurants(request, pageable)
         return CommonResponse.success(response)

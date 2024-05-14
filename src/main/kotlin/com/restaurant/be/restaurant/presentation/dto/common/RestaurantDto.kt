@@ -55,7 +55,7 @@ data class MenuDto(
     @Schema(description = "대표 메뉴 여부")
     val isRepresentative: Boolean,
     @Schema(description = "메뉴 이미지 URL")
-    val imageUrl: String? = null,
+    val imageUrl: String? = null
 )
 
 data class OperatingInfoDto(

@@ -20,7 +20,7 @@ data class GetRestaurantsRequest(
     @ApiModelProperty(value = "최대 가격 필터", example = "30000", required = false)
     val priceMax: Int?,
     @ApiModelProperty(value = "정렬 기준", example = "BASIC", required = false)
-    val sort: Sort = Sort.BASIC,
+    val sort: Sort = Sort.BASIC
 )
 
 enum class Sort {
@@ -28,7 +28,7 @@ enum class Sort {
     CLOSELY_DESC,
     RATING_DESC,
     REVIEW_COUNT_DESC,
-    LIKE_COUNT_DESC,
+    LIKE_COUNT_DESC
 }
 
 data class GetRestaurantsResponse(

@@ -6,10 +6,9 @@ import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
-import java.io.Serial
 
 @Serializable
-data class RestaurantEsDocument (
+data class RestaurantEsDocument(
     @SerialName("id") val id: Long,
     @SerialName("name") val name: String,
     @SerialName("original_category") val originalCategory: String,
@@ -20,7 +19,7 @@ data class RestaurantEsDocument (
     @SerialName("image_url") val imageUrl: String,
     @SerialName("category") val category: String,
     @SerialName("discount_content") val discountContent: String?,
-    @SerialName("menus") val menus: List<MenuEsDocument>,
+    @SerialName("menus") val menus: List<MenuEsDocument>
 ) {
     fun toDto() = RestaurantDto(
         id = id,
@@ -51,13 +50,13 @@ data class MenuEsDocument(
     @SerialName("menu_name") val menuName: String,
     @SerialName("price") val price: Int,
     @SerialName("description") val description: String,
-    @SerialName("image_url") val imageUrl: String? = null,
+    @SerialName("image_url") val imageUrl: String? = null
 ) {
     fun toDto() = MenuDto(
         name = menuName,
         price = price,
         description = description,
         isRepresentative = false,
-        imageUrl = imageUrl,
+        imageUrl = imageUrl
     )
 }
