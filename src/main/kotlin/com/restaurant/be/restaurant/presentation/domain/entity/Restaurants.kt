@@ -52,13 +52,7 @@ class Restaurants(
     var kingoPass: Boolean,
 
     @Column(name = "view_count", nullable = false)
-    var viewCount: Long = 0,
-
-    @Column(name = "menus")
-    var menus: String,
-
-    @Column(name = "operating_infos")
-    var operatingInfos: String
+    var viewCount: Long = 0
 
 ) {
     fun toDto(): RestaurantDto {
