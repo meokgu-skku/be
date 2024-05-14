@@ -80,7 +80,9 @@ class Restaurants(
             discountContent = "",
             detailInfo = RestaurantDetailDto(
                 contactNumber = this.contactNum,
-                address = this.address
+                address = this.address,
+                menus = emptyList(), // TODO: 메뉴 정보 추가
+                operatingInfos = emptyList() // TODO: 영업 정보 추가
             )
         )
     }
@@ -104,7 +106,9 @@ class Restaurants(
             discountContent = "",
             detailInfo = RestaurantDetailDto(
                 contactNumber = this.contactNum,
-                address = this.address
+                address = this.address,
+                menus = emptyList(), // TODO: 메뉴 정보 추가
+                operatingInfos = emptyList() // TODO: 영업 정보 추가
             )
         )
     }
