@@ -60,7 +60,6 @@ class Restaurants(
     @Column(name = "operating_infos")
     var operatingInfos: String
 
-
 ) {
     fun toDto(): RestaurantDto {
         return RestaurantDto(
