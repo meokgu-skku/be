@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @Api(tags = ["01. User Info"], description = "유저 서비스")
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/v1/users")
 class GetUserController(
     private val getUserService: GetUserService
 ) {
