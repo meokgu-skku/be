@@ -43,6 +43,7 @@ class GetReviewService(
         }
         return GetReviewResponse(reviewResponses)
     }
+
     @Transactional(readOnly = true)
     fun getOneReview(reviewId: Long?, email: String): GetOneReviewResponse {
         val user = userRepository.findByEmail(email)
