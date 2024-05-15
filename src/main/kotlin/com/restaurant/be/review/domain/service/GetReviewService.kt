@@ -44,7 +44,6 @@ class GetReviewService(
         }
         return GetReviewResponse(reviewResponses)
     }
-
     @Transactional(readOnly = true)
     fun getOneReview(reviewId: Long?, email: String): GetOneReviewResponse {
         val user = userRepository.findByEmail(email)
@@ -66,7 +65,7 @@ class GetReviewService(
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
-        val reviews = reviewRepository.findByUserId(user.id, pageable)
+        val reviews = reviewRepository.findByUserId(user.id,pageable)
 
         val reviewsWithLikes = joinQuery(user, reviews.content)
 
