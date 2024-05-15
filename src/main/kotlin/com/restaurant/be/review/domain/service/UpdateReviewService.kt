@@ -35,7 +35,7 @@ class UpdateReviewService(
             .getOrNull()
             ?: throw NotFoundReviewException()
 
-        if(user.id != review.user.id) throw UnAuthorizedUpdateException()
+        if (user.id != review.user.id) throw UnAuthorizedUpdateException()
 
         review.updateReview(reviewRequest)
 
