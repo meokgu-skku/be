@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ReviewRepository : JpaRepository<Review, Long> {
-    fun findByUserId(userId: Long?, pageable: Pageable) : Page<Review>
+    fun findByUserId(userId: Long?, pageable: Pageable): Page<Review>
 }
