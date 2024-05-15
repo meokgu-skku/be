@@ -15,7 +15,7 @@ class GetRestaurantByIdService(
 ) {
     @Transactional
     fun getRestaurantById(restaurantId: Long, email: String): GetRestaurantResponse {
-        // id가 일치하는 Restaurants Entity 를 가져움. 없으면 return status 204
+        // id가 일치하는 Restaurants Entity 를 가져움. 없으면 return status 404
         val restaurant: Restaurants = restaurantRepository.findById(restaurantId) ?: throw NotFoundRestaurantException()
 
         // Restaurants Entity 를 RestaurantDto 로 변환하여 GetRestaurantResponse 에 저장 후 반환

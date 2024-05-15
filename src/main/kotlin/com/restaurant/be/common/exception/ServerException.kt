@@ -55,4 +55,4 @@ data class NotFoundUserException(
 
 data class NotFoundRestaurantException(
     override val message: String = "해당 식당 정보가 존재하지 않습니다."
-) : ServerException(204, message)
+) : ServerException(404, message)
