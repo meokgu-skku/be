@@ -21,7 +21,7 @@ class Restaurants(
     @Column(name = "name", nullable = false, length = 64)
     var name: String,
 
-    @Column(name = "category", length = 64)
+    @Column(name = "category", nullable = false, length = 64)
     var category: String,
 
     @Column(name = "custom_category", nullable = false, length = 64)

@@ -19,7 +19,7 @@ class RestaurantLikes(
     @Column(name = "restaurant_id", nullable = false)
     var restaurantId: Long,
 
-    @Column(name = "user_name", nullable = false)
-    var userName: String
+    @Column(name = "email", nullable = false)
+    var email: String  // user의 email 정보
 
 )

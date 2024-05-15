@@ -55,7 +55,6 @@ class GetRestaurantController(
         @PathVariable
         restaurantId: Long
     ): CommonResponse<GetRestaurantResponse> {
-        println("GetRestaurantController")
         val response = getRestaurantByIdService.getRestaurantById(restaurantId, principal.name)
         return CommonResponse.success(response)
     }
