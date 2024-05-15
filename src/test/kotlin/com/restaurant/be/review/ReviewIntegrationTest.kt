@@ -9,6 +9,7 @@ import com.restaurant.be.common.IntegrationTest
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
+import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.domain.entity.QUser.user
@@ -80,6 +81,62 @@ class ReviewIntegrationTest(
         actualResult.data!!.review.comment shouldBe "맛있어요"
         actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
+    }
+
+    @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
+    @Transactional
+    @Test
+    fun `리뷰 수정 성공`() {
+        signUpUserService.signUpUser(
+            SignUpUserRequest(
+                email = "test@gmail.com",
+                password = "a12345678",
+                nickname = "testname"
+            )
+        )
+        val reviewRequest = ReviewRequestDto(
+            rating = 4.0,
+            comment = "맛있어요",
+            imageUrls = listOf("image1", "image2", "image3")
+        )
+
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewRequest))
+        )
+            .andReturn()
+
+        val createResult: CommonResponse<CreateReviewResponse> = objectMapper.readValue(
+            result.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
+            object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
+        )
+
+        val restaurantId = createResult.data!!.review.restaurantId
+        val reviewId = createResult.data!!.review.id
+
+        val reviewUpdateRequest = ReviewRequestDto(
+            rating = 1.0,
+            comment = "수정했어요",
+            imageUrls = listOf("update1", "update2")
+        )
+
+        val updateResult = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}", restaurantId, reviewId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewUpdateRequest))
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.result").value("SUCCESS"))
+            .andReturn()
+
+        val actualResult: CommonResponse<UpdateReviewResponse> = objectMapper.readValue(
+            updateResult.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
+            object : TypeReference<CommonResponse<UpdateReviewResponse>>() {}
+        )
+
+        actualResult.data!!.review.comment shouldBe reviewUpdateRequest.comment
+        actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.imageUrls.size
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")

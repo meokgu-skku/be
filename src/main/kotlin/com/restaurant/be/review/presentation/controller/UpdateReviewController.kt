@@ -1,7 +1,9 @@
 package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.review.domain.service.UpdateReviewService
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
+import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -19,7 +21,9 @@ import javax.validation.Valid
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
 @RequestMapping("/api/v1/restaurants/reviews")
-class UpdateReviewController {
+class UpdateReviewController(
+    val updateReviewService: UpdateReviewService
+) {
 
     @PatchMapping("/{restaurantId}/reviews/{reviewId}")
     @PreAuthorize("hasRole('USER')")
@@ -31,11 +35,12 @@ class UpdateReviewController {
     )
     fun updateReview(
         principal: Principal,
-        @PathVariable restaurantId: String,
-        @PathVariable reviewId: String,
+        @PathVariable restaurantId: Long,
+        @PathVariable reviewId: Long,
         @RequestBody @Valid
-        request: UpdateReviewResponse
+        request: ReviewRequestDto
     ): CommonResponse<UpdateReviewResponse> {
-        return CommonResponse.success()
+        val response = updateReviewService.updateReview(restaurantId, reviewId, request, principal.name)
+        return CommonResponse.success(response)
     }
 }
