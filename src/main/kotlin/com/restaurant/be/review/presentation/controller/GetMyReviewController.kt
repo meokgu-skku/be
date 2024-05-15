@@ -1,6 +1,7 @@
 package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.review.domain.service.GetReviewService
 import com.restaurant.be.review.presentation.dto.GetMyReviewResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -12,11 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
+import org.springframework.data.domain.Pageable
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
 @RequestMapping("/api/v1/restaurants/my-reviews")
-class GetMyReviewController {
+class GetMyReviewController (
+    val getReviewService: GetReviewService
+){
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -27,8 +31,10 @@ class GetMyReviewController {
         content = [Content(schema = Schema(implementation = GetMyReviewResponse::class))]
     )
     fun getMyReview(
-        principal: Principal
+        principal: Principal,
+        pageable: Pageable
     ): CommonResponse<GetMyReviewResponse> {
-        return CommonResponse.success()
+        val response = getReviewService.getMyReviewList(pageable, principal.name)
+        return CommonResponse.success(response)
     }
 }

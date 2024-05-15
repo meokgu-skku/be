@@ -7,6 +7,7 @@ import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReviewLikes
 import com.restaurant.be.review.domain.entity.Review
+import com.restaurant.be.review.presentation.dto.GetMyReviewResponse
 import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
@@ -57,6 +58,25 @@ class GetReviewService(
         )
 
         return GetOneReviewResponse(responseDto)
+    }
+
+    @Transactional(readOnly = true)
+    fun getMyReviewList(pageable: Pageable, email: String): GetMyReviewResponse {
+        val user = userRepository.findByEmail(email)
+            ?: throw NotFoundUserEmailException()
+
+        val reviews = reviewRepository.findByUserId(user.id,pageable)
+
+        val reviewsWithLikes = joinQuery(user, reviews.content)
+
+        val reviewResponses = reviewsWithLikes.map {
+            ReviewResponseDto.toDto(
+                it!!.review,
+                it!!.isLikedByUser
+            )
+        }
+
+        return GetMyReviewResponse(reviewResponses)
     }
 
     private fun joinQuery(user: User, reviews: List<Review>): List<ReviewWithLikesDto> {
