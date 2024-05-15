@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
+import com.restaurant.be.common.exception.UnAuthorizedUpdateException
 import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.review.domain.entity.QReviewLikes
@@ -33,6 +34,8 @@ class UpdateReviewService(
         var review = reviewRepository.findById(reviewId)
             .getOrNull()
             ?: throw NotFoundReviewException()
+
+        if(user.id != review.user.id) throw UnAuthorizedUpdateException()
 
         review.updateReview(reviewRequest)
 

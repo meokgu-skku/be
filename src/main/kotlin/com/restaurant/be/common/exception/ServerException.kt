@@ -56,3 +56,7 @@ data class NotFoundUserException(
 data class NotFoundReviewException(
     override val message: String = "존재하지 않은 리뷰 입니다."
 ) : ServerException(400, message)
+
+data class UnAuthorizedUpdateException(
+    override val message: String = "해당 게시글을 수정할 권한이 없습니다."
+) : ServerException(401, message)
