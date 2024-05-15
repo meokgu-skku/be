@@ -9,3 +9,8 @@ data class GetReviewResponse(
     @Schema(description = "리뷰 리스트")
     val reviews: List<ReviewResponseDto>
 )
+
+data class GetOneReviewResponse(
+    @Schema(description = "리뷰 단건")
+    val review: ReviewResponseDto
+)

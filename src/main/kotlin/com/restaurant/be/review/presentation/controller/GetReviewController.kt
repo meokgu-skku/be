@@ -3,6 +3,7 @@ package com.restaurant.be.review.presentation.controller
 import com.restaurant.be.common.principal.PrincipalUtils
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
+import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
@@ -37,6 +39,22 @@ class GetReviewController(
     ): CommonResponse<GetReviewResponse> {
         val email = PrincipalUtils.getUsername(principal)
         val response = getReviewService.getReviewList(pageable, email)
+        return CommonResponse.success(response)
+    }
+
+    @GetMapping("/{reviewId}")
+    @PreAuthorize("hasRole('USER')")
+    @ApiOperation(value = "리뷰 단건 조회 API")
+    @ApiResponse(
+        responseCode = "200",
+        description = "성공",
+        content = [Content(schema = Schema(implementation = GetOneReviewResponse::class))]
+    )
+    fun getOneReview(
+        principal: Principal,
+        @PathVariable reviewId: Long
+    ): CommonResponse<GetOneReviewResponse> {
+        val response = getReviewService.getOneReview(reviewId, principal.name)
         return CommonResponse.success(response)
     }
 }

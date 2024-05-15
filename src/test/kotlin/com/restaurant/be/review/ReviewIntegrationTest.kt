@@ -6,9 +6,11 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.restaurant.be.common.CustomDescribeSpec
 import com.restaurant.be.common.IntegrationTest
+import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
+import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
@@ -71,6 +73,21 @@ class ReviewIntegrationTest(
         actualResult.data!!.review.comment shouldBe "맛있어요"
         actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
+
+        val getResult = mockMvc.perform(
+            MockMvcRequestBuilders.get(
+                "/api/v1/restaurants/reviews/{reviewId}",
+                actualResult.data!!.review.id
+            )
+        ).andExpect(status().isOk())
+            .andReturn()
+
+        val reviewResult: CommonResponse<GetOneReviewResponse> =
+            objectMapper.readValue(
+                getResult.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
+                object : TypeReference<CommonResponse<GetOneReviewResponse>>() {}
+            )
+        reviewResult.data!!.review.comment shouldBe "맛있어요"
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
@@ -159,13 +176,21 @@ class ReviewIntegrationTest(
         val restaurantId = createResult.data!!.review.restaurantId
         val reviewId = createResult.data!!.review.id
 
-        val deleteResult = mockMvc.perform(
+        mockMvc.perform(
             MockMvcRequestBuilders.delete(
                 "/api/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}",
                 restaurantId,
                 reviewId
             )
-        ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
+        ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS"))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get(
+                "/api/v1/restaurants/reviews/{reviewId}",
+                reviewId
+            )
+        ).andExpect(status().isBadRequest())
+            .andExpect { result -> result.resolvedException is NotFoundReviewException }
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")

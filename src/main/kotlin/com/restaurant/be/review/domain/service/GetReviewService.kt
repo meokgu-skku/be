@@ -2,10 +2,12 @@ package com.restaurant.be.review.domain.service
 
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
+import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReviewLikes
 import com.restaurant.be.review.domain.entity.Review
+import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
@@ -42,6 +44,21 @@ class GetReviewService(
         return GetReviewResponse(reviewResponses)
     }
 
+    fun getOneReview(reviewId: Long?, email: String): GetOneReviewResponse {
+        val user = userRepository.findByEmail(email)
+            ?: throw NotFoundUserEmailException()
+
+        val reviewWithLikes: ReviewWithLikesDto? = joinQuery(user, reviewId)
+            ?: throw NotFoundReviewException()
+
+        val responseDto = ReviewResponseDto.toDto(
+            reviewWithLikes!!.review,
+            reviewWithLikes.isLikedByUser
+        )
+
+        return GetOneReviewResponse(responseDto)
+    }
+
     private fun joinQuery(user: User, reviews: List<Review>): List<ReviewWithLikesDto> {
         val reviewIds = reviews.map { it.id } // 리뷰 ID 목록 가져오기
 
@@ -63,5 +80,29 @@ class GetReviewService(
             .fetch()
 
         return reviewsWithLikes
+    }
+
+    private fun joinQuery(
+        user: User,
+        reviewId: Long?
+    ): ReviewWithLikesDto? {
+        val reviewWithLikes: ReviewWithLikesDto? = jpaQueryFactory
+            .from(QReview.review)
+            .leftJoin(QReviewLikes.reviewLikes)
+            .on(
+                QReviewLikes.reviewLikes.reviewId.eq(QReview.review.id)
+                    .and(QReviewLikes.reviewLikes.userId.eq(user.id))
+            )
+            .where(QReview.review.id.eq(reviewId))
+            .select(
+                Projections.constructor(
+                    ReviewWithLikesDto::class.java,
+                    QReview.review,
+                    QReviewLikes.reviewLikes.userId.isNotNull()
+                )
+            )
+            .fetchOne()
+
+        return reviewWithLikes
     }
 }
