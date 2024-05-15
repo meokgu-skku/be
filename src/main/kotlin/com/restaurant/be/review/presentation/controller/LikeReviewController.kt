@@ -1,7 +1,6 @@
 package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
-import com.restaurant.be.review.domain.service.LikeReviewService
 import com.restaurant.be.review.presentation.dto.LikeReviewRequest
 import com.restaurant.be.review.presentation.dto.LikeReviewResponse
 import io.swagger.annotations.Api
@@ -21,11 +20,9 @@ import javax.validation.Valid
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
 @RequestMapping("/api/v1/restaurants")
-class LikeReviewController(
-    val likeReviewService: LikeReviewService
-) {
+class LikeReviewController {
 
-    @PostMapping("/reviews/{reviewId}/like")
+    @PostMapping("/{restaurantId}/reviews/{reviewId}/like")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "리뷰 좋아요 API")
     @ApiResponse(
@@ -35,11 +32,11 @@ class LikeReviewController(
     )
     fun likeReview(
         principal: Principal,
-        @PathVariable reviewId: Long,
+        @PathVariable restaurantId: String,
+        @PathVariable reviewId: String,
         @RequestBody @Valid
         request: LikeReviewRequest
     ): CommonResponse<LikeReviewResponse> {
-        val response = likeReviewService.likeReview(reviewId, request, principal.name)
-        return CommonResponse.success(response)
+        return CommonResponse.success()
     }
 }

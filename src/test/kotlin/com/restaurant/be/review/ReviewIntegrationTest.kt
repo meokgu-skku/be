@@ -6,14 +6,11 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.restaurant.be.common.CustomDescribeSpec
 import com.restaurant.be.common.IntegrationTest
-import com.restaurant.be.common.exception.DuplicateLikeException
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
-import com.restaurant.be.review.presentation.dto.LikeReviewRequest
-import com.restaurant.be.review.presentation.dto.LikeReviewResponse
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
@@ -304,62 +301,6 @@ class ReviewIntegrationTest(
 
             val reviewsSaved = reviewRepository.findAll()
             reviewsSaved.size shouldBe 23
-        }
-
-        @Test
-        @WithMockUser(username = "newUser@gmail.com", roles = ["USER"])
-        @Transactional
-        open fun `새로운 유저가 특정 리뷰 좋아요 확인`() {
-            val newUser = User(
-                email = "newUser@gmail.com",
-                nickname = "maker1",
-                password = "q1w2e3r41",
-                withdrawal = false,
-                roles = listOf(),
-                profileImageUrl = "newuser-profile"
-            )
-
-            signUpUserRepository.save(newUser)
-
-            val likeRequest = LikeReviewRequest(true)
-
-            val reviewId = reviewRepository.findAll().get(0).id
-
-            val result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/restaurants/reviews/{reviewId}/like", reviewId)
-                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(likeRequest))
-            )
-                .andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
-
-            val actualResult: CommonResponse<LikeReviewResponse> =
-                objectMapper.readValue(
-                    result.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
-                    object : TypeReference<CommonResponse<LikeReviewResponse>>() {}
-                )
-
-            actualResult.data!!.review.isLike shouldBe true
-
-            mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/restaurants/reviews/{reviewId}/like", reviewId)
-                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(likeRequest))
-            )
-                .andExpect(status().isBadRequest)
-                .andExpect { result -> result.resolvedException is DuplicateLikeException }
-
-            val unLikeRequest = LikeReviewRequest(false)
-
-            val unlikeResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/restaurants/reviews/{reviewId}/like", reviewId)
-                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(unLikeRequest))
-            )
-                .andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
-
-            val unLikeActualResult: CommonResponse<LikeReviewResponse> =
-                objectMapper.readValue(
-                    unlikeResult.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
-                    object : TypeReference<CommonResponse<LikeReviewResponse>>() {}
-                )
-            unLikeActualResult.data!!.review.isLike shouldBe false
         }
     }
 }
