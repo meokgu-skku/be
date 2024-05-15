@@ -9,10 +9,10 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
@@ -33,11 +33,10 @@ class GetReviewController(
     )
     fun getReview(
         principal: Principal?,
-        @RequestParam page: Int,
-        size: Int
+        pageable: Pageable
     ): CommonResponse<GetReviewResponse> {
         val email = PrincipalUtils.getUsername(principal)
-        val response = getReviewService.getReviewListOf(page, size, email)
+        val response = getReviewService.getReviewList(pageable, email)
         return CommonResponse.success(response)
     }
 }

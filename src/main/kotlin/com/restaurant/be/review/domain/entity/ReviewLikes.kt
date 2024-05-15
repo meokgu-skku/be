@@ -1,3 +1,4 @@
+
 package com.restaurant.be.review.domain.entity
 
 import javax.persistence.Column

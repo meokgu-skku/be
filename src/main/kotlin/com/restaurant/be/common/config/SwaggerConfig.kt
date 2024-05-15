@@ -1,5 +1,7 @@
 package com.restaurant.be.common.config
 
+import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -75,5 +77,14 @@ class SwaggerConfig {
     private fun apiInfo(): ApiInfo {
         return ApiInfoBuilder().title("REST API Document.")
             .description("work in progress").termsOfServiceUrl("localhost").version("1.0").build()
+    }
+
+    @ApiModel
+    class PageModel {
+        @ApiModelProperty(value = "페이지 번호(0..N)", example = "0")
+        val page: Int = 0
+
+        @ApiModelProperty(value = "페이지 크기", allowableValues = "range[0, 100]", example = "0")
+        val size: Int = 0
     }
 }
