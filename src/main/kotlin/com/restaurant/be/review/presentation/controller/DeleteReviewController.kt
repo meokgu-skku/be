@@ -1,6 +1,7 @@
 package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.review.domain.service.DeleteReviewService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -13,8 +14,10 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/")
-class DeleteReviewController {
+@RequestMapping("/api/v1/restaurants/reviews")
+class DeleteReviewController(
+    val deleteReviewService: DeleteReviewService
+) {
 
     @DeleteMapping("/{restaurantId}/reviews/{reviewId}")
     @PreAuthorize("hasRole('USER')")
@@ -25,9 +28,10 @@ class DeleteReviewController {
     )
     fun deleteReview(
         principal: Principal,
-        @PathVariable restaurantId: String,
-        @PathVariable reviewId: String
+        @PathVariable restaurantId: Long,
+        @PathVariable reviewId: Long
     ): CommonResponse<Void> {
+        deleteReviewService.deleteReview(restaurantId, reviewId, principal.name)
         return CommonResponse.success()
     }
 }

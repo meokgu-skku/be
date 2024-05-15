@@ -142,6 +142,46 @@ class ReviewIntegrationTest(
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
     @Transactional
     @Test
+    fun `리뷰 삭제 성공`() {
+        signUpUserService.signUpUser(
+            SignUpUserRequest(
+                email = "test@gmail.com",
+                password = "a12345678",
+                nickname = "testname"
+            )
+        )
+        val reviewRequest = ReviewRequestDto(
+            rating = 4.0,
+            comment = "맛있어요",
+            imageUrls = listOf("image1", "image2", "image3")
+        )
+
+        val result = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewRequest))
+        )
+            .andReturn()
+
+        val createResult: CommonResponse<CreateReviewResponse> = objectMapper.readValue(
+            result.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
+            object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
+        )
+
+        val restaurantId = createResult.data!!.review.restaurantId
+        val reviewId = createResult.data!!.review.id
+
+        val deleteResult = mockMvc.perform(
+            MockMvcRequestBuilders.delete("/api/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}", restaurantId, reviewId)
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.result").value("SUCCESS"))
+            .andReturn()
+    }
+
+    @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
+    @Transactional
+    @Test
     fun`comment가 없으면 오류 반환`() {
         val reviewRequest = ReviewRequestDto(
             rating = 3.0,
