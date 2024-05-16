@@ -64,7 +64,7 @@ class ReviewIntegrationTest(
             imageUrls = listOf()
         )
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -93,7 +93,7 @@ class ReviewIntegrationTest(
         )
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -137,7 +137,7 @@ class ReviewIntegrationTest(
             reviewsSaved.size shouldBe 20
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
                     .param("page", "0")
                     .param("size", "5")
             )
