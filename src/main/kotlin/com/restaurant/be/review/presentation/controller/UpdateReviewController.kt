@@ -18,7 +18,7 @@ import javax.validation.Valid
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/reviews")
+@RequestMapping("/v1/restaurants/reviews")
 class UpdateReviewController {
 
     @PatchMapping("/{restaurantId}/reviews/{reviewId}")

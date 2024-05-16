@@ -22,7 +22,7 @@ import javax.validation.Valid
 
 @Api(tags = ["02. Restaurant Info"], description = "음식점 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants")
+@RequestMapping("/v1/restaurants")
 class LikeRestaurantController {
 
     @GetMapping("/like")
