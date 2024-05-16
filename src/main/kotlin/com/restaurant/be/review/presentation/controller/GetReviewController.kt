@@ -1,6 +1,5 @@
 package com.restaurant.be.review.presentation.controller
 
-import com.restaurant.be.common.principal.PrincipalUtils
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
@@ -32,12 +31,11 @@ class GetReviewController(
         content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
     )
     fun getReview(
-        principal: Principal?,
+        principal: Principal,
         @RequestParam page: Int,
         size: Int
     ): CommonResponse<GetReviewResponse> {
-        val email = PrincipalUtils.getUsername(principal)
-        val response = getReviewService.getReviewListOf(page, size, email)
+        val response = getReviewService.getReviewListOf(page, size, principal.name)
         return CommonResponse.success(response)
     }
 }
