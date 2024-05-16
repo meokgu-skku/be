@@ -2,12 +2,9 @@ package com.restaurant.be.review.repository
 
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReview.review
-import com.restaurant.be.review.domain.entity.QReviewLikes
-import com.restaurant.be.review.domain.entity.Review
+import com.restaurant.be.review.domain.entity.QReviewLikes.reviewLikes
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
-import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 
 class ReviewRepositoryCustomImpl(
@@ -15,23 +12,24 @@ class ReviewRepositoryCustomImpl(
 ) : ReviewRepositoryCustom {
     override fun findReview(
         user: User,
-        review: Review
+        reviewId: Long
     ): ReviewWithLikesDto? {
         return queryFactory
             .select(
                 Projections.constructor(
                     ReviewWithLikesDto::class.java,
-                    QReview.review,
-                    QReviewLikes.reviewLikes.userId.isNotNull()
+                    review,
+                    reviewLikes.userId.isNotNull()
                 )
             )
-            .from(QReview.review)
-            .leftJoin(QReviewLikes.reviewLikes)
+            .from(review)
+            .leftJoin(reviewLikes)
             .on(
-                QReviewLikes.reviewLikes.reviewId.eq(QReview.review.id)
-                    .and(QReviewLikes.reviewLikes.userId.eq(user.id))
+                reviewLikes.reviewId.eq(review.id)
+                    .and(reviewLikes.userId.eq(user.id))
             )
-            .where(QReview.review.id.eq(review.id))
+            .where(review.id.eq(reviewId))
+            .fetchJoin()
             .fetchOne()
     }
 }

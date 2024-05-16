@@ -31,7 +31,7 @@ data class ReviewRequestDto(
 
 data class ReviewResponseDto(
     @Schema(description = "유저 id")
-    val userId: Long?,
+    val userId: Long,
     @Schema(description = "유저 닉네임")
     val username: String,
     @Schema(description = "유저 프로필 이미지")
@@ -50,7 +50,7 @@ data class ReviewResponseDto(
     companion object {
         fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
             return ReviewResponseDto(
-                review.user.id,
+                review.user.id ?: 0,
                 review.user.nickname,
                 review.user.profileImageUrl,
                 review.restaurantId,
