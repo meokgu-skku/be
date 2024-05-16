@@ -48,15 +48,15 @@ data class ReviewResponseDto(
     val isLike: Boolean
 ) {
     companion object {
-        fun toDto(review: Review?, isLikedByUser: Boolean? = null): ReviewResponseDto {
+        fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
             return ReviewResponseDto(
-                review!!.user!!.id,
-                review!!.user!!.nickname,
-                review!!.user!!.profileImageUrl,
-                review!!.restaurantId,
-                review!!.rating,
-                review!!.content,
-                review!!.images.map { it.imageUrl },
+                review.user.id,
+                review.user.nickname,
+                review.user.profileImageUrl,
+                review.restaurantId,
+                review.rating,
+                review.content,
+                review.images.map { it.imageUrl },
                 isLikedByUser ?: false
             )
         }

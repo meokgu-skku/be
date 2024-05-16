@@ -2,6 +2,7 @@ package com.restaurant.be.review.domain.service
 
 import com.querydsl.core.types.Projections
 import com.querydsl.jpa.impl.JPAQueryFactory
+import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReview.review
@@ -41,10 +42,11 @@ class CreateReviewService(
 
         reviewRepository.saveAndFlush(review)
 
-        val reviewWithLikes: ReviewWithLikesDto? = joinQuery(user, review)
+        val reviewWithLikes = joinQuery(user, review)
+            ?: throw NotFoundReviewException()
 
         val responseDto = ReviewResponseDto.toDto(
-            reviewWithLikes!!.review,
+            reviewWithLikes.review,
             reviewWithLikes.isLikedByUser
         )
 

@@ -12,13 +12,12 @@ import javax.persistence.Table
 @Table(name = "review_likes")
 class ReviewLikes(
     @Id
-    @Column(name = "review_likes_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
 
-    @JoinColumn(name = "user_id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     val userId: Long,
 
-    @JoinColumn(name = "review_id", nullable = false)
+    @Column(name = "review_id", nullable = false)
     val reviewId: Long
 )

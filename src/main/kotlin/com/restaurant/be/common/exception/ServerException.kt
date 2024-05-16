@@ -52,3 +52,7 @@ data class NotEqualTokenException(
 data class NotFoundUserException(
     override val message: String = "존재 하지 않는 유저 입니다."
 ) : ServerException(400, message)
+
+data class NotFoundReviewException(
+    override val message: String = "존재하지 않은 리뷰 입니다."
+) : ServerException(400, message)
