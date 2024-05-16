@@ -18,10 +18,8 @@ class GetReviewService(
         val pageable = PageRequest.of(page, size)
         val reviews = reviewRepository.findAll(pageable).content
 
-
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
-
 
         return GetReviewResponse(
             reviews.map {

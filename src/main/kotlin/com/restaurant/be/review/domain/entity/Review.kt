@@ -3,6 +3,7 @@ package com.restaurant.be.review.domain.entity
 import com.restaurant.be.common.entity.BaseEntity
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.user.domain.entity.User
+import kotlinx.serialization.json.JsonNull.content
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -14,7 +15,6 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
-import kotlinx.serialization.json.JsonNull.content
 
 @Entity
 @Table(name = "restaurant_reviews")
