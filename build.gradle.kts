@@ -86,7 +86,8 @@ dependencies {
     testImplementation("junit", "junit", "4.13.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.5.4")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
-    testImplementation("io.mockk:mockk:1.12.4")
+    testImplementation("io.mockk:mockk:1.12.0")
+    testImplementation("org.springframework.security:spring-security-test")
 
     // TestContainers
     testImplementation("org.testcontainers:testcontainers:1.17.1")
