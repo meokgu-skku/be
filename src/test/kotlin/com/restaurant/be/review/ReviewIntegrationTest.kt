@@ -60,7 +60,7 @@ class ReviewIntegrationTest(
         )
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
-            comment = "맛있어요",
+            content = "맛있어요",
             imageUrls = listOf()
         )
         val result = mockMvc.perform(
@@ -77,7 +77,7 @@ class ReviewIntegrationTest(
             object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
         )
 
-        actualResult.data!!.review.comment shouldBe "맛있어요"
+        actualResult.data!!.review.content shouldBe "맛있어요"
         actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
     }
@@ -88,7 +88,7 @@ class ReviewIntegrationTest(
     fun`comment가 없으면 오류 반환`() {
         val reviewRequest = ReviewRequestDto(
             rating = 3.0,
-            comment = "",
+            content = "",
             imageUrls = listOf()
         )
 

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
+import kotlinx.serialization.json.JsonNull.content
 
 @Entity
 @Table(name = "restaurant_reviews")
@@ -52,7 +53,7 @@ class Review(
             profileImageUrl = user.profileImageUrl,
             restaurantId = restaurantId,
             rating = rating,
-            comment = content,
+            content = content,
             imageUrls = images.map { it.imageUrl },
             isLike = doesUserLike
         )
