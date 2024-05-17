@@ -2,6 +2,7 @@ package com.restaurant.be.review.domain.entity
 
 import com.restaurant.be.common.entity.BaseEntity
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
+import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import kotlinx.serialization.json.JsonNull.content
 import javax.persistence.CascadeType
@@ -37,6 +38,12 @@ class Review(
     @Column(nullable = false)
     val rating: Double,
 
+    @Column(name = "like_count", nullable = false)
+    val likeCount: Long = 0,
+
+    @Column(name = "view_count", nullable = false)
+    val viewCount: Long = 0,
+
     // 부모 (Review Entity)가 주인이되어 Image참조 가능. 반대는 불가능
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "review_id")
@@ -56,7 +63,9 @@ class Review(
             rating = rating,
             content = content,
             imageUrls = images.map { it.imageUrl },
-            isLike = doesUserLike
+            isLike = doesUserLike,
+            viewCount = viewCount,
+            likeCount = likeCount
         )
     }
 }

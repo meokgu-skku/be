@@ -45,19 +45,25 @@ data class ReviewResponseDto(
     @Schema(description = "이미지 url 리스트")
     val imageUrls: List<String>,
     @Schema(description = "좋아요 여부")
-    val isLike: Boolean
+    val isLike: Boolean,
+    @Schema(description = "좋아요 받은 횟수")
+    val likeCount: Long,
+    @Schema(description = "리뷰 조회 수")
+    val viewCount: Long
 ) {
     companion object {
         fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
             return ReviewResponseDto(
-                review.user.id ?: 0,
-                review.user.nickname,
-                review.user.profileImageUrl,
-                review.restaurantId,
-                review.rating,
-                review.content,
-                review.images.map { it.imageUrl },
-                isLikedByUser ?: false
+                userId = review.user.id ?: 0,
+                username = review.user.nickname,
+                profileImageUrl = review.user.profileImageUrl,
+                restaurantId = review.restaurantId,
+                rating = review.rating,
+                content = review.content,
+                imageUrls = review.images.map { it.imageUrl },
+                isLike = isLikedByUser ?: false,
+                likeCount = review.likeCount,
+                viewCount = review.viewCount
             )
         }
     }

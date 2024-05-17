@@ -152,6 +152,7 @@ class ReviewIntegrationTest(
 
             reviews.size shouldBe 5
             reviews.get(0)?.get("isLike") shouldBe false
+            reviews.get(0)?.get("viewCount") shouldBe 0
         }
     }
 }
