@@ -1,15 +1,11 @@
 package com.restaurant.be.review.domain.service
 
-import com.querydsl.core.types.Projections
-import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.common.exception.DuplicateLikeException
 import com.restaurant.be.common.exception.NotFoundLikeException
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.common.exception.NotFoundUserIdException
-import com.restaurant.be.review.domain.entity.QReview
 import com.restaurant.be.review.domain.entity.QReview.review
-import com.restaurant.be.review.domain.entity.QReviewLikes
 import com.restaurant.be.review.presentation.dto.LikeReviewRequest
 import com.restaurant.be.review.presentation.dto.LikeReviewResponse
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
@@ -25,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 class LikeReviewService(
     val userRepository: UserRepository,
     val reviewLikesRepository: ReviewLikesRepository,
-    val reviewRepository: ReviewRepository,
+    val reviewRepository: ReviewRepository
 ) {
     @Transactional
     fun likeReview(reviewId: Long, request: LikeReviewRequest, email: String): LikeReviewResponse {
@@ -36,7 +32,7 @@ class LikeReviewService(
 
         likeReviewWhetherAlreadyLikeOrNot(request, reviewId, user, userId)
 
-        val reviewWithLikes: ReviewWithLikesDto? = reviewRepository.findReview(user,reviewId)
+        val reviewWithLikes: ReviewWithLikesDto? = reviewRepository.findReview(user, reviewId)
             ?: throw NotFoundReviewException()
 
         val responseDto = ReviewResponseDto.toDto(
@@ -60,7 +56,6 @@ class LikeReviewService(
             reviewLikesRepository.save(request.toEntity(userId, reviewId))
             val review = reviewRepository.findById(reviewId)
             review.get().incrementLikeCount()
-
         } else {
             if (!isAlreadyLike(reviewId, user)) {
                 throw NotFoundLikeException()
@@ -73,5 +68,4 @@ class LikeReviewService(
 
     private fun isAlreadyLike(reviewId: Long, user: User) =
         reviewLikesRepository.existsByReviewIdAndUserId(reviewId, user.id)
-
 }

@@ -74,11 +74,11 @@ class Review(
     fun incrementViewCount() {
         this.viewCount++
     }
-    fun incrementLikeCount(){
+    fun incrementLikeCount() {
         this.likeCount++
     }
-    fun decrementLikeCount(){
-        if(this.likeCount == 0L){
+    fun decrementLikeCount() {
+        if (this.likeCount == 0L) {
             throw InvalidLikeCountException()
         }
         this.likeCount--

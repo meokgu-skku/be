@@ -21,9 +21,9 @@ import javax.validation.Valid
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
 @RequestMapping("/v1/restaurants")
-class LikeReviewController (
+class LikeReviewController(
     val likeReviewService: LikeReviewService
-){
+) {
 
     @PostMapping("/reviews/{reviewId}/like")
     @PreAuthorize("hasRole('USER')")
