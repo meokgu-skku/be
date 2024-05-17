@@ -18,9 +18,9 @@ import java.security.Principal
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
 @RequestMapping("/v1/restaurants/my-reviews")
-class GetMyReviewController (
+class GetMyReviewController(
     val getReviewService: GetReviewService
-){
+) {
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
