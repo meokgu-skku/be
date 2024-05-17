@@ -41,10 +41,10 @@ class Review(
     var rating: Double,
 
     @Column(name = "like_count", nullable = false)
-    val likeCount: Long = 0,
+    var likeCount: Long = 0,
 
     @Column(name = "view_count", nullable = false)
-    val viewCount: Long = 0,
+    var viewCount: Long = 0,
 
     // 부모 (Review Entity)가 주인이되어 Image참조 가능. 반대는 불가능
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
@@ -68,6 +68,10 @@ class Review(
                 )
             )
         }
+    }
+
+    fun incrementViewCount() {
+        this.viewCount++
     }
 
     fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
