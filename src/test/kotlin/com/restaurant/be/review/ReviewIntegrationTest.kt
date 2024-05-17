@@ -12,7 +12,6 @@ import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
-import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.domain.service.SignUpUserService
 import com.restaurant.be.user.presentation.dto.SignUpUserRequest
@@ -28,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password
 import java.nio.charset.StandardCharsets
 import javax.transaction.Transactional
 
@@ -61,11 +59,11 @@ class ReviewIntegrationTest(
         )
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
-            comment = "맛있어요",
+            content = "맛있어요",
             imageUrls = listOf()
         )
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -78,7 +76,7 @@ class ReviewIntegrationTest(
             object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
         )
 
-        actualResult.data!!.review.comment shouldBe "맛있어요"
+        actualResult.data!!.review.content shouldBe "맛있어요"
         actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
     }
@@ -96,7 +94,7 @@ class ReviewIntegrationTest(
         )
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
-            comment = "맛있어요",
+            content = "맛있어요",
             imageUrls = listOf("image1", "image2", "image3")
         )
 
@@ -117,12 +115,12 @@ class ReviewIntegrationTest(
 
         val reviewUpdateRequest = ReviewRequestDto(
             rating = 1.0,
-            comment = "수정했어요",
+            content = "수정했어요",
             imageUrls = listOf("update1", "update2")
         )
 
         val updateResult = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/api/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}", restaurantId, reviewId)
+            MockMvcRequestBuilders.patch("/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}", restaurantId, reviewId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewUpdateRequest))
         )
@@ -135,7 +133,7 @@ class ReviewIntegrationTest(
             object : TypeReference<CommonResponse<UpdateReviewResponse>>() {}
         )
 
-        actualResult.data!!.review.comment shouldBe reviewUpdateRequest.comment
+        actualResult.data!!.review.content shouldBe reviewUpdateRequest.content
         actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.imageUrls.size
     }
 
@@ -145,12 +143,12 @@ class ReviewIntegrationTest(
     fun`comment가 없으면 오류 반환`() {
         val reviewRequest = ReviewRequestDto(
             rating = 3.0,
-            comment = "",
+            content = "",
             imageUrls = listOf()
         )
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -194,9 +192,10 @@ class ReviewIntegrationTest(
             reviewsSaved.size shouldBe 20
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
                     .param("page", "0")
                     .param("size", "5")
+                    .param("sort", "createdAt,DESC")
             )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.result").value("SUCCESS"))
@@ -210,6 +209,7 @@ class ReviewIntegrationTest(
 
             reviews.size shouldBe 5
             reviews.get(0)?.get("isLike") shouldBe false
+            reviews.get(0)?.get("viewCount") shouldBe 0
         }
     }
 }

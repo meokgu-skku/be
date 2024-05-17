@@ -20,10 +20,10 @@ import javax.validation.Valid
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/reviews")
-class UpdateReviewController(
+@RequestMapping("/v1/restaurants/reviews")
+class UpdateReviewController (
     val updateReviewService: UpdateReviewService
-) {
+){
 
     @PatchMapping("/{restaurantId}/reviews/{reviewId}")
     @PreAuthorize("hasRole('USER')")
