@@ -30,7 +30,9 @@ class ValidateEmailService(
             .readText()
 
     fun sendValidateCode(request: SendEmailRequest) {
-        if (request.email.split("@")[1] != "g.skku.edu") {
+        if (request.email.split("@")[1] != "g.skku.edu" ||
+            request.email.split("@")[1] != "skku.edu"
+        ) {
             throw SkkuEmailException()
         }
         try {
