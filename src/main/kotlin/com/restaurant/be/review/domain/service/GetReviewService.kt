@@ -42,7 +42,9 @@ class GetReviewService(
         val reviewWithLikes = reviewRepository.findReview(user, reviewId)
             ?: throw NotFoundReviewException()
 
-        reviewWithLikes.review.incrementViewCount()
+        if (reviewWithLikes.review.user.id != user.id) {
+            reviewWithLikes.review.incrementViewCount()
+        }
 
         val responseDto = ReviewResponseDto.toDto(
             reviewWithLikes!!.review,
