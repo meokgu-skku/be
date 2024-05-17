@@ -138,6 +138,7 @@ class ReviewIntegrationTest(
                 MockMvcRequestBuilders.get("/v1/restaurants/reviews")
                     .param("page", "0")
                     .param("size", "5")
+                    .param("sort", "createdAt,DESC")
             )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.result").value("SUCCESS"))
