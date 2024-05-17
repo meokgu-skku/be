@@ -10,5 +10,13 @@ interface ReviewRepositoryCustom {
         reviewId: Long
     ): ReviewWithLikesDto?
 
-    fun findReviews(user: User, pageable: Pageable): List<ReviewWithLikesDto>
+    fun findReviews(
+        user: User,
+        pageable: Pageable
+    ): List<ReviewWithLikesDto>
+
+    fun findMyReviews(
+        user: User,
+        pageable: Pageable
+    ): List<ReviewWithLikesDto>
 }

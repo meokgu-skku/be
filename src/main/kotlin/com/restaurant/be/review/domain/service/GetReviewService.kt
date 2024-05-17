@@ -2,8 +2,10 @@ package com.restaurant.be.review.domain.service
 
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
+import com.restaurant.be.review.presentation.dto.GetMyReviewsResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewsResponse
+import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
@@ -24,12 +26,7 @@ class GetReviewService(
 
         val reviewsWithLikes = reviewRepository.findReviews(user, pageable)
 
-        val responseDtos = reviewsWithLikes.map {
-            ReviewResponseDto.toDto(
-                it.review,
-                it.isLikedByUser
-            )
-        }
+        val responseDtos = convertResponeDto(reviewsWithLikes)
 
         return GetReviewsResponse(responseDtos)
     }
@@ -47,29 +44,32 @@ class GetReviewService(
         }
 
         val responseDto = ReviewResponseDto.toDto(
-            reviewWithLikes!!.review,
+            reviewWithLikes.review,
             reviewWithLikes.isLikedByUser
         )
 
-        return GetOneReviewResponse(responseDto)
+        return GetReviewResponse(responseDto)
     }
 
     @Transactional(readOnly = true)
-    fun getMyReviews(pageable: Pageable, email: String): GetMyReviewResponse {
+    fun getMyReviews(pageable: Pageable, email: String): GetMyReviewsResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
-        val reviews = reviewRepository.findByUserId(user.id, pageable)
+        val reviewsWithLikes = reviewRepository.findMyReviews(user, pageable)
 
-        val reviewsWithLikes = joinQuery(user, reviews.content)
+        val reviewResponses = convertResponeDto(reviewsWithLikes)
 
+        return GetMyReviewsResponse(reviewResponses)
+    }
+
+    private fun convertResponeDto(reviewsWithLikes: List<ReviewWithLikesDto>): List<ReviewResponseDto> {
         val reviewResponses = reviewsWithLikes.map {
             ReviewResponseDto.toDto(
-                it!!.review,
-                it!!.isLikedByUser
+                it.review,
+                it.isLikedByUser
             )
         }
-
-        return GetMyReviewResponse(reviewResponses)
+        return reviewResponses
     }
 }

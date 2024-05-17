@@ -402,8 +402,18 @@ class ReviewIntegrationTest(
 
             newReviews.forEach { reviewRepository.save(it) }
 
+            mockMvc.perform(
+                MockMvcRequestBuilders.get(
+                    "/v1/restaurants/reviews/{reviewId}",
+                    newReviews.get(0).id
+                )
+            ).andExpect(status().isOk())
+
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/restaurants/my-reviews").param("page", "0").param("size", "5")
+                MockMvcRequestBuilders.get("/v1/restaurants/my-reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "viewCount,DESC")
             ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
 
             val mapper = jacksonObjectMapper()
