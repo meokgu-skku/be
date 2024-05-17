@@ -35,7 +35,7 @@ class GetReviewService(
     }
 
     @Transactional
-    fun getOneReview(reviewId: Long, email: String): GetOneReviewResponse {
+    fun getReview(reviewId: Long, email: String): GetOneReviewResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 

@@ -52,7 +52,7 @@ class GetReviewController(
         principal: Principal,
         @PathVariable reviewId: Long
     ): CommonResponse<GetOneReviewResponse> {
-        val response = getReviewService.getOneReview(reviewId, principal.name)
+        val response = getReviewService.getReview(reviewId, principal.name)
         return CommonResponse.success(response)
     }
 }
