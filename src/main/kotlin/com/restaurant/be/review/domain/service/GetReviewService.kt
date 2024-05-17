@@ -2,8 +2,8 @@ package com.restaurant.be.review.domain.service
 
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
-import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
+import com.restaurant.be.review.presentation.dto.GetReviewsResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
@@ -18,7 +18,7 @@ class GetReviewService(
 
 ) {
     @Transactional(readOnly = true)
-    fun getReviews(pageable: Pageable, email: String): GetReviewResponse {
+    fun getReviews(pageable: Pageable, email: String): GetReviewsResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
@@ -31,11 +31,11 @@ class GetReviewService(
             )
         }
 
-        return GetReviewResponse(responseDtos)
+        return GetReviewsResponse(responseDtos)
     }
 
     @Transactional
-    fun getReview(reviewId: Long, email: String): GetOneReviewResponse {
+    fun getReview(reviewId: Long, email: String): GetReviewResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
@@ -49,6 +49,6 @@ class GetReviewService(
             reviewWithLikes.isLikedByUser
         )
 
-        return GetOneReviewResponse(responseDto)
+        return GetReviewResponse(responseDto)
     }
 }

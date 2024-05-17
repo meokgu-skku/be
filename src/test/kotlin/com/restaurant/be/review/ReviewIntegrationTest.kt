@@ -10,7 +10,7 @@ import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
-import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
+import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
@@ -87,10 +87,10 @@ class ReviewIntegrationTest(
         ).andExpect(status().isOk())
             .andReturn()
 
-        val reviewResult: CommonResponse<GetOneReviewResponse> =
+        val reviewResult: CommonResponse<GetReviewResponse> =
             objectMapper.readValue(
                 getResult.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
-                object : TypeReference<CommonResponse<GetOneReviewResponse>>() {}
+                object : TypeReference<CommonResponse<GetReviewResponse>>() {}
             )
         reviewResult.data!!.review.content shouldBe "맛있어요"
         reviewResult.data!!.review.viewCount shouldBe 1

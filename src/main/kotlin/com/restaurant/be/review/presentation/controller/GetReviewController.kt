@@ -2,8 +2,8 @@ package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
-import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
+import com.restaurant.be.review.presentation.dto.GetReviewsResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -35,7 +35,7 @@ class GetReviewController(
     fun getReviews(
         principal: Principal,
         pageable: Pageable
-    ): CommonResponse<GetReviewResponse> {
+    ): CommonResponse<GetReviewsResponse> {
         val response = getReviewService.getReviews(pageable, principal.name)
         return CommonResponse.success(response)
     }
@@ -46,12 +46,12 @@ class GetReviewController(
     @ApiResponse(
         responseCode = "200",
         description = "성공",
-        content = [Content(schema = Schema(implementation = GetOneReviewResponse::class))]
+        content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
     )
     fun getOneReview(
         principal: Principal,
         @PathVariable reviewId: Long
-    ): CommonResponse<GetOneReviewResponse> {
+    ): CommonResponse<GetReviewResponse> {
         val response = getReviewService.getReview(reviewId, principal.name)
         return CommonResponse.success(response)
     }
