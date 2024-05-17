@@ -11,7 +11,6 @@ import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
-import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.domain.service.SignUpUserService
 import com.restaurant.be.user.presentation.dto.SignUpUserRequest
@@ -27,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password
 import java.nio.charset.StandardCharsets
 import javax.transaction.Transactional
 
