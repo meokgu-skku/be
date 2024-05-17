@@ -11,9 +11,10 @@ import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
-import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
+import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.LikeReviewRequest
 import com.restaurant.be.review.presentation.dto.LikeReviewResponse
+import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
@@ -60,13 +61,17 @@ class ReviewIntegrationTest(
         )
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
-            comment = "맛있어요",
+            content = "맛있어요",
             imageUrls = listOf()
         )
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewRequest))
-        ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewRequest))
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.result").value("SUCCESS"))
+            .andReturn()
 
         val actualResult: CommonResponse<CreateReviewResponse> =
             objectMapper.readValue(
@@ -74,24 +79,24 @@ class ReviewIntegrationTest(
                 object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
             )
 
-        actualResult.data!!.review.comment shouldBe "맛있어요"
+        actualResult.data!!.review.content shouldBe "맛있어요"
         actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
 
         val getResult = mockMvc.perform(
             MockMvcRequestBuilders.get(
-                "/api/v1/restaurants/reviews/{reviewId}",
+                "/v1/restaurants/reviews/{reviewId}",
                 actualResult.data!!.review.id
             )
         ).andExpect(status().isOk())
             .andReturn()
 
-        val reviewResult: CommonResponse<GetOneReviewResponse> =
+        val reviewResult: CommonResponse<GetReviewResponse> =
             objectMapper.readValue(
                 getResult.response.contentAsString.toByteArray(StandardCharsets.ISO_8859_1),
-                object : TypeReference<CommonResponse<GetOneReviewResponse>>() {}
+                object : TypeReference<CommonResponse<GetReviewResponse>>() {}
             )
-        reviewResult.data!!.review.comment shouldBe "맛있어요"
+        reviewResult.data!!.review.content shouldBe "맛있어요"
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
@@ -107,14 +112,16 @@ class ReviewIntegrationTest(
         )
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
-            comment = "맛있어요",
+            content = "맛있어요",
             imageUrls = listOf("image1", "image2", "image3")
         )
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewRequest))
-        ).andReturn()
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewRequest))
+        )
+            .andReturn()
 
         val createResult: CommonResponse<CreateReviewResponse> =
             objectMapper.readValue(
@@ -122,22 +129,25 @@ class ReviewIntegrationTest(
                 object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
             )
 
-        val restaurantId = createResult.data!!.review.restaurantId
-        val reviewId = createResult.data!!.review.id
+        val restaurantId = createResult.data?.review?.restaurantId
+        val reviewId = createResult.data?.review?.id
 
-        val reviewUpdateRequest = ReviewRequestDto(
-            rating = 1.0,
-            comment = "수정했어요",
-            imageUrls = listOf("update1", "update2")
+        val reviewUpdateRequest = UpdateReviewRequest(
+            ReviewRequestDto(
+                rating = 1.0,
+                content = "수정했어요",
+                imageUrls = listOf("update1", "update2")
+            )
         )
 
         val updateResult = mockMvc.perform(
-            MockMvcRequestBuilders.patch(
-                "/api/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}",
-                restaurantId,
-                reviewId
-            ).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewUpdateRequest))
-        ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
+            MockMvcRequestBuilders.patch("/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}", restaurantId, reviewId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewUpdateRequest))
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.result").value("SUCCESS"))
+            .andReturn()
 
         val actualResult: CommonResponse<UpdateReviewResponse> =
             objectMapper.readValue(
@@ -145,8 +155,8 @@ class ReviewIntegrationTest(
                 object : TypeReference<CommonResponse<UpdateReviewResponse>>() {}
             )
 
-        actualResult.data!!.review.comment shouldBe reviewUpdateRequest.comment
-        actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.imageUrls.size
+        actualResult.data!!.review.content shouldBe reviewUpdateRequest.review.content
+        actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.review.imageUrls.size
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
@@ -162,12 +172,12 @@ class ReviewIntegrationTest(
         )
         val reviewRequest = ReviewRequestDto(
             rating = 4.0,
-            comment = "맛있어요",
+            content = "맛있어요",
             imageUrls = listOf("image1", "image2", "image3")
         )
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewRequest))
         ).andReturn()
 
@@ -177,20 +187,18 @@ class ReviewIntegrationTest(
                 object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
             )
 
-        val restaurantId = createResult.data!!.review.restaurantId
         val reviewId = createResult.data!!.review.id
 
         mockMvc.perform(
             MockMvcRequestBuilders.delete(
-                "/api/v1/restaurants/reviews/{restaurantId}/reviews/{reviewId}",
-                restaurantId,
+                "/v1/restaurants/reviews/{reviewId}",
                 reviewId
             )
         ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS"))
 
         mockMvc.perform(
             MockMvcRequestBuilders.get(
-                "/api/v1/restaurants/reviews/{reviewId}",
+                "/v1/restaurants/reviews/{reviewId}",
                 reviewId
             )
         ).andExpect(status().isBadRequest())
@@ -203,14 +211,16 @@ class ReviewIntegrationTest(
     fun `comment가 없으면 오류 반환`() {
         val reviewRequest = ReviewRequestDto(
             rating = 3.0,
-            comment = "",
+            content = "",
             imageUrls = listOf()
         )
 
         mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
-                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewRequest))
-        ).andExpect(status().isBadRequest)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewRequest))
+        )
+            .andExpect(status().isBadRequest)
     }
 
     @Nested
@@ -218,7 +228,6 @@ class ReviewIntegrationTest(
         @BeforeEach
         open fun setUp() {
             val user = User(
-                id = 1L,
                 email = "test@gmail.com",
                 nickname = "maker",
                 password = "q1w2e3r4",
@@ -250,8 +259,14 @@ class ReviewIntegrationTest(
             reviewsSaved.size shouldBe 20
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/restaurants/reviews").param("page", "0").param("size", "5")
-            ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "createdAt,DESC")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.result").value("SUCCESS"))
+                .andReturn()
 
             val mapper = jacksonObjectMapper()
             val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
@@ -261,6 +276,148 @@ class ReviewIntegrationTest(
 
             reviews.size shouldBe 5
             reviews.get(0)?.get("isLike") shouldBe false
+            reviews.get(0)?.get("viewCount") shouldBe 0
+        }
+
+        @Test
+        @WithMockUser(username = "test@gmail.com", roles = ["USER"])
+        @Transactional
+        open fun `조회수 DESC 리스트 조회에 성공 (자신이 작성한 리뷰에 접근시 조회수가 반영되지 않는다`() {
+            val getReviews = reviewRepository.findAll()
+            val firstReviewId = getReviews.get(1).id
+            val secondReviewId = getReviews.get(2).id
+
+            for (callCount in 1..3) {
+                mockMvc.perform(
+                    MockMvcRequestBuilders.get(
+                        "/v1/restaurants/reviews/{reviewId}",
+                        firstReviewId
+                    )
+                ).andExpect(status().isOk())
+                if (callCount != 3) {
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.get(
+                            "/v1/restaurants/reviews/{reviewId}",
+                            secondReviewId
+                        )
+                    ).andExpect(status().isOk())
+                }
+            }
+
+            val result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "viewCount,DESC")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.result").value("SUCCESS"))
+                .andReturn()
+
+            val mapper = jacksonObjectMapper()
+            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
+
+            val data = jsonMap["data"] as Map<String, Any>
+            val reviews = data["reviews"] as List<Map<String, Any>>
+
+            reviews.size shouldBe 5
+            reviews.get(0)?.get("viewCount") shouldBe 0
+        }
+
+        @Test
+        @WithMockUser(username = "another@gmail.com", roles = ["USER"])
+        @Transactional
+        open fun `조회수 DESC 리스트 조회에 성공 (자신이 작성하지 않은 리뷰에 접근시 조회수가 반영된다`() {
+            signUpUserService.signUpUser(
+                SignUpUserRequest(
+                    email = "another@gmail.com",
+                    password = "a12345678",
+                    nickname = "another"
+                )
+            )
+            val getReviews = reviewRepository.findAll()
+            val firstReviewId = getReviews.get(1).id
+            val secondReviewId = getReviews.get(2).id
+
+            for (callCount in 1..3) {
+                mockMvc.perform(
+                    MockMvcRequestBuilders.get(
+                        "/v1/restaurants/reviews/{reviewId}",
+                        firstReviewId
+                    )
+                ).andExpect(status().isOk())
+                if (callCount != 3) {
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.get(
+                            "/v1/restaurants/reviews/{reviewId}",
+                            secondReviewId
+                        )
+                    ).andExpect(status().isOk())
+                }
+            }
+
+            val result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "viewCount,DESC")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.result").value("SUCCESS"))
+                .andReturn()
+
+            val mapper = jacksonObjectMapper()
+            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
+
+            val data = jsonMap["data"] as Map<String, Any>
+            val reviews = data["reviews"] as List<Map<String, Any>>
+
+            reviews.size shouldBe 5
+            reviews.get(0)?.get("viewCount") shouldBe 3
+            reviews.get(1)?.get("viewCount") shouldBe 2
+            reviews.get(2)?.get("viewCount") shouldBe 0
+        }
+
+        @Test
+        @WithMockUser(username = "another@gmail.com", roles = ["USER"])
+        @Transactional
+        open fun `좋아요 DESC 리스트 조회에 성공`() {
+            signUpUserService.signUpUser(
+                SignUpUserRequest(
+                    email = "another@gmail.com",
+                    password = "a12345678",
+                    nickname = "another"
+                )
+            )
+            val getReviews = reviewRepository.findAll()
+            val firstReviewId = getReviews.get(1).id
+
+            val likeRequest = LikeReviewRequest(true)
+
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/v1/restaurants/reviews/{reviewId}/like", firstReviewId)
+                    .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(likeRequest))
+            )
+
+            val result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "likeCount,DESC")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.result").value("SUCCESS"))
+                .andReturn()
+
+            val mapper = jacksonObjectMapper()
+            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
+
+            val data = jsonMap["data"] as Map<String, Any>
+            val reviews = data["reviews"] as List<Map<String, Any>>
+
+            reviews.size shouldBe 5
+            reviews.get(0)?.get("likeCount") shouldBe 1
+            reviews.get(1)?.get("likeCount") shouldBe 0
         }
 
         @Test
@@ -290,8 +447,18 @@ class ReviewIntegrationTest(
 
             newReviews.forEach { reviewRepository.save(it) }
 
+            mockMvc.perform(
+                MockMvcRequestBuilders.get(
+                    "/v1/restaurants/reviews/{reviewId}",
+                    newReviews.get(0).id
+                )
+            ).andExpect(status().isOk())
+
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/restaurants/my-reviews").param("page", "0").param("size", "5")
+                MockMvcRequestBuilders.get("/v1/restaurants/my-reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "viewCount,DESC")
             ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
 
             val mapper = jacksonObjectMapper()
@@ -326,7 +493,7 @@ class ReviewIntegrationTest(
             val reviewId = reviewRepository.findAll().get(0).id
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/restaurants/reviews/{reviewId}/like", reviewId)
+                MockMvcRequestBuilders.post("/v1/restaurants/reviews/{reviewId}/like", reviewId)
                     .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(likeRequest))
             )
                 .andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
@@ -340,7 +507,7 @@ class ReviewIntegrationTest(
             actualResult.data!!.review.isLike shouldBe true
 
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/restaurants/reviews/{reviewId}/like", reviewId)
+                MockMvcRequestBuilders.post("/v1/restaurants/reviews/{reviewId}/like", reviewId)
                     .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(likeRequest))
             )
                 .andExpect(status().isBadRequest)
@@ -349,7 +516,7 @@ class ReviewIntegrationTest(
             val unLikeRequest = LikeReviewRequest(false)
 
             val unlikeResult = mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/v1/restaurants/reviews/{reviewId}/like", reviewId)
+                MockMvcRequestBuilders.post("/v1/restaurants/reviews/{reviewId}/like", reviewId)
                     .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(unLikeRequest))
             )
                 .andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()

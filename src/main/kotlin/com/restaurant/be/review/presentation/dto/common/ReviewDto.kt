@@ -16,7 +16,7 @@ data class ReviewRequestDto(
     @Schema(description = "리뷰 내용")
     @field:NotBlank(message = "리뷰 내용을 작성해주세요")
     @ApiModelProperty(value = "리뷰 내용", example = "사장님이 친절해요", required = true)
-    val comment: String,
+    val content: String,
 
     @Schema(description = "이미지 url 리스트")
     val imageUrls: List<String>
@@ -24,16 +24,16 @@ data class ReviewRequestDto(
     fun toEntity(user: User, restaurantId: Long) = Review(
         user = user,
         rating = rating,
-        content = comment,
+        content = content,
         restaurantId = restaurantId
     )
 }
 
 data class ReviewResponseDto(
     @Schema(description = "리뷰 id")
-    val id: Long?,
+    val id: Long,
     @Schema(description = "유저 id")
-    val userId: Long?,
+    val userId: Long,
     @Schema(description = "유저 닉네임")
     val username: String,
     @Schema(description = "유저 프로필 이미지")
@@ -43,24 +43,30 @@ data class ReviewResponseDto(
     @Schema(description = "평가 점수")
     val rating: Double,
     @Schema(description = "리뷰 내용")
-    val comment: String,
+    val content: String,
     @Schema(description = "이미지 url 리스트")
     val imageUrls: List<String>,
     @Schema(description = "좋아요 여부")
-    val isLike: Boolean
+    val isLike: Boolean,
+    @Schema(description = "좋아요 받은 횟수")
+    val likeCount: Long,
+    @Schema(description = "리뷰 조회 수")
+    val viewCount: Long
 ) {
     companion object {
-        fun toDto(review: Review?, isLikedByUser: Boolean? = null): ReviewResponseDto {
+        fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
             return ReviewResponseDto(
-                review!!.id,
-                review!!.user!!.id,
-                review!!.user!!.nickname,
-                review!!.user!!.profileImageUrl,
-                review!!.restaurantId,
-                review!!.rating,
-                review!!.content,
-                review!!.images.map { it.imageUrl },
-                isLikedByUser ?: false
+                id = review.id ?: 0,
+                userId = review.user.id ?: 0,
+                username = review.user.nickname,
+                profileImageUrl = review.user.profileImageUrl,
+                restaurantId = review.restaurantId,
+                rating = review.rating,
+                content = review.content,
+                imageUrls = review.images.map { it.imageUrl },
+                isLike = isLikedByUser ?: false,
+                likeCount = review.likeCount,
+                viewCount = review.viewCount
             )
         }
     }

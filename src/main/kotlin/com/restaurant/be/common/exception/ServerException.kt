@@ -17,6 +17,10 @@ data class NotFoundUserEmailException(
     override val message: String = "존재 하지 않는 유저 이메일 입니다."
 ) : ServerException(400, message)
 
+data class NotFoundUserIdException(
+    override val message: String = "유저 고유 ID가 존재하지 않습니다"
+) : ServerException(500, message)
+
 data class WithdrawalUserException(
     override val message: String = "탈퇴한 유저 입니다."
 ) : ServerException(400, message)
@@ -25,7 +29,7 @@ data class DuplicateUserEmailException(
     override val message: String = "이미 존재 하는 이메일 입니다."
 ) : ServerException(400, message)
 
-data class DuplicateUserNickNameException(
+data class DuplicateUserNicknameException(
     override val message: String = "이미 존재 하는 닉네임 입니다."
 ) : ServerException(400, message)
 
@@ -72,3 +76,7 @@ data class DuplicateLikeException(
 data class NotFoundLikeException(
     override val message: String = "해당 게시글은 이미 좋아하지 않습니다."
 ) : ServerException(400, message)
+
+data class InvalidLikeCountException(
+    override val message: String = "좋아요가 0보다 작아질 순 없습니다."
+) : ServerException(500, message)

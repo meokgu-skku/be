@@ -2,7 +2,7 @@ package com.restaurant.be.review.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
-import com.restaurant.be.review.presentation.dto.GetMyReviewResponse
+import com.restaurant.be.review.presentation.dto.GetMyReviewsResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -17,7 +17,7 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/my-reviews")
+@RequestMapping("/v1/restaurants/my-reviews")
 class GetMyReviewController(
     val getReviewService: GetReviewService
 ) {
@@ -28,13 +28,13 @@ class GetMyReviewController(
     @ApiResponse(
         responseCode = "200",
         description = "성공",
-        content = [Content(schema = Schema(implementation = GetMyReviewResponse::class))]
+        content = [Content(schema = Schema(implementation = GetMyReviewsResponse::class))]
     )
     fun getMyReview(
         principal: Principal,
         pageable: Pageable
-    ): CommonResponse<GetMyReviewResponse> {
-        val response = getReviewService.getMyReviewList(pageable, principal.name)
+    ): CommonResponse<GetMyReviewsResponse> {
+        val response = getReviewService.getMyReviews(pageable, principal.name)
         return CommonResponse.success(response)
     }
 }

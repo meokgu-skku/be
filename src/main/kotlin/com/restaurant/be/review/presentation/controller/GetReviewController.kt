@@ -1,10 +1,9 @@
 package com.restaurant.be.review.presentation.controller
 
-import com.restaurant.be.common.principal.PrincipalUtils
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
-import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
+import com.restaurant.be.review.presentation.dto.GetReviewsResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -20,7 +19,7 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/reviews")
+@RequestMapping("/v1/restaurants/reviews")
 class GetReviewController(
     private val getReviewService: GetReviewService
 ) {
@@ -33,12 +32,11 @@ class GetReviewController(
         description = "성공",
         content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
     )
-    fun getReview(
-        principal: Principal?,
+    fun getReviews(
+        principal: Principal,
         pageable: Pageable
-    ): CommonResponse<GetReviewResponse> {
-        val email = PrincipalUtils.getUsername(principal)
-        val response = getReviewService.getReviewList(pageable, email)
+    ): CommonResponse<GetReviewsResponse> {
+        val response = getReviewService.getReviews(pageable, principal.name)
         return CommonResponse.success(response)
     }
 
@@ -48,13 +46,13 @@ class GetReviewController(
     @ApiResponse(
         responseCode = "200",
         description = "성공",
-        content = [Content(schema = Schema(implementation = GetOneReviewResponse::class))]
+        content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
     )
     fun getOneReview(
         principal: Principal,
         @PathVariable reviewId: Long
-    ): CommonResponse<GetOneReviewResponse> {
-        val response = getReviewService.getOneReview(reviewId, principal.name)
+    ): CommonResponse<GetReviewResponse> {
+        val response = getReviewService.getReview(reviewId, principal.name)
         return CommonResponse.success(response)
     }
 }

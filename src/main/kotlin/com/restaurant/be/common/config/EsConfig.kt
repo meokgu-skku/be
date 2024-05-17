@@ -5,10 +5,6 @@ import com.jillesvangurp.ktsearch.SearchClient
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.java.Java
 import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.logging.DEFAULT
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -43,8 +39,9 @@ fun ktorClientWithJavaEngine(
         requestTimeoutMillis = timeoutMillis
     }
 
-    install(Logging) {
-        logger = Logger.DEFAULT
-        level = LogLevel.ALL
-    }
+//    로컬 환경에서만 enable해서 사용
+//    install(Logging) {
+//        logger = Logger.DEFAULT
+//        level = LogLevel.ALL
+//    }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @Api(tags = ["02. Restaurant Info"], description = "음식점 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/category")
+@RequestMapping("/v1/restaurants/category")
 class GetCategoryController {
 
     @GetMapping
