@@ -15,7 +15,7 @@ class DeleteReviewService(
     private val userRepository: UserRepository
 ) {
     @Transactional
-    fun deleteReview(restaurantId: Long, reviewId: Long, email: String) {
+    fun deleteReview(reviewId: Long, email: String) {
         val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
         var review = reviewRepository.findById(reviewId).getOrNull() ?: throw NotFoundReviewException()

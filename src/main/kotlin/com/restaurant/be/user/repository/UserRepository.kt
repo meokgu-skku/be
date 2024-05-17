@@ -9,4 +9,6 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByNicknameOrEmail(nickname: String, email: String): User?
 
     fun findByEmail(email: String): User?
+
+    fun findByNickname(nickname: String): User?
 }

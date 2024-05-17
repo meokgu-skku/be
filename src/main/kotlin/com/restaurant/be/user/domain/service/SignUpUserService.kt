@@ -1,7 +1,7 @@
 package com.restaurant.be.user.domain.service
 
 import com.restaurant.be.common.exception.DuplicateUserEmailException
-import com.restaurant.be.common.exception.DuplicateUserNickNameException
+import com.restaurant.be.common.exception.DuplicateUserNicknameException
 import com.restaurant.be.common.jwt.TokenProvider
 import com.restaurant.be.common.redis.RedisRepository
 import com.restaurant.be.user.presentation.dto.SignUpUserRequest
@@ -23,7 +23,7 @@ class SignUpUserService(
         with(request) {
             userRepository.findByNicknameOrEmail(nickname, email)?.let {
                 if (it.nickname == nickname) {
-                    throw DuplicateUserNickNameException()
+                    throw DuplicateUserNicknameException()
                 }
 
                 if (it.email == email) {

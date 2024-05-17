@@ -14,12 +14,12 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/reviews")
-class DeleteReviewController(
+@RequestMapping("/v1/restaurants/")
+class DeleteReviewController (
     val deleteReviewService: DeleteReviewService
-) {
+){
 
-    @DeleteMapping("/{restaurantId}/reviews/{reviewId}")
+    @DeleteMapping("/reviews/{reviewId}")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "리뷰 삭제 API")
     @ApiResponse(
@@ -28,10 +28,9 @@ class DeleteReviewController(
     )
     fun deleteReview(
         principal: Principal,
-        @PathVariable restaurantId: Long,
         @PathVariable reviewId: Long
     ): CommonResponse<Void> {
-        deleteReviewService.deleteReview(restaurantId, reviewId, principal.name)
+        deleteReviewService.deleteReview(reviewId, principal.name)
         return CommonResponse.success()
     }
 }
