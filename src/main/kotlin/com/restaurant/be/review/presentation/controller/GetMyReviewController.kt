@@ -17,10 +17,10 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/my-reviews")
-class GetMyReviewController(
+@RequestMapping("/v1/restaurants/my-reviews")
+class GetMyReviewController (
     val getReviewService: GetReviewService
-) {
+){
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -34,7 +34,7 @@ class GetMyReviewController(
         principal: Principal,
         pageable: Pageable
     ): CommonResponse<GetMyReviewResponse> {
-        val response = getReviewService.getMyReviewList(pageable, principal.name)
+        val response = getReviewService.getMyReviews(pageable, principal.name)
         return CommonResponse.success(response)
     }
 }
