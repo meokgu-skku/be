@@ -9,6 +9,7 @@ import com.restaurant.be.common.IntegrationTest
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
+import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
@@ -99,7 +100,7 @@ class ReviewIntegrationTest(
         )
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/api/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -110,13 +111,15 @@ class ReviewIntegrationTest(
             object : TypeReference<CommonResponse<CreateReviewResponse>>() {}
         )
 
-        val restaurantId = createResult.data!!.review.restaurantId
-        val reviewId = createResult.data!!.review.id
+        val restaurantId = createResult.data?.review?.restaurantId
+        val reviewId = createResult.data?.review?.id
 
-        val reviewUpdateRequest = ReviewRequestDto(
-            rating = 1.0,
-            content = "수정했어요",
-            imageUrls = listOf("update1", "update2")
+        val reviewUpdateRequest = UpdateReviewRequest(
+            ReviewRequestDto(
+                rating = 1.0,
+                content = "수정했어요",
+                imageUrls = listOf("update1", "update2")
+            )
         )
 
         val updateResult = mockMvc.perform(
@@ -133,8 +136,8 @@ class ReviewIntegrationTest(
             object : TypeReference<CommonResponse<UpdateReviewResponse>>() {}
         )
 
-        actualResult.data!!.review.content shouldBe reviewUpdateRequest.content
-        actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.imageUrls.size
+        actualResult.data!!.review.content shouldBe reviewUpdateRequest.review.content
+        actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.review.imageUrls.size
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")

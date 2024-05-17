@@ -2,7 +2,7 @@ package com.restaurant.be.review.domain.entity
 
 import com.restaurant.be.common.entity.BaseEntity
 import com.restaurant.be.review.domain.entity.QReview.review
-import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
+import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
@@ -56,11 +56,12 @@ class Review(
         images.add(reviewImage)
     }
 
-    fun updateReview(request: ReviewRequestDto) {
-        this.content = request.content
-        this.rating = request.rating
+    fun updateReview(request: UpdateReviewRequest) {
+        val updateRequest = request.review
+        this.content = updateRequest.content
+        this.rating = updateRequest.rating
         this.images.clear()
-        request.imageUrls.forEach {
+        updateRequest.imageUrls.forEach {
             this.addImage(
                 ReviewImage(
                     imageUrl = it
@@ -71,7 +72,7 @@ class Review(
 
     fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
         return ReviewResponseDto(
-            id = id,
+            id = id ?: 0,
             userId = user.id ?: 0,
             username = user.nickname,
             profileImageUrl = user.profileImageUrl,
