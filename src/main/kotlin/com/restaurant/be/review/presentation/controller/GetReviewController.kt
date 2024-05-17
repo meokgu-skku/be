@@ -1,6 +1,5 @@
 package com.restaurant.be.review.presentation.controller
 
-import com.restaurant.be.common.principal.PrincipalUtils
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
 import com.restaurant.be.review.presentation.dto.GetOneReviewResponse
@@ -20,7 +19,7 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/reviews")
+@RequestMapping("/v1/restaurants/reviews")
 class GetReviewController(
     private val getReviewService: GetReviewService
 ) {
@@ -33,12 +32,11 @@ class GetReviewController(
         description = "성공",
         content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
     )
-    fun getReview(
-        principal: Principal?,
+    fun getReviews(
+        principal: Principal,
         pageable: Pageable
     ): CommonResponse<GetReviewResponse> {
-        val email = PrincipalUtils.getUsername(principal)
-        val response = getReviewService.getReviewList(pageable, email)
+        val response = getReviewService.getReviews(pageable, principal.name)
         return CommonResponse.success(response)
     }
 

@@ -20,7 +20,7 @@ import javax.validation.Valid
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants")
+@RequestMapping("/v1/restaurants")
 class CreateReviewController(
     private val createReviewService: CreateReviewService
 ) {
@@ -37,9 +37,9 @@ class CreateReviewController(
         principal: Principal,
         @PathVariable restaurantId: Long,
         @Valid @RequestBody
-        createReview: ReviewRequestDto
+        request: ReviewRequestDto
     ): CommonResponse<CreateReviewResponse> {
-        val response = createReviewService.createReviewOf(restaurantId, createReview, principal.name)
+        val response = createReviewService.createReview(restaurantId, request, principal.name)
         return CommonResponse.success(response)
     }
 }

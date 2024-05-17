@@ -18,7 +18,7 @@ data class RestaurantDto(
     @Schema(description = "식당 카테고리")
     val category: String,
     @Schema(description = "식당 대표 메뉴")
-    val representativeMenu: String,
+    val representativeMenu: MenuDto?,
     @Schema(description = "식당 영업 시작 시간")
     val operatingStartTime: String,
     @Schema(description = "식당 영업 종료 시간")
@@ -27,10 +27,8 @@ data class RestaurantDto(
     val representativeReviewContent: String,
     @Schema(description = "식당 좋아요 여부(로그인한 유저)")
     val isLike: Boolean,
-    @Schema(description = "식당 할인 여부")
-    val isDiscountForSkku: Boolean,
     @Schema(description = "식당 할인 내용")
-    val discountContent: String,
+    val discountContent: String?,
 
     @Schema(description = "식당 상세 정보")
     val detailInfo: RestaurantDetailDto
@@ -55,7 +53,9 @@ data class MenuDto(
     @Schema(description = "메뉴 설명")
     val description: String,
     @Schema(description = "대표 메뉴 여부")
-    val isRepresentative: Boolean
+    val isRepresentative: Boolean,
+    @Schema(description = "메뉴 이미지 URL")
+    val imageUrl: String? = null
 )
 
 data class OperatingInfoDto(
