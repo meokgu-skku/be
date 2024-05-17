@@ -13,7 +13,7 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants/")
+@RequestMapping("/v1/restaurants/")
 class DeleteReviewController {
 
     @DeleteMapping("/{restaurantId}/reviews/{reviewId}")

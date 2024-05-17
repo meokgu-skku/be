@@ -1,10 +1,11 @@
 package com.restaurant.be.review.domain.service
 
+import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.domain.entity.ReviewImage
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
-import com.restaurant.be.review.repository.ReviewLikesRepository
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -13,11 +14,14 @@ import javax.transaction.Transactional
 @Service
 class CreateReviewService(
     private val reviewRepository: ReviewRepository,
-    private val userRepository: UserRepository,
-    private val reviewLikesRepository: ReviewLikesRepository
+    private val userRepository: UserRepository
 ) {
     @Transactional
-    fun createReviewOf(restaurantId: Long, reviewRequest: ReviewRequestDto, email: String): CreateReviewResponse {
+    fun createReview(
+        restaurantId: Long,
+        reviewRequest: ReviewRequestDto,
+        email: String
+    ): CreateReviewResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
@@ -31,14 +35,16 @@ class CreateReviewService(
             )
         }
 
-        val savedReview = reviewRepository.save(review)
+        reviewRepository.save(review)
 
-        return CreateReviewResponse(
-            savedReview.toResponseDTO(isReviewLikedByUser(user.id, savedReview.id))
+        val reviewWithLikes = reviewRepository.findReview(user, review.id ?: 0)
+            ?: throw NotFoundReviewException()
+
+        val responseDto = ReviewResponseDto.toDto(
+            reviewWithLikes.review,
+            reviewWithLikes.isLikedByUser
         )
-    }
 
-    fun isReviewLikedByUser(userId: Long?, reviewId: Long?): Boolean {
-        return reviewLikesRepository.existsByReviewIdAndUserId(userId, reviewId)
+        return CreateReviewResponse(responseDto)
     }
 }

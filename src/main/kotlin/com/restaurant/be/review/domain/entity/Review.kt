@@ -3,9 +3,11 @@ package com.restaurant.be.review.domain.entity
 import com.restaurant.be.common.entity.BaseEntity
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.user.domain.entity.User
+import kotlinx.serialization.json.JsonNull.content
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -22,7 +24,7 @@ class Review(
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
 
@@ -52,7 +54,7 @@ class Review(
             profileImageUrl = user.profileImageUrl,
             restaurantId = restaurantId,
             rating = rating,
-            comment = content,
+            content = content,
             imageUrls = images.map { it.imageUrl },
             isLike = doesUserLike
         )

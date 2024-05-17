@@ -1,9 +1,10 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
+import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
+import com.restaurant.be.restaurant.service.GetRestaurantService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -20,8 +21,10 @@ import java.security.Principal
 
 @Api(tags = ["02. Restaurant Info"], description = "음식점 서비스")
 @RestController
-@RequestMapping("/api/v1/restaurants")
-class GetRestaurantController {
+@RequestMapping("/v1/restaurants")
+class GetRestaurantController(
+    private val getRestaurantService: GetRestaurantService
+) {
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -33,10 +36,11 @@ class GetRestaurantController {
     )
     fun getRestaurants(
         principal: Principal,
-        @ModelAttribute request: GetRestaurantRequest,
+        @ModelAttribute request: GetRestaurantsRequest,
         pageable: Pageable
     ): CommonResponse<GetRestaurantsResponse> {
-        return CommonResponse.success()
+        val response = getRestaurantService.getRestaurants(request, pageable, principal.name)
+        return CommonResponse.success(response)
     }
 
     @GetMapping("/{restaurantId}")
