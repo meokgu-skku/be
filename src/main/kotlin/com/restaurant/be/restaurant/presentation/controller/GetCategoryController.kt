@@ -28,8 +28,7 @@ class GetCategoryController(
         description = "성공",
         content = [Content(schema = Schema(implementation = GetCategoryResponse::class))]
     )
-    fun getCategories(
-    ): CommonResponse<GetCategoryResponse> {
+    fun getCategories(): CommonResponse<GetCategoryResponse> {
         val response = getCategoryService.getCategories()
         return CommonResponse.success(response)
     }

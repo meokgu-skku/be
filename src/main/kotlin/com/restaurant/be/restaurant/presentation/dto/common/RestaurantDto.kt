@@ -1,5 +1,6 @@
 package com.restaurant.be.restaurant.presentation.dto.common
 
+import com.restaurant.be.restaurant.presentation.domain.entity.Category
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class RestaurantDto(
@@ -15,12 +16,8 @@ data class RestaurantDto(
     val reviewCount: Long,
     @Schema(description = "식당 좋아요 수")
     val likeCount: Long,
-    @Schema(description = "오리지널 카테고리")
-    val category: String,
-    @Schema(description = "카테고리")
-    val customCategory: String,
-    @Schema(description = "식당 대표 메뉴")
-    val representativeMenu: String,
+    @Schema(description = "메뉴 세부 카테고리")
+    val categoryDetail: String,
     @Schema(description = "식당 영업 시작 시간")
     val operatingStartTime: String,
     @Schema(description = "식당 영업 종료 시간")
@@ -33,6 +30,9 @@ data class RestaurantDto(
     val isDiscountForSkku: Boolean,
     @Schema(description = "식당 할인 내용")
     val discountContent: String,
+
+    @Schema(description = "오리지널 카테고리")
+    val category: MutableSet<Category>,
 
     @Schema(description = "식당 상세 정보")
     val detailInfo: RestaurantDetailDto

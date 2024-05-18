@@ -8,5 +8,5 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 data class GetCategoryResponse(
     @Schema(description = "카테고리 리스트")
-    val categories: List<CategoryDto>?
+    val categories: List<CategoryDto>
 )

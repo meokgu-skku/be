@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "restaurant_likes")
-class RestaurantLikes(
+class RestaurantLike(
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +19,7 @@ class RestaurantLikes(
     @Column(name = "restaurant_id", nullable = false)
     var restaurantId: Long,
 
-    @Column(name = "email", nullable = false)
-    var email: String  // user의 email 정보
+    @Column(name = "user_id", nullable = false)
+    var userId: String // user의 email 정보
 
 )
