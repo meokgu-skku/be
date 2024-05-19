@@ -31,10 +31,11 @@ class UpdateReviewService(
 
         review.updateReview(reviewRequest)
 
-        val reviewWithLikes = reviewRepository.findReview(user, review.id ?: throw NotFoundReviewException())
+        val reviewWithLikes = reviewRepository.findReview(user, reviewId)
+            ?: throw NotFoundReviewException()
 
         val responseDto = ReviewResponseDto.toDto(
-            reviewWithLikes!!.review,
+            reviewWithLikes.review,
             reviewWithLikes.isLikedByUser
         )
 
