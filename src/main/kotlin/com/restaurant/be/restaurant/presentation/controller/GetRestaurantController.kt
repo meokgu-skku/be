@@ -1,6 +1,7 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.domain.service.GetRestaurantByIdService
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
@@ -23,7 +24,8 @@ import java.security.Principal
 @RestController
 @RequestMapping("/v1/restaurants")
 class GetRestaurantController(
-    private val getRestaurantService: GetRestaurantService
+    private val getRestaurantService: GetRestaurantService,
+    private val getRestaurantByIdService: GetRestaurantByIdService
 ) {
 
     @GetMapping
@@ -53,8 +55,9 @@ class GetRestaurantController(
     )
     fun getRestaurant(
         principal: Principal,
-        @PathVariable restaurantId: String
+        @PathVariable restaurantId: Long
     ): CommonResponse<GetRestaurantResponse> {
-        return CommonResponse.success()
+        val response = getRestaurantByIdService.getRestaurantById(restaurantId, principal.name)
+        return CommonResponse.success(response)
     }
 }

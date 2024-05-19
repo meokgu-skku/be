@@ -1,6 +1,7 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.domain.service.GetCategoryService
 import com.restaurant.be.restaurant.presentation.dto.GetCategoryResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController
 @Api(tags = ["02. Restaurant Info"], description = "음식점 서비스")
 @RestController
 @RequestMapping("/v1/restaurants/category")
-class GetCategoryController {
+class GetCategoryController(
+    private val getCategoryService: GetCategoryService
+) {
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -26,6 +29,7 @@ class GetCategoryController {
         content = [Content(schema = Schema(implementation = GetCategoryResponse::class))]
     )
     fun getCategory(): CommonResponse<GetCategoryResponse> {
-        return CommonResponse.success()
+        val response = getCategoryService.getCategories()
+        return CommonResponse.success(response)
     }
 }

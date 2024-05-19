@@ -56,3 +56,7 @@ data class NotFoundUserException(
 data class NotFoundReviewException(
     override val message: String = "존재하지 않은 리뷰 입니다."
 ) : ServerException(400, message)
+
+data class NotFoundRestaurantException(
+    override val message: String = "해당 식당 정보가 존재하지 않습니다."
+) : ServerException(404, message)
