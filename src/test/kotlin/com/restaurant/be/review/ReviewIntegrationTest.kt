@@ -11,7 +11,6 @@ import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
-import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.domain.service.SignUpUserService
 import com.restaurant.be.user.presentation.dto.SignUpUserRequest
@@ -27,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password
 import java.nio.charset.StandardCharsets
 import javax.transaction.Transactional
 
@@ -136,10 +134,22 @@ class ReviewIntegrationTest(
             val reviewsSaved = reviewRepository.findAll()
             reviewsSaved.size shouldBe 20
 
+            val reviewRequest = ReviewRequestDto(
+                rating = 4.0,
+                content = "맛있어요",
+                imageUrls = listOf()
+            )
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(reviewRequest))
+            )
+
             val result = mockMvc.perform(
                 MockMvcRequestBuilders.get("/v1/restaurants/reviews")
                     .param("page", "0")
                     .param("size", "5")
+                    .param("sort", "createdAt,DESC")
             )
                 .andExpect(status().isOk)
                 .andExpect(jsonPath("$.result").value("SUCCESS"))
@@ -152,7 +162,24 @@ class ReviewIntegrationTest(
             val reviews = data["reviews"] as List<Map<String, Any>>
 
             reviews.size shouldBe 5
+
             reviews.get(0)?.get("isLike") shouldBe false
+            reviews.get(0)?.get("viewCount") shouldBe 0
+
+            val result2 = mockMvc.perform(
+                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                    .param("page", "4")
+                    .param("size", "5")
+                    .param("sort", "createdAt,DESC")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.result").value("SUCCESS"))
+                .andReturn()
+            val jsonMap2 = mapper.readValue<Map<String, Any>>(result2.response.contentAsString)
+            val data2 = jsonMap2["data"] as Map<String, Any>
+            val reviews2 = data2["reviews"] as List<Map<String, Any>>
+
+            reviews2.size shouldBe 1
         }
     }
 }

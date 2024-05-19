@@ -2,37 +2,33 @@ package com.restaurant.be.review.domain.service
 
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
-import com.restaurant.be.review.repository.ReviewLikesRepository
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
-import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class GetReviewService(
     private val userRepository: UserRepository,
-    private val reviewRepository: ReviewRepository,
-    private val reviewLikesRepository: ReviewLikesRepository
-) {
-    fun getReviewListOf(page: Int, size: Int, email: String): GetReviewResponse {
-        val pageable = PageRequest.of(page, size)
-        val reviews = reviewRepository.findAll(pageable).content
+    private val reviewRepository: ReviewRepository
 
+) {
+    @Transactional(readOnly = true)
+    fun getReviews(pageable: Pageable, email: String): GetReviewResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
-        return GetReviewResponse(
-            reviews.map {
-                it
-                    .toResponseDTO(doesUserLike = isReviewLikedByUser(user.id, it.id))
-            }
-        )
-    }
+        val reviewsWithLikes = reviewRepository.findReviews(user, pageable)
 
-    fun isReviewLikedByUser(userId: Long?, reviewId: Long?): Boolean {
-        if (userId != 0L) {
-            return reviewLikesRepository.existsByReviewIdAndUserId(userId, reviewId)
+        val responseDtos = reviewsWithLikes.map {
+            ReviewResponseDto.toDto(
+                it.review,
+                it.isLikedByUser
+            )
         }
-        return false
+
+        return GetReviewResponse(responseDtos)
     }
 }
