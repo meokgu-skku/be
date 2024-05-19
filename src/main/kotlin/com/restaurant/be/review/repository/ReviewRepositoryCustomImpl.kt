@@ -64,6 +64,33 @@ class ReviewRepositoryCustomImpl(
         return reviewsWithLikes
     }
 
+    override fun findMyReviews(user: User, pageable: Pageable): List<ReviewWithLikesDto> {
+        val orderSpecifier = setOrderSpecifier(pageable)
+
+        val reviewsWithLikes = queryFactory
+            .select(
+                Projections.constructor(
+                    ReviewWithLikesDto::class.java,
+                    review,
+                    reviewLikes.userId.isNotNull()
+                )
+            )
+            .from(review)
+            .leftJoin(reviewLikes)
+            .on(
+                reviewLikes.reviewId.eq(review.id)
+                    .and(reviewLikes.userId.eq(user.id))
+            )
+            .where(review.user.id.eq(user.id))
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .orderBy(*orderSpecifier.toTypedArray())
+            .fetchJoin()
+            .fetch()
+
+        return reviewsWithLikes
+    }
+
     private fun setOrderSpecifier(pageable: Pageable): List<OrderSpecifier<*>> {
         val pathBuilder: PathBuilder<Review> = PathBuilderFactory().create(Review::class.java)
         val sort = pageable.sort

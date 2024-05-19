@@ -15,6 +15,7 @@ import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
+import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.domain.service.SignUpUserService
 import com.restaurant.be.user.presentation.dto.SignUpUserRequest
@@ -399,6 +400,59 @@ class ReviewIntegrationTest(
             reviews.get(0)?.get("viewCount") shouldBe 3
             reviews.get(1)?.get("viewCount") shouldBe 2
             reviews.get(2)?.get("viewCount") shouldBe 0
+        }
+
+        @Test
+        @WithMockUser(username = "newUser@gmail.com", roles = ["USER"])
+        @Transactional
+        open fun `새로운 유저가 자기 자신의 리뷰 목록을 조회`() {
+            val newUser = User(
+                email = "newUser@gmail.com",
+                nickname = "maker1",
+                password = "q1w2e3r41",
+                withdrawal = false,
+                roles = listOf(),
+                profileImageUrl = "newuser-profile"
+            )
+
+            signUpUserRepository.save(newUser)
+
+            val newReviews = (1..3).map { index ->
+                Review(
+                    user = newUser,
+                    restaurantId = index.toLong(),
+                    content = "정말 맛있어요 $index",
+                    rating = 5.0,
+                    images = mutableListOf()
+                )
+            }
+
+            newReviews.forEach { reviewRepository.save(it) }
+
+            mockMvc.perform(
+                MockMvcRequestBuilders.get(
+                    "/v1/restaurants/reviews/{reviewId}",
+                    newReviews.get(0).id
+                )
+            ).andExpect(status().isOk())
+
+            val result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/v1/restaurants/my-reviews")
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "viewCount,DESC")
+            ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS")).andReturn()
+
+            val mapper = jacksonObjectMapper()
+            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
+
+            val data = jsonMap["data"] as Map<String, Any>
+            val reviews = data["reviews"] as List<Map<String, Any>>
+
+            reviews.size shouldBe 3
+
+            val reviewsSaved = reviewRepository.findAll()
+            reviewsSaved.size shouldBe 23
         }
     }
 }
