@@ -1,6 +1,7 @@
 package com.restaurant.be.review.domain.entity
 
 import com.restaurant.be.common.entity.BaseEntity
+import com.restaurant.be.common.exception.InvalidLikeCountException
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
@@ -72,6 +73,15 @@ class Review(
 
     fun incrementViewCount() {
         this.viewCount++
+    }
+    fun incrementLikeCount() {
+        this.likeCount++
+    }
+    fun decrementLikeCount() {
+        if (this.likeCount == 0L) {
+            throw InvalidLikeCountException()
+        }
+        this.likeCount--
     }
 
     fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
