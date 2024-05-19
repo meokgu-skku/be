@@ -60,3 +60,7 @@ data class NotFoundReviewException(
 data class UnAuthorizedUpdateException(
     override val message: String = "해당 게시글을 수정할 권한이 없습니다."
 ) : ServerException(401, message)
+
+data class UnAuthorizedDeleteException(
+    override val message: String = "해당 게시글을 삭제할 권한이 없습니다."
+) : ServerException(401, message)
