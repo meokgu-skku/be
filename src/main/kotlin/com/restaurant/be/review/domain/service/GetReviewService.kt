@@ -47,7 +47,7 @@ class GetReviewService(
         }
 
         val responseDto = ReviewResponseDto.toDto(
-            reviewWithLikes!!.review,
+            reviewWithLikes.review,
             reviewWithLikes.isLikedByUser
         )
 
