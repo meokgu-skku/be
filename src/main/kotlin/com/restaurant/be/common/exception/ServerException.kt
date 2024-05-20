@@ -17,6 +17,10 @@ data class NotFoundUserEmailException(
     override val message: String = "존재 하지 않는 유저 이메일 입니다."
 ) : ServerException(400, message)
 
+data class NotFoundUserIdException(
+    override val message: String = "유저 고유 ID가 존재하지 않습니다"
+) : ServerException(500, message)
+
 data class WithdrawalUserException(
     override val message: String = "탈퇴한 유저 입니다."
 ) : ServerException(400, message)
@@ -56,3 +60,23 @@ data class NotFoundUserException(
 data class NotFoundReviewException(
     override val message: String = "존재하지 않은 리뷰 입니다."
 ) : ServerException(400, message)
+
+data class UnAuthorizedUpdateException(
+    override val message: String = "해당 게시글을 수정할 권한이 없습니다."
+) : ServerException(401, message)
+
+data class UnAuthorizedDeleteException(
+    override val message: String = "해당 게시글을 삭제할 권한이 없습니다."
+) : ServerException(401, message)
+
+data class DuplicateLikeException(
+    override val message: String = "같은 게시글을 두번 좋아요할 수 없습니다."
+) : ServerException(400, message)
+
+data class NotFoundLikeException(
+    override val message: String = "해당 게시글은 이미 좋아하지 않습니다."
+) : ServerException(400, message)
+
+data class InvalidLikeCountException(
+    override val message: String = "좋아요가 0보다 작아질 순 없습니다."
+) : ServerException(500, message)

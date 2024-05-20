@@ -3,15 +3,17 @@ package com.restaurant.be.review.presentation.controller
 import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.review.domain.service.GetReviewService
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
+import com.restaurant.be.review.presentation.dto.GetReviewsResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
 
@@ -30,12 +32,27 @@ class GetReviewController(
         description = "성공",
         content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
     )
-    fun getReview(
+    fun getReviews(
         principal: Principal,
-        @RequestParam page: Int,
-        size: Int
+        pageable: Pageable
+    ): CommonResponse<GetReviewsResponse> {
+        val response = getReviewService.getReviews(pageable, principal.name)
+        return CommonResponse.success(response)
+    }
+
+    @GetMapping("/{reviewId}")
+    @PreAuthorize("hasRole('USER')")
+    @ApiOperation(value = "리뷰 단건 조회 API")
+    @ApiResponse(
+        responseCode = "200",
+        description = "성공",
+        content = [Content(schema = Schema(implementation = GetReviewResponse::class))]
+    )
+    fun getOneReview(
+        principal: Principal,
+        @PathVariable reviewId: Long
     ): CommonResponse<GetReviewResponse> {
-        val response = getReviewService.getReviewListOf(page, size, principal.name)
+        val response = getReviewService.getReview(reviewId, principal.name)
         return CommonResponse.success(response)
     }
 }

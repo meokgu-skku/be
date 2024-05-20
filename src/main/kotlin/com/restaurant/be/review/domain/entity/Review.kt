@@ -1,7 +1,11 @@
 package com.restaurant.be.review.domain.entity
 
 import com.restaurant.be.common.entity.BaseEntity
+import com.restaurant.be.common.exception.InvalidLikeCountException
+import com.restaurant.be.review.domain.entity.QReview.review
+import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
+import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
 import kotlinx.serialization.json.JsonNull.content
 import javax.persistence.CascadeType
@@ -32,23 +36,57 @@ class Review(
     val restaurantId: Long,
 
     @Column(nullable = false)
-    val content: String,
+    var content: String,
 
     @Column(nullable = false)
-    val rating: Double,
+    var rating: Double,
+
+    @Column(name = "like_count", nullable = false)
+    var likeCount: Long = 0,
+
+    @Column(name = "view_count", nullable = false)
+    var viewCount: Long = 0,
 
     // 부모 (Review Entity)가 주인이되어 Image참조 가능. 반대는 불가능
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "review_id")
-    val images: MutableList<ReviewImage> = mutableListOf()
+    var images: MutableList<ReviewImage> = mutableListOf()
 
 ) : BaseEntity() {
     fun addImage(reviewImage: ReviewImage) {
         images.add(reviewImage)
     }
 
+    fun updateReview(request: UpdateReviewRequest) {
+        val updateRequest = request.review
+        this.content = updateRequest.content
+        this.rating = updateRequest.rating
+        this.images.clear()
+        updateRequest.imageUrls.forEach {
+            this.addImage(
+                ReviewImage(
+                    imageUrl = it
+                )
+            )
+        }
+    }
+
+    fun incrementViewCount() {
+        this.viewCount++
+    }
+    fun incrementLikeCount() {
+        this.likeCount++
+    }
+    fun decrementLikeCount() {
+        if (this.likeCount == 0L) {
+            throw InvalidLikeCountException()
+        }
+        this.likeCount--
+    }
+
     fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
         return ReviewResponseDto(
+            id = id ?: 0,
             userId = user.id ?: 0,
             username = user.nickname,
             profileImageUrl = user.profileImageUrl,
@@ -56,7 +94,9 @@ class Review(
             rating = rating,
             content = content,
             imageUrls = images.map { it.imageUrl },
-            isLike = doesUserLike
+            isLike = doesUserLike,
+            viewCount = viewCount,
+            likeCount = likeCount
         )
     }
 }
