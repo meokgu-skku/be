@@ -1,6 +1,6 @@
 package com.restaurant.be.restaurant.repository
 
-interface CategoryRepository {
+import com.restaurant.be.restaurant.presentation.domain.entity.Category
+import org.springframework.data.jpa.repository.JpaRepository
 
-    fun findDistinctName(): List<String>
-}
+interface CategoryRepository : JpaRepository<Category, Long>

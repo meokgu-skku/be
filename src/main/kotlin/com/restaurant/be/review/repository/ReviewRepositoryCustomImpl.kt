@@ -6,7 +6,7 @@ import com.querydsl.core.types.dsl.PathBuilder
 import com.querydsl.core.types.dsl.PathBuilderFactory
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.review.domain.entity.QReview.review
-import com.restaurant.be.review.domain.entity.QReviewLikes.reviewLikes
+import com.restaurant.be.review.domain.entity.QReviewLike.reviewLike
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.user.domain.entity.User
@@ -24,14 +24,14 @@ class ReviewRepositoryCustomImpl(
                 Projections.constructor(
                     ReviewWithLikesDto::class.java,
                     review,
-                    reviewLikes.userId.isNotNull()
+                    reviewLike.userId.isNotNull()
                 )
             )
             .from(review)
-            .leftJoin(reviewLikes)
+            .leftJoin(reviewLike)
             .on(
-                reviewLikes.reviewId.eq(review.id)
-                    .and(reviewLikes.userId.eq(user.id))
+                reviewLike.reviewId.eq(review.id)
+                    .and(reviewLike.userId.eq(user.id))
             )
             .where(review.id.eq(reviewId))
             .fetchJoin()
@@ -46,14 +46,14 @@ class ReviewRepositoryCustomImpl(
                 Projections.constructor(
                     ReviewWithLikesDto::class.java,
                     review,
-                    reviewLikes.userId.isNotNull()
+                    reviewLike.userId.isNotNull()
                 )
             )
             .from(review)
-            .leftJoin(reviewLikes)
+            .leftJoin(reviewLike)
             .on(
-                reviewLikes.reviewId.eq(review.id)
-                    .and(reviewLikes.userId.eq(user.id))
+                reviewLike.reviewId.eq(review.id)
+                    .and(reviewLike.userId.eq(user.id))
             )
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
@@ -72,14 +72,14 @@ class ReviewRepositoryCustomImpl(
                 Projections.constructor(
                     ReviewWithLikesDto::class.java,
                     review,
-                    reviewLikes.userId.isNotNull()
+                    reviewLike.userId.isNotNull()
                 )
             )
             .from(review)
-            .leftJoin(reviewLikes)
+            .leftJoin(reviewLike)
             .on(
-                reviewLikes.reviewId.eq(review.id)
-                    .and(reviewLikes.userId.eq(user.id))
+                reviewLike.reviewId.eq(review.id)
+                    .and(reviewLike.userId.eq(user.id))
             )
             .where(review.user.id.eq(user.id))
             .offset(pageable.offset)
