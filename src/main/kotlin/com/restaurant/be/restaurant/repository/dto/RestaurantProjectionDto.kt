@@ -6,13 +6,12 @@ import com.restaurant.be.restaurant.presentation.domain.entity.Restaurant
 import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDetailDto
 import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
 import com.restaurant.be.review.domain.entity.Review
-import kotlinx.serialization.json.JsonNull.content
 
 data class RestaurantProjectionDto(
     val restaurant: Restaurant,
     val isLike: Boolean,
     val menus: List<Menu>,
-    val review: List<Review>,
+    val review: Review?,
     val categories: List<Category>
 ) {
     fun toDto(): RestaurantDto {
@@ -27,7 +26,7 @@ data class RestaurantProjectionDto(
             representativeMenu = menus.firstOrNull()?.toDto(),
             operatingStartTime = "",
             operatingEndTime = "",
-            representativeReviewContent = review.first().content,
+            representativeReviewContent = review?.content,
             isLike = isLike,
             discountContent = restaurant.discountContent,
             detailInfo = RestaurantDetailDto(

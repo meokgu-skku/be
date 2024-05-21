@@ -8,6 +8,8 @@ import com.restaurant.be.restaurant.presentation.domain.entity.QMenu.menu
 import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurant.restaurant
 import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurantCategory.restaurantCategory
 import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurantLike.restaurantLike
+import com.restaurant.be.restaurant.presentation.dto.common.CategoryDto
+import com.restaurant.be.restaurant.presentation.dto.common.MenuDto
 import com.restaurant.be.restaurant.repository.dto.RestaurantProjectionDto
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.user.domain.entity.QUser.user
@@ -16,28 +18,50 @@ class RestaurantRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory
 ) : RestaurantRepositoryCustom {
     override fun findDtoById(restaurantId: Long): RestaurantProjectionDto? {
-        val result = queryFactory
+        val restaurantInfo = queryFactory
+            .select(restaurant)
             .from(restaurant)
-            .leftJoin(restaurantLike).on(restaurantLike.restaurantId.eq(restaurant.id))
-            .leftJoin(user).on(restaurantLike.userId.eq(user.id))
-            .leftJoin(menu).on(menu.restaurantId.eq(restaurant.id))
-            .leftJoin(restaurantCategory).on(restaurantCategory.restaurantId.eq(restaurant.id))
-            .leftJoin(category).on(restaurantCategory.categoryId.eq(category.id))
-            .leftJoin(review).on(review.restaurantId.eq(restaurant.id))
             .where(restaurant.id.eq(restaurantId))
-            .transform(
-                GroupBy.groupBy(restaurant.id).list(
-                    Projections.constructor(
-                        RestaurantProjectionDto::class.java,
-                        restaurant,
-                        restaurantLike.userId.isNotNull(),
-                        GroupBy.list(menu),
-                        GroupBy.list(review),
-                        GroupBy.list(category)
-                    )
-                )
-            )
+            .fetchOne()
 
-        return result.firstOrNull()
+        val likedUsers = queryFactory
+            .select(user.id)
+            .from(restaurantLike)
+            .leftJoin(user).on(restaurantLike.userId.eq(user.id))
+            .where(restaurantLike.restaurantId.eq(restaurantId))
+            .fetch()
+
+        val menus = queryFactory
+            .select(menu)
+            .from(menu)
+            .where(menu.restaurantId.eq(restaurantId))
+            .fetch()
+
+        val review = queryFactory
+            .select(review)
+            .from(review)
+            .where(review.restaurantId.eq(restaurantId))
+            .orderBy(review.likeCount.desc())
+            .limit(1)
+            .fetchOne()
+
+        val categories = queryFactory
+            .select(category)
+            .from(restaurantCategory)
+            .leftJoin(category).on(restaurantCategory.categoryId.eq(category.id))
+            .where(restaurantCategory.restaurantId.eq(restaurantId))
+            .fetch()
+
+        return if (restaurantInfo != null) {
+            RestaurantProjectionDto(
+                restaurantInfo,
+                likedUsers.isNotEmpty(),
+                menus,
+                review,
+                categories,
+            )
+        } else {
+            null
+        }
     }
 }

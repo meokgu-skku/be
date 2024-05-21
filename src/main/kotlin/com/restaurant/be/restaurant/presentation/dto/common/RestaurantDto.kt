@@ -24,7 +24,7 @@ data class RestaurantDto(
     @Schema(description = "식당 영업 종료 시간")
     val operatingEndTime: String,
     @Schema(description = "식당 대표 리뷰 내용")
-    val representativeReviewContent: String,
+    val representativeReviewContent: String?,
     @Schema(description = "식당 좋아요 여부(로그인한 유저)")
     val isLike: Boolean,
     @Schema(description = "식당 할인 내용")
