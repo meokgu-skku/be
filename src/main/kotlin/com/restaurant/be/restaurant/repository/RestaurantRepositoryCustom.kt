@@ -10,6 +10,6 @@ interface RestaurantRepositoryCustom {
         restaurantIds: List<Long>,
         userId: Long,
         isLikeFilter: Boolean?,
-        pageable: Pageable,
+        pageable: Pageable
     ): Page<RestaurantProjectionDto>
 }

@@ -20,7 +20,7 @@ data class RestaurantEsDocument(
     @SerialName("discount_content") val discountContent: String?,
     @SerialName("menus") val menus: List<MenuEsDocument>,
     @SerialName("review_count") val reviewCount: Long,
-    @SerialName("rating_avg") val ratingAvg: Double?,
+    @SerialName("rating_avg") val ratingAvg: Double?
 ) {
     fun toDto() = RestaurantDto(
         id = id,

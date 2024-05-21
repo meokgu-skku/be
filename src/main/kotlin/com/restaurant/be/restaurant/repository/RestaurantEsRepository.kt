@@ -140,7 +140,7 @@ class RestaurantEsRepository(
                     }
                 },
                 size = 500,
-                from = 0,
+                from = 0
             ).parseHits<RestaurantEsDocument>()
         }
 

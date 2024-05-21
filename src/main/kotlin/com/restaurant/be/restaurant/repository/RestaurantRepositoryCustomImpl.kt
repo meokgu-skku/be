@@ -69,20 +69,25 @@ class RestaurantRepositoryCustomImpl(
         restaurantIds: List<Long>,
         userId: Long,
         isLikeFilter: Boolean?,
-        pageable: Pageable,
+        pageable: Pageable
     ): Page<RestaurantProjectionDto> {
         val restaurantQuery = queryFactory
             .select(restaurant)
             .from(restaurant)
-            .where(restaurant.id.`in`(restaurantIds)
-                .and(
-                    if (isLikeFilter == true) restaurant.id.`in`(
-                        JPAExpressions
-                            .select(restaurantLike.restaurantId)
-                            .from(restaurantLike)
-                            .where(restaurantLike.userId.eq(userId))
-                    ) else null
-                )
+            .where(
+                restaurant.id.`in`(restaurantIds)
+                    .and(
+                        if (isLikeFilter == true) {
+                            restaurant.id.`in`(
+                                JPAExpressions
+                                    .select(restaurantLike.restaurantId)
+                                    .from(restaurantLike)
+                                    .where(restaurantLike.userId.eq(userId))
+                            )
+                        } else {
+                            null
+                        }
+                    )
             )
 
         val total = restaurantQuery.fetchCount()

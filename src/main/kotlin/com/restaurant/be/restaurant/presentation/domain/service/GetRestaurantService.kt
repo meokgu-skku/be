@@ -26,7 +26,7 @@ class GetRestaurantService(
     fun getRestaurants(
         request: GetRestaurantsRequest,
         pageable: Pageable,
-        email: String,
+        email: String
     ): GetRestaurantsResponse {
         val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
@@ -40,14 +40,14 @@ class GetRestaurantService(
             restaurants.map { it.id },
             user.id ?: 0,
             request.like,
-            pageable,
+            pageable
         )
 
         return GetRestaurantsResponse(
             PageImpl(
                 restaurantProjections.content.map { it.toDto() },
                 pageable,
-                restaurantProjections.size.toLong(),
+                restaurantProjections.size.toLong()
             )
         )
     }

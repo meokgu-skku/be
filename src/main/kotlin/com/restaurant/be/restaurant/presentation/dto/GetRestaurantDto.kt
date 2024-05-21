@@ -29,7 +29,7 @@ data class GetRestaurantsRequest(
     val naverReviewCount: Int?,
 
     @ApiModelProperty(value = "찜 필터", example = "false", required = false)
-    val like: Boolean?,
+    val like: Boolean?
 )
 
 enum class Sort {
