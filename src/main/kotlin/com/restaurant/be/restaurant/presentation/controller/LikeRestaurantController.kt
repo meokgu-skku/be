@@ -1,6 +1,7 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.domain.service.LikeRestaurantService
 import com.restaurant.be.restaurant.presentation.dto.GetLikeRestaurantsResponse
 import com.restaurant.be.restaurant.presentation.dto.LikeRestaurantRequest
 import com.restaurant.be.restaurant.presentation.dto.LikeRestaurantResponse
@@ -23,9 +24,11 @@ import javax.validation.Valid
 @Api(tags = ["02. Restaurant Info"], description = "음식점 서비스")
 @RestController
 @RequestMapping("/v1/restaurants")
-class LikeRestaurantController {
+class LikeRestaurantController(
+    private val likeRestaurantService: LikeRestaurantService
+) {
 
-    @GetMapping("/like")
+    @GetMapping("/my-like")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "좋아요한 음식점 리스트 조회 API")
     @ApiResponse(
@@ -37,7 +40,8 @@ class LikeRestaurantController {
         principal: Principal,
         pageable: Pageable
     ): CommonResponse<GetLikeRestaurantsResponse> {
-        return CommonResponse.success()
+        val response = likeRestaurantService.getLikeRestaurant(pageable, principal.name)
+        return CommonResponse.success(response)
     }
 
     @PostMapping("/{restaurantId}/like")
@@ -50,10 +54,11 @@ class LikeRestaurantController {
     )
     fun likeRestaurant(
         principal: Principal,
-        @PathVariable restaurantId: String,
+        @PathVariable restaurantId: Long,
         @RequestBody @Valid
         request: LikeRestaurantRequest
     ): CommonResponse<LikeRestaurantResponse> {
-        return CommonResponse.success()
+        val response = likeRestaurantService.likeRestaurant(principal.name, restaurantId, request.isLike)
+        return CommonResponse.success(response)
     }
 }
