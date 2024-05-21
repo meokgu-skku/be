@@ -8,15 +8,14 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class GetCategoryService(
-
     private val categoryRepository: CategoryRepository
 ) {
     @Transactional(readOnly = true)
     fun getCategories(): GetCategoryResponse {
-        // assuming you have the findByCategory method in your repository
-        val categories: List<String> = categoryRepository.findDistinctName()
-        val categoryDtos: List<CategoryDto> = categories.map { CategoryDto(0, it) }
+        val categories = categoryRepository.findAll()
 
-        return GetCategoryResponse(categoryDtos)
+        return GetCategoryResponse(
+            categories = categories.map { CategoryDto(it.id, it.name) }
+        )
     }
 }

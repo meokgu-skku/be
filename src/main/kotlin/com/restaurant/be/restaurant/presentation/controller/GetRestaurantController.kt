@@ -1,11 +1,10 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
-import com.restaurant.be.restaurant.presentation.domain.service.GetRestaurantByIdService
+import com.restaurant.be.restaurant.presentation.domain.service.GetRestaurantService
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
-import com.restaurant.be.restaurant.service.GetRestaurantService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -24,8 +23,7 @@ import java.security.Principal
 @RestController
 @RequestMapping("/v1/restaurants")
 class GetRestaurantController(
-    private val getRestaurantService: GetRestaurantService,
-    private val getRestaurantByIdService: GetRestaurantByIdService
+    private val getRestaurantService: GetRestaurantService
 ) {
 
     @GetMapping
@@ -57,7 +55,7 @@ class GetRestaurantController(
         principal: Principal,
         @PathVariable restaurantId: Long
     ): CommonResponse<GetRestaurantResponse> {
-        val response = getRestaurantByIdService.getRestaurantById(restaurantId, principal.name)
+        val response = getRestaurantService.getRestaurant(restaurantId, principal.name)
         return CommonResponse.success(response)
     }
 }

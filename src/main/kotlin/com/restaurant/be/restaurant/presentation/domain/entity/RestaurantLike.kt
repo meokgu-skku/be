@@ -10,7 +10,6 @@ import javax.persistence.Table
 @Entity
 @Table(name = "restaurant_likes")
 class RestaurantLike(
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -20,6 +19,5 @@ class RestaurantLike(
     var restaurantId: Long,
 
     @Column(name = "user_id", nullable = false)
-    var userId: String // user의 email 정보
-
+    var userId: Long
 )

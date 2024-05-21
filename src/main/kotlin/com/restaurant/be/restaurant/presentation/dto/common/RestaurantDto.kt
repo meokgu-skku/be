@@ -16,7 +16,7 @@ data class RestaurantDto(
     @Schema(description = "식당 좋아요 수")
     val likeCount: Long,
     @Schema(description = "식당 카테고리")
-    val category: String,
+    val categories: List<String>,
     @Schema(description = "식당 대표 메뉴")
     val representativeMenu: MenuDto?,
     @Schema(description = "식당 영업 시작 시간")

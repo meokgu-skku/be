@@ -28,7 +28,7 @@ data class RestaurantEsDocument(
         ratingAvg = naverRating ?: 0.0, // RDB로 변경 필요
         reviewCount = naverReviewCount, // RDB로 변경 필요
         likeCount = 0, // RDB
-        category = category,
+        categories = category.split(",").map { it.trim() },
         representativeMenu = menus.firstOrNull()?.toDto(),
         operatingStartTime = "", // 나중에 추가
         operatingEndTime = "", // 나중에 추가

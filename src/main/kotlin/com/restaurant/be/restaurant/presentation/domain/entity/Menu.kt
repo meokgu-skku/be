@@ -19,28 +19,27 @@ class Menu(
     @Column(name = "restaurant_id", nullable = false)
     var restaurantId: Long,
 
-    @Column(name = "menu_name", nullable = false)
-    var menuName: String,
+    @Column(name = "name", nullable = false)
+    var name: String,
 
     @Column(name = "price")
-    var price: String,
+    var price: Int,
 
     @Column(name = "description")
     var description: String,
 
     @Column(name = "is_representative")
-    var isRepresentative: String,
+    var isRepresentative: Boolean,
 
     @Column(name = "image_url")
     var imageUrl: String
-
 ) {
     fun toDto(): MenuDto {
         return MenuDto(
-            name = this.menuName,
-            price = this.price.replace(",", "").toInt(),
+            name = this.name,
+            price = this.price,
             description = this.description,
-            isRepresentative = (this.isRepresentative == "대표"),
+            isRepresentative = isRepresentative,
             imageUrl = this.imageUrl
         )
     }

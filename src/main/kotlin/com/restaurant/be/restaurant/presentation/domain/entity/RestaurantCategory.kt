@@ -8,13 +8,16 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "categories")
-class Category(
+@Table(name = "restaurant_categories")
+data class RestaurantCategory(
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     var id: Long,
 
-    @Column(name = "name", nullable = false, length = 64)
-    var name: String
+    @Column(name = "restaurant_id", nullable = false)
+    var restaurantId: Long,
+
+    @Column(name = "category_id", nullable = false)
+    var categoryId: Long
 )

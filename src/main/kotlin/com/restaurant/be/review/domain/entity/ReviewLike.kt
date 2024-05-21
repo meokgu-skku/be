@@ -10,7 +10,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "review_likes")
-class ReviewLikes(
+class ReviewLike(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
