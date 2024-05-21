@@ -9,6 +9,7 @@ import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.repository.RestaurantEsRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.user.repository.UserRepository
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,20 +22,33 @@ class GetRestaurantService(
     private val restaurantRepository: RestaurantRepository
 ) {
 
+    @Transactional(readOnly = true)
     fun getRestaurants(
         request: GetRestaurantsRequest,
         pageable: Pageable,
-        email: String
+        email: String,
     ): GetRestaurantsResponse {
+        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
+
         val restaurants = restaurantEsRepository.searchRestaurants(request, pageable)
 
         if (!request.query.isNullOrEmpty()) {
-            val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
             redisRepository.addSearchQuery(user.id ?: 0, request.query)
         }
 
+        val restaurantProjections = restaurantRepository.findDtoByIds(
+            restaurants.map { it.id },
+            user.id ?: 0,
+            request.like,
+            pageable,
+        )
+
         return GetRestaurantsResponse(
-            restaurants = restaurants.map { it.toDto() }
+            PageImpl(
+                restaurantProjections.content.map { it.toDto() },
+                pageable,
+                restaurantProjections.size.toLong(),
+            )
         )
     }
 
