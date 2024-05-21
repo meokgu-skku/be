@@ -1,5 +1,4 @@
-
-package com.restaurant.be.review.domain.entity
+package com.restaurant.be.restaurant.presentation.domain.entity
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -9,15 +8,13 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "review_likes")
-class ReviewLikes(
+@Table(name = "categories")
+class Category(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long? = null,
+    @Column(name = "id", nullable = false)
+    var id: Long,
 
-    @Column(name = "user_id", nullable = false)
-    val userId: Long,
-
-    @Column(name = "review_id", nullable = false)
-    val reviewId: Long
+    @Column(name = "name", nullable = false, length = 64)
+    var name: String
 )

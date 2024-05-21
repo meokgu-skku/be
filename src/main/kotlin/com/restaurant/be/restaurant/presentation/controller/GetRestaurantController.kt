@@ -1,10 +1,10 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.domain.service.GetRestaurantService
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
-import com.restaurant.be.restaurant.service.GetRestaurantService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -53,8 +53,9 @@ class GetRestaurantController(
     )
     fun getRestaurant(
         principal: Principal,
-        @PathVariable restaurantId: String
+        @PathVariable restaurantId: Long
     ): CommonResponse<GetRestaurantResponse> {
-        return CommonResponse.success()
+        val response = getRestaurantService.getRestaurant(restaurantId, principal.name)
+        return CommonResponse.success(response)
     }
 }

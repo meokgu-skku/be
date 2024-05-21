@@ -24,7 +24,7 @@ import javax.persistence.Table
 @Table(name = "restaurant_reviews")
 class Review(
     @Id
-    @Column(name = "review_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
 
