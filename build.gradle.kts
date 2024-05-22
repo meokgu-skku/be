@@ -93,6 +93,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers:1.17.1")
     testImplementation("org.testcontainers:junit-jupiter:1.17.1")
     testImplementation("org.testcontainers:mysql:1.17.1")
+    testImplementation("org.testcontainers:elasticsearch:1.16.2")
 }
 
 allOpen {
