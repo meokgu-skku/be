@@ -32,11 +32,11 @@ class RestaurantEsRepository(
                 dsl.terms("category", *request.categories.toTypedArray())
             )
         }
-        if (request.discountForSkku) {
+        if (request.discountForSkku == true) {
             termQueries.add(
                 dsl.exists("discount_content")
             )
-        } else {
+        } else if (request.discountForSkku == false) {
             termQueries.add(
                 dsl.bool {
                     mustNot(
@@ -45,17 +45,31 @@ class RestaurantEsRepository(
                 }
             )
         }
-        if (request.rating != null) {
+        if (request.ratingAvg != null) {
             termQueries.add(
-                dsl.range("naver_rating") {
-                    gte = request.rating
+                dsl.range("rating_avg") {
+                    gte = request.ratingAvg
                 }
             )
         }
         if (request.reviewCount != null) {
             termQueries.add(
-                dsl.range("naver_review_count") {
+                dsl.range("review_count") {
                     gte = request.reviewCount
+                }
+            )
+        }
+        if (request.naverRatingAvg != null) {
+            termQueries.add(
+                dsl.range("naver_rating_avg") {
+                    gte = request.naverRatingAvg
+                }
+            )
+        }
+        if (request.naverReviewCount != null) {
+            termQueries.add(
+                dsl.range("naver_review_count") {
+                    gte = request.naverReviewCount
                 }
             )
         }
@@ -125,8 +139,8 @@ class RestaurantEsRepository(
                         }
                     }
                 },
-                size = pageable.pageSize,
-                from = pageable.offset.toInt()
+                size = 500,
+                from = 0
             ).parseHits<RestaurantEsDocument>()
         }
 

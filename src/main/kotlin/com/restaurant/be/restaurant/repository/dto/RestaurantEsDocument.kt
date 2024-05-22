@@ -14,12 +14,13 @@ data class RestaurantEsDocument(
     @SerialName("original_category") val originalCategory: String,
     @SerialName("naver_review_count") val naverReviewCount: Long,
     @SerialName("address") val address: String,
-    @SerialName("naver_rating") val naverRating: Double?,
-    @SerialName("number") val number: String,
+    @SerialName("naver_rating_avg") val naverRating: Double?,
     @SerialName("image_url") val imageUrl: String,
     @SerialName("category") val category: String,
     @SerialName("discount_content") val discountContent: String?,
-    @SerialName("menus") val menus: List<MenuEsDocument>
+    @SerialName("menus") val menus: List<MenuEsDocument>,
+    @SerialName("review_count") val reviewCount: Long,
+    @SerialName("rating_avg") val ratingAvg: Double?
 ) {
     fun toDto() = RestaurantDto(
         id = id,
@@ -36,7 +37,7 @@ data class RestaurantEsDocument(
         isLike = false, // RDB
         discountContent = discountContent, // 나중에 추가
         detailInfo = RestaurantDetailDto(
-            contactNumber = number,
+            contactNumber = "",
             address = address,
             menus = menus.map { it.toDto() },
             operatingInfos = emptyList() // 나중에 추가
