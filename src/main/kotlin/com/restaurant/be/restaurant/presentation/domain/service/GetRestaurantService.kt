@@ -42,6 +42,9 @@ class GetRestaurantService(
             request.like,
             pageable
         )
+        
+        println("test..22" + restaurantProjections.content.size)
+        println("test..33" + restaurants.size)
 
         return GetRestaurantsResponse(
             PageImpl(
