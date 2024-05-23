@@ -16,15 +16,15 @@ import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.user.repository.UserRepository
 import io.kotest.matchers.shouldBe
-import java.nio.charset.Charset
-import javax.persistence.EntityManager
-import javax.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.nio.charset.Charset
+import javax.persistence.EntityManager
+import javax.transaction.Transactional
 
 @IntegrationTest
 @Transactional
@@ -33,7 +33,7 @@ class GetRestaurantControllerTest(
     private val userRepository: UserRepository,
     private val elasticsearchTemplate: ElasticsearchRestTemplate,
     private val restaurantRepository: RestaurantRepository,
-    private val em: EntityManager,
+    private val em: EntityManager
 ) : CustomDescribeSpec() {
     private val restaurantUrl = "/v1/restaurants"
     private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule()).apply {
@@ -44,7 +44,6 @@ class GetRestaurantControllerTest(
 
     init {
         beforeEach {
-            println("beforeEach start")
             setUpUser("test@gmail.com", userRepository)
             val indexOperations = elasticsearchTemplate.indexOps(RestaurantDocument::class.java)
             if (indexOperations.exists()) {
@@ -52,16 +51,13 @@ class GetRestaurantControllerTest(
             }
             indexOperations.create()
             indexOperations.putMapping(indexOperations.createMapping())
-            println("beforeEach end")
         }
 
         afterEach {
-            println("afterEach start")
             val indexOperations = elasticsearchTemplate.indexOps(RestaurantDocument::class.java)
             if (indexOperations.exists()) {
                 indexOperations.delete()
             }
-            println("afterEach end")
         }
 
         describe("#get restaurant") {
@@ -100,7 +96,6 @@ class GetRestaurantControllerTest(
                 )
                 elasticsearchTemplate.save(restaurantDocument)
                 elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
-                em.flush()
 
                 // when
                 val result = mockMvc.perform(
