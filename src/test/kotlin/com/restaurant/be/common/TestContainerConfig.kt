@@ -1,12 +1,12 @@
 package com.restaurant.be.common
 
 import com.github.dockerjava.api.model.PortBinding
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.utility.DockerImageName
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
 
 object TestContainerConfig {
 
@@ -64,8 +64,6 @@ object TestContainerConfig {
 
         // Initialize Elasticsearch
         waitForElasticsearch()
-        createElasticsearchIndex()
-        insertSampleData()
     }
 
     private fun waitForElasticsearch() {
@@ -84,62 +82,6 @@ object TestContainerConfig {
             } catch (e: Exception) {
                 Thread.sleep(1000)
             }
-        }
-    }
-
-    private fun createElasticsearchIndex() {
-        val url =
-            URL("http://${elasticsearchContainer.host}:${elasticsearchContainer.getMappedPort(9200)}/restaurant")
-        val jsonPayload = """
-            {
-              "settings": {
-                "number_of_shards": 1,
-                "number_of_replicas": 0
-              },
-              "mappings": {
-                    "properties": {
-                        "id": {"type": "long"},
-                        "name": {"type": "text"},
-                        "original_category": {"type": "text"},
-                        "address": {"type": "text"},
-                        "naver_review_count": {"type": "long"},
-                        "naver_rating_avg": {"type": "float"},
-                        "review_count": {"type": "long"},
-                        "rating_avg": {"type": "float"},
-                        "like_count": {"type": "long"},
-                        "number": {"type": "text"},
-                        "image_url": {"type": "text"},
-                        "category": {"type": "text"},
-                        "discount_content": {"type": "text"},
-                        "menus": {
-                            "type": "nested",
-                            "properties": {
-                                "menu_name": {"type": "text"},
-                                "price": {"type": "integer"},
-                                "description": {"type": "text"},
-                                "is_representative": {"type": "text"},
-                                "image_url": {"type": "text"}
-                            }
-                        }
-                    }
-                }
-            }
-        """.trimIndent()
-
-        val connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = "PUT"
-        connection.setRequestProperty("Content-Type", "application/json")
-        connection.doOutput = true
-        connection.outputStream.use { os ->
-            os.write(jsonPayload.toByteArray())
-            os.flush()
-        }
-
-        if (connection.responseCode != 200) {
-            println("Failed to create Elasticsearch index")
-            println(connection.errorStream.bufferedReader().readText())
-        } else {
-            println("Created Elasticsearch index")
         }
     }
 

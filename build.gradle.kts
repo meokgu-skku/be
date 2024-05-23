@@ -94,6 +94,9 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.17.1")
     testImplementation("org.testcontainers:mysql:1.17.1")
     testImplementation("org.testcontainers:elasticsearch:1.16.2")
+
+    // ES
+    testImplementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 }
 
 allOpen {

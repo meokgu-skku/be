@@ -47,7 +47,7 @@ class GetRestaurantService(
             PageImpl(
                 restaurantProjections.content.map { it.toDto() },
                 pageable,
-                restaurantProjections.size.toLong()
+                restaurantProjections.content.size.toLong()
             )
         )
     }
