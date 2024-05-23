@@ -57,31 +57,6 @@ class GetRestaurantControllerTest(
             }
         }
 
-        describe("#get restaurant when no saved") {
-            it("should return empty") {
-                setUpUser("test@gmail.com", userRepository)
-                val result = mockMvc.perform(
-                    get(restaurantUrl)
-                        .param("query", "목구멍 율전점")
-                )
-                    .also {
-                        println(it.andReturn().response.contentAsString)
-                    }
-                    .andExpect(status().isOk)
-                    .andExpect(jsonPath("$.result").value("SUCCESS"))
-                    .andReturn()
-
-                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
-                val responseType = object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
-                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
-                    responseContent,
-                    responseType
-                )
-
-                actualResult.data!!.restaurants.content.size shouldBe 0
-            }
-        }
-
         describe("#get restaurant when saved") {
             it("should return restaurant") {
                 // given
@@ -116,6 +91,31 @@ class GetRestaurantControllerTest(
                 // then
                 actualResult.data!!.restaurants.content.size shouldBe 1
                 actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점"
+            }
+        }
+
+        describe("#get restaurant when no saved") {
+            it("should return empty") {
+                setUpUser("test@gmail.com", userRepository)
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("query", "목구멍 율전점")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType = object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                actualResult.data!!.restaurants.content.size shouldBe 0
             }
         }
     }
