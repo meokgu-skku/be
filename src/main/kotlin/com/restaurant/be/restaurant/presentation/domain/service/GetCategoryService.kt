@@ -15,7 +15,7 @@ class GetCategoryService(
         val categories = categoryRepository.findAll()
 
         return GetCategoryResponse(
-            categories = categories.map { CategoryDto(it.id, it.name) }
+            categories = categories.map { CategoryDto(it.id ?: 0, it.name) }
         )
     }
 }

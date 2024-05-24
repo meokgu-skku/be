@@ -23,14 +23,14 @@ data class RestaurantDocument(
     @Field(type = FieldType.Long, name = "naver_review_count")
     val naverReviewCount: Long,
 
-    @Field(type = FieldType.Float, name = "naver_rating_avg")
-    val naverRatingAvg: Float,
+    @Field(type = FieldType.Double, name = "naver_rating_avg")
+    val naverRatingAvg: Double,
 
     @Field(type = FieldType.Long, name = "review_count")
     val reviewCount: Long,
 
-    @Field(type = FieldType.Float, name = "rating_avg")
-    val ratingAvg: Float,
+    @Field(type = FieldType.Double, name = "rating_avg")
+    val ratingAvg: Double,
 
     @Field(type = FieldType.Long, name = "like_count")
     val likeCount: Long,
@@ -45,13 +45,16 @@ data class RestaurantDocument(
     val category: String,
 
     @Field(type = FieldType.Text, name = "discount_content")
-    val discountContent: String,
+    val discountContent: String?,
 
     @Field(type = FieldType.Nested, name = "menus")
     val menus: List<MenuDocument>
 )
 
 data class MenuDocument(
+    @Field(type = FieldType.Long, name = "restaurant_id")
+    val restaurantId: Long,
+
     @Field(type = FieldType.Text, name = "menu_name")
     val menuName: String,
 
