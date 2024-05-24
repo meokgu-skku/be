@@ -1,6 +1,6 @@
 package com.restaurant.be.restaurant.presentation.domain.entity
 
-import com.restaurant.be.restaurant.presentation.dto.common.MenuDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.MenuDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

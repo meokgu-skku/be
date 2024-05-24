@@ -1,8 +1,8 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.GetCategoryResponse
 import com.restaurant.be.restaurant.presentation.domain.service.GetCategoryService
-import com.restaurant.be.restaurant.presentation.dto.GetCategoryResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content

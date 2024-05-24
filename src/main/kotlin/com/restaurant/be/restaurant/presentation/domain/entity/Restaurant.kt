@@ -48,6 +48,12 @@ class Restaurant(
     @Column(name = "discount_content")
     var discountContent: String? = null,
 
+    @Column(name = "longitude")
+    var longitude: Double,
+
+    @Column(name = "latitude")
+    var latitude: Double,
+
     @OneToMany(mappedBy = "restaurantId", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var menus: MutableList<Menu> = mutableListOf()
 

@@ -1,10 +1,10 @@
 package com.restaurant.be.restaurant.repository.dto
 
+import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDetailDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
 import com.restaurant.be.restaurant.presentation.domain.entity.Category
 import com.restaurant.be.restaurant.presentation.domain.entity.Menu
 import com.restaurant.be.restaurant.presentation.domain.entity.Restaurant
-import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDetailDto
-import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
 import com.restaurant.be.review.domain.entity.Review
 
 data class RestaurantProjectionDto(
@@ -29,6 +29,8 @@ data class RestaurantProjectionDto(
             representativeReviewContent = review?.content,
             isLike = isLike,
             discountContent = restaurant.discountContent,
+            longitude = restaurant.longitude,
+            latitude = restaurant.latitude,
             detailInfo = RestaurantDetailDto(
                 contactNumber = restaurant.contactNumber,
                 address = restaurant.address,

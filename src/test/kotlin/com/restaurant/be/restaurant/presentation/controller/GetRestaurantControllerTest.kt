@@ -11,11 +11,11 @@ import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.common.util.RestaurantDocument
 import com.restaurant.be.common.util.RestaurantUtil
 import com.restaurant.be.common.util.setUpUser
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
 import com.restaurant.be.restaurant.presentation.domain.entity.Category
 import com.restaurant.be.restaurant.presentation.domain.entity.RestaurantCategory
 import com.restaurant.be.restaurant.presentation.domain.entity.RestaurantLike
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
-import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
 import com.restaurant.be.restaurant.repository.CategoryRepository
 import com.restaurant.be.restaurant.repository.RestaurantCategoryRepository
 import com.restaurant.be.restaurant.repository.RestaurantLikeRepository

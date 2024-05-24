@@ -1,10 +1,10 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsRequest
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.presentation.domain.service.GetRestaurantService
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content

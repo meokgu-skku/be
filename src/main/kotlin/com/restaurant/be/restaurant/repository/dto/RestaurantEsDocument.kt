@@ -1,8 +1,8 @@
 package com.restaurant.be.restaurant.repository.dto
 
-import com.restaurant.be.restaurant.presentation.dto.common.MenuDto
-import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDetailDto
-import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.MenuDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDetailDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
@@ -35,7 +35,9 @@ data class RestaurantEsDocument(
         operatingEndTime = "", // 나중에 추가
         representativeReviewContent = "", // RDB
         isLike = false, // RDB
-        discountContent = discountContent, // 나중에 추가
+        discountContent = discountContent, // 나중에 추가,
+        longitude = 0.0, // RDB
+        latitude = 0.0, // RDB
         detailInfo = RestaurantDetailDto(
             contactNumber = "",
             address = address,
