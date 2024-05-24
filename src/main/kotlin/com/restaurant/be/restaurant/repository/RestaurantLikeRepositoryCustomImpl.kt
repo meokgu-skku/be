@@ -4,6 +4,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.common.exception.NotFoundRestaurantException
 import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurantLike.restaurantLike
 import com.restaurant.be.restaurant.presentation.dto.common.RestaurantDto
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 
 class RestaurantLikeRepositoryCustomImpl(
@@ -11,11 +13,9 @@ class RestaurantLikeRepositoryCustomImpl(
     private val restaurantRepository: RestaurantRepository
 ) : RestaurantLikeRepositoryCustom {
     override fun findRestaurantLikesByUserId(
-        userId: Long?,
+        userId: Long,
         pageable: Pageable
-    ): List<RestaurantDto> {
-        println(pageable.offset)
-        println(pageable.pageSize)
+    ): Page<RestaurantDto> {
         val restaurantIds = queryFactory
             .select(restaurantLike.restaurantId)
             .from(restaurantLike)
@@ -24,6 +24,7 @@ class RestaurantLikeRepositoryCustomImpl(
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        return restaurantIds.map { restaurantRepository.findDtoById(it)?.toDto() ?: throw NotFoundRestaurantException() }
+        val restaurantDtos: List<RestaurantDto> = restaurantIds.map { restaurantRepository.findDtoById(it)?.toDto() ?: throw NotFoundRestaurantException() }
+        return PageImpl(restaurantDtos, pageable, restaurantDtos.size.toLong())
     }
 }

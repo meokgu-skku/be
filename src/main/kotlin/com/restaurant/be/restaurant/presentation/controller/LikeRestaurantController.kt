@@ -36,7 +36,7 @@ class LikeRestaurantController(
         description = "성공",
         content = [Content(schema = Schema(implementation = GetLikeRestaurantsResponse::class))]
     )
-    fun getLikeRestaurants(
+    fun getMyLikeRestaurants(
         principal: Principal,
         pageable: Pageable
     ): CommonResponse<GetLikeRestaurantsResponse> {
