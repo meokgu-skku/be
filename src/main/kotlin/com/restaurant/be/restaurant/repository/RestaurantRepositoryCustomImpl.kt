@@ -71,6 +71,10 @@ class RestaurantRepositoryCustomImpl(
         isLikeFilter: Boolean?,
         pageable: Pageable
     ): Page<RestaurantProjectionDto> {
+        if (restaurantIds.isEmpty()) {
+            return PageImpl(emptyList())
+        }
+
         val restaurantQuery = queryFactory
             .select(restaurant)
             .from(restaurant)
@@ -84,6 +88,13 @@ class RestaurantRepositoryCustomImpl(
                                     .from(restaurantLike)
                                     .where(restaurantLike.userId.eq(userId))
                             )
+                        } else if(isLikeFilter == false) {
+                            restaurant.id.`in`(
+                                JPAExpressions
+                                    .select(restaurantLike.restaurantId)
+                                    .from(restaurantLike)
+                                    .where(restaurantLike.userId.eq(userId))
+                            ).not()
                         } else {
                             null
                         }

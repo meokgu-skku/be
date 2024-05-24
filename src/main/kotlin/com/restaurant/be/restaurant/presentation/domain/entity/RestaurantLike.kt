@@ -13,7 +13,7 @@ class RestaurantLike(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    var id: Long,
+    var id: Long? = null,
 
     @Column(name = "restaurant_id", nullable = false)
     var restaurantId: Long,

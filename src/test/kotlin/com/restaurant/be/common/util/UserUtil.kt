@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import java.security.Principal
 
-fun setUpUser(email: String, userRepository: UserRepository) {
+fun setUpUser(email: String, userRepository: UserRepository): User {
     val user = User(email = email, profileImageUrl = "")
     userRepository.save(user)
 
@@ -17,4 +17,6 @@ fun setUpUser(email: String, userRepository: UserRepository) {
             null,
             listOf(SimpleGrantedAuthority("ROLE_USER"))
         )
+
+    return user
 }
