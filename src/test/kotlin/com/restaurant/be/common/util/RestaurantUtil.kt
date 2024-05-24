@@ -11,14 +11,14 @@ object RestaurantUtil {
         originalCategory: String = "default_category",
         address: String = "default_address",
         naverReviewCount: Long = 0,
-        naverRatingAvg: Float = 0.0f,
+        naverRatingAvg: Double = 0.0,
         reviewCount: Long = 0,
-        ratingAvg: Float = 0.0f,
+        ratingAvg: Double = 0.0,
         likeCount: Long = 0,
         number: String = "default_number",
         imageUrl: String = "default_image_url",
         category: String = "default_category",
-        discountContent: String = "default_discount_content",
+        discountContent: String? = "default_discount_content",
         menus: List<MenuDocument> = emptyList()
     ): RestaurantDocument {
         return RestaurantDocument(
@@ -66,6 +66,44 @@ object RestaurantUtil {
             viewCount = viewCount,
             discountContent = discountContent,
             menus = menus
+        )
+    }
+
+    fun generateMenuEntity(
+        id: Long = 0,
+        restaurantId: Long = 0,
+        name: String = "default_name",
+        price: Int = 0,
+        description: String = "default_description",
+        isRepresentative: Boolean = false,
+        imageUrl: String = "default_image_url"
+    ): Menu {
+        return Menu(
+            id = id,
+            restaurantId = restaurantId,
+            name = name,
+            price = price,
+            description = description,
+            isRepresentative = isRepresentative,
+            imageUrl = imageUrl
+        )
+    }
+
+    fun generateMenuDocument(
+        restaurantId: Long,
+        menuName: String = "default_menu_name",
+        price: Int = 0,
+        description: String = "default_description",
+        isRepresentative: String = "default_is_representative",
+        imageUrl: String = "default_image_url"
+    ): MenuDocument {
+        return MenuDocument(
+            restaurantId = restaurantId,
+            menuName = menuName,
+            price = price,
+            description = description,
+            isRepresentative = isRepresentative,
+            imageUrl = imageUrl
         )
     }
 }

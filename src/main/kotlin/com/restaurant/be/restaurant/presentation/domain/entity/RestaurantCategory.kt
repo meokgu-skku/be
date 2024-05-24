@@ -13,7 +13,7 @@ data class RestaurantCategory(
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id: Long,
+    var id: Long? = null,
 
     @Column(name = "restaurant_id", nullable = false)
     var restaurantId: Long,
