@@ -12,7 +12,6 @@ import com.restaurant.be.common.util.RestaurantDocument
 import com.restaurant.be.common.util.RestaurantUtil
 import com.restaurant.be.common.util.setUpUser
 import com.restaurant.be.restaurant.presentation.domain.entity.Category
-import com.restaurant.be.restaurant.presentation.domain.entity.Restaurant
 import com.restaurant.be.restaurant.presentation.domain.entity.RestaurantCategory
 import com.restaurant.be.restaurant.presentation.domain.entity.RestaurantLike
 import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
@@ -23,14 +22,14 @@ import com.restaurant.be.restaurant.repository.RestaurantLikeRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.user.repository.UserRepository
 import io.kotest.matchers.shouldBe
-import java.nio.charset.Charset
-import javax.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.nio.charset.Charset
+import javax.transaction.Transactional
 
 @IntegrationTest
 @Transactional
@@ -41,7 +40,7 @@ class GetRestaurantControllerTest(
     private val restaurantRepository: RestaurantRepository,
     private val categoryRepository: CategoryRepository,
     private val restaurantCategoryRepository: RestaurantCategoryRepository,
-    private val restaurantLikeRepository: RestaurantLikeRepository,
+    private val restaurantLikeRepository: RestaurantLikeRepository
 ) : CustomDescribeSpec() {
     private val restaurantUrl = "/v1/restaurants"
     private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule()).apply {

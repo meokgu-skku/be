@@ -88,7 +88,7 @@ class RestaurantRepositoryCustomImpl(
                                     .from(restaurantLike)
                                     .where(restaurantLike.userId.eq(userId))
                             )
-                        } else if(isLikeFilter == false) {
+                        } else if (isLikeFilter == false) {
                             restaurant.id.`in`(
                                 JPAExpressions
                                     .select(restaurantLike.restaurantId)
