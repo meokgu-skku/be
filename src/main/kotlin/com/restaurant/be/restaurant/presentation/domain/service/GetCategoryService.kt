@@ -1,7 +1,7 @@
 package com.restaurant.be.restaurant.presentation.domain.service
 
-import com.restaurant.be.restaurant.presentation.dto.GetCategoryResponse
-import com.restaurant.be.restaurant.presentation.dto.common.CategoryDto
+import com.restaurant.be.restaurant.presentation.controller.dto.GetCategoryResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.common.CategoryDto
 import com.restaurant.be.restaurant.repository.CategoryRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

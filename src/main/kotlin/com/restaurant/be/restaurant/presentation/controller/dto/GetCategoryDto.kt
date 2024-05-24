@@ -1,8 +1,8 @@
 @file:Suppress("ktlint", "MatchingDeclarationName")
 
-package com.restaurant.be.restaurant.presentation.dto
+package com.restaurant.be.restaurant.presentation.controller.dto
 
-import com.restaurant.be.restaurant.presentation.dto.common.CategoryDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.CategoryDto
 import io.swagger.v3.oas.annotations.media.Schema
 
 data class GetCategoryResponse(

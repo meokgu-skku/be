@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.dto.common
+package com.restaurant.be.restaurant.presentation.controller.dto.common
 
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -29,6 +29,10 @@ data class RestaurantDto(
     val isLike: Boolean,
     @Schema(description = "식당 할인 내용")
     val discountContent: String?,
+    @Schema(description = "longitude")
+    val longitude: Double,
+    @Schema(description = "latitude")
+    val latitude: Double,
 
     @Schema(description = "식당 상세 정보")
     val detailInfo: RestaurantDetailDto
