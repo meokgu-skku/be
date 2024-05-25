@@ -45,4 +45,9 @@ class User(
         this.nickname = request.nickname
         this.profileImageUrl = request.profileImageUrl
     }
+
+    fun delete() {
+        this.withdrawal = true
+        this.email = ""
+    }
 }
