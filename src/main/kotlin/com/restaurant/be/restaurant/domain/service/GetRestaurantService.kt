@@ -7,6 +7,7 @@ import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantRes
 import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.repository.RestaurantEsRepository
+import com.restaurant.be.restaurant.repository.RestaurantLikeRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.data.domain.PageImpl
@@ -19,7 +20,8 @@ class GetRestaurantService(
     private val restaurantEsRepository: RestaurantEsRepository,
     private val redisRepository: RedisRepository,
     private val userRepository: UserRepository,
-    private val restaurantRepository: RestaurantRepository
+    private val restaurantRepository: RestaurantRepository,
+    private val restaurantLikeRepository: RestaurantLikeRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -28,26 +30,36 @@ class GetRestaurantService(
         pageable: Pageable,
         email: String
     ): GetRestaurantsResponse {
-        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
+        val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
+        val restaurantIds =
+            if (request.like != null) {
+                restaurantLikeRepository.findAllByUserId(userId)
+                    .map { it.restaurantId }
+            } else {
+                null
+            }
 
-        val restaurants = restaurantEsRepository.searchRestaurants(request, pageable)
+        val restaurants = restaurantEsRepository.searchRestaurants(
+            request,
+            pageable,
+            restaurantIds,
+            request.like
+        )
 
         if (!request.query.isNullOrEmpty()) {
-            redisRepository.addSearchQuery(user.id ?: 0, request.query)
+            redisRepository.addSearchQuery(userId, request.query)
         }
 
         val restaurantProjections = restaurantRepository.findDtoByIds(
             restaurants.map { it.id },
-            user.id ?: 0,
-            request.like,
-            pageable
+            userId
         )
 
         return GetRestaurantsResponse(
             PageImpl(
-                restaurantProjections.content.map { it.toDto() },
+                restaurantProjections.map { it.toDto() },
                 pageable,
-                restaurantProjections.content.size.toLong()
+                restaurantProjections.size.toLong()
             )
         )
     }
