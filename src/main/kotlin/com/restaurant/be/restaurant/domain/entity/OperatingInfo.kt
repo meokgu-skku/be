@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.domain.entity
+package com.restaurant.be.restaurant.domain.entity
 
 import com.restaurant.be.restaurant.presentation.controller.dto.common.OperatingInfoDto
 import javax.persistence.Column

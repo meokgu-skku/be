@@ -2,11 +2,11 @@ package com.restaurant.be.restaurant.repository
 
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.restaurant.be.restaurant.presentation.domain.entity.QCategory.category
-import com.restaurant.be.restaurant.presentation.domain.entity.QMenu.menu
-import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurant.restaurant
-import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurantCategory.restaurantCategory
-import com.restaurant.be.restaurant.presentation.domain.entity.QRestaurantLike.restaurantLike
+import com.restaurant.be.restaurant.domain.entity.QCategory.category
+import com.restaurant.be.restaurant.domain.entity.QMenu.menu
+import com.restaurant.be.restaurant.domain.entity.QRestaurant.restaurant
+import com.restaurant.be.restaurant.domain.entity.QRestaurantCategory.restaurantCategory
+import com.restaurant.be.restaurant.domain.entity.QRestaurantLike.restaurantLike
 import com.restaurant.be.restaurant.repository.dto.RestaurantProjectionDto
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.user.domain.entity.QUser.user
