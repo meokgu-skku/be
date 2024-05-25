@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.domain.entity
+package com.restaurant.be.restaurant.domain.entity
 
 import javax.persistence.Column
 import javax.persistence.Entity

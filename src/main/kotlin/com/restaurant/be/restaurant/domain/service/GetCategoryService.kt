@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.domain.service
+package com.restaurant.be.restaurant.domain.service
 
 import com.restaurant.be.restaurant.presentation.controller.dto.GetCategoryResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.common.CategoryDto

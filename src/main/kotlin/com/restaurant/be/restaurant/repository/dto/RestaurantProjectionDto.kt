@@ -1,10 +1,10 @@
 package com.restaurant.be.restaurant.repository.dto
 
+import com.restaurant.be.restaurant.domain.entity.Category
+import com.restaurant.be.restaurant.domain.entity.Menu
+import com.restaurant.be.restaurant.domain.entity.Restaurant
 import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDetailDto
 import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
-import com.restaurant.be.restaurant.presentation.domain.entity.Category
-import com.restaurant.be.restaurant.presentation.domain.entity.Menu
-import com.restaurant.be.restaurant.presentation.domain.entity.Restaurant
 import com.restaurant.be.review.domain.entity.Review
 
 data class RestaurantProjectionDto(

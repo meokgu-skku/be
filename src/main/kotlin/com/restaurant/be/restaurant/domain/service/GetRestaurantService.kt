@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.domain.service
+package com.restaurant.be.restaurant.domain.service
 
 import com.restaurant.be.common.exception.NotFoundRestaurantException
 import com.restaurant.be.common.exception.NotFoundUserEmailException

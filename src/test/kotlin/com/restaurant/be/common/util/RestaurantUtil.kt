@@ -1,7 +1,7 @@
 package com.restaurant.be.common.util
 
-import com.restaurant.be.restaurant.presentation.domain.entity.Menu
-import com.restaurant.be.restaurant.presentation.domain.entity.Restaurant
+import com.restaurant.be.restaurant.domain.entity.Menu
+import com.restaurant.be.restaurant.domain.entity.Restaurant
 
 object RestaurantUtil {
 
@@ -51,7 +51,9 @@ object RestaurantUtil {
         representativeImageUrl: String = "default_image_url",
         viewCount: Long = 0,
         discountContent: String? = null,
-        menus: MutableList<Menu> = mutableListOf()
+        menus: MutableList<Menu> = mutableListOf(),
+        longitude: Double = 0.0,
+        latitude: Double = 0.0
     ): Restaurant {
         return Restaurant(
             id = id,
@@ -65,7 +67,9 @@ object RestaurantUtil {
             representativeImageUrl = representativeImageUrl,
             viewCount = viewCount,
             discountContent = discountContent,
-            menus = menus
+            menus = menus,
+            longitude = longitude,
+            latitude = latitude
         )
     }
 
