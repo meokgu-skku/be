@@ -25,6 +25,7 @@ class User(
     @Column(unique = true)
     var nickname: String = "",
 
+    @Column
     var password: String = "",
 
     @Column(columnDefinition = "boolean default false")

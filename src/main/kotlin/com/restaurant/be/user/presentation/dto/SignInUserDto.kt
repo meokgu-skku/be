@@ -29,6 +29,7 @@ data class SignInUserResponse(
 ) {
     constructor(user: User, token: Token) : this(
         userDto = UserDto(
+            id = user.id ?: 0,
             email = user.email,
             nickname = user.nickname,
             profileImageUrl = user.profileImageUrl

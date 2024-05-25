@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty
 
 data class UserDto(
     @ApiModelProperty(value = "유저 아이디", example = "1", required = true)
-    val id: Long = 0,
+    val id: Long,
 
     @ApiModelProperty(value = "이메일 아이디", example = "test@gmail.com", required = true)
     val email: String,
