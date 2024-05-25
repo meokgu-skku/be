@@ -21,7 +21,7 @@ data class GetRestaurantsRequest(
     @ApiModelProperty(value = "최대 가격 필터", example = "30000", required = false)
     val priceMax: Int?,
     @ApiModelProperty(value = "정렬 기준", example = "BASIC", required = false)
-    val sort: Sort = Sort.BASIC,
+    val customSort: Sort = Sort.BASIC,
 
     @ApiModelProperty(value = "네이버 평점 필터", example = "4.5", required = false)
     val naverRatingAvg: Double?,
@@ -29,7 +29,12 @@ data class GetRestaurantsRequest(
     val naverReviewCount: Int?,
 
     @ApiModelProperty(value = "찜 필터", example = "false", required = false)
-    val like: Boolean?
+    val like: Boolean?,
+
+    @ApiModelProperty(value = "경도(거리순 정렬 할 때 사용)", example = "126.123456", required = false)
+    val longitude: Double?,
+    @ApiModelProperty(value = "위도(거리순 정렬 할 때 사용)", example = "37.123456", required = false)
+    val latitude: Double?
 )
 
 enum class Sort {

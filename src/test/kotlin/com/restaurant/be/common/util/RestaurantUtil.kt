@@ -2,6 +2,7 @@ package com.restaurant.be.common.util
 
 import com.restaurant.be.restaurant.domain.entity.Menu
 import com.restaurant.be.restaurant.domain.entity.Restaurant
+import org.elasticsearch.common.geo.GeoPoint
 
 object RestaurantUtil {
 
@@ -19,7 +20,9 @@ object RestaurantUtil {
         imageUrl: String = "default_image_url",
         category: String = "default_category",
         discountContent: String? = "default_discount_content",
-        menus: List<MenuDocument> = emptyList()
+        menus: List<MenuDocument> = emptyList(),
+        latitude: Double = 0.0,
+        longitude: Double = 0.0
     ): RestaurantDocument {
         return RestaurantDocument(
             id = id,
@@ -35,7 +38,8 @@ object RestaurantUtil {
             imageUrl = imageUrl,
             category = category,
             discountContent = discountContent,
-            menus = menus
+            menus = menus,
+            location = GeoPoint(latitude, longitude)
         )
     }
 
