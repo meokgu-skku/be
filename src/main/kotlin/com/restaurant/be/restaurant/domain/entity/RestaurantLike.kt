@@ -11,7 +11,7 @@ import javax.persistence.Table
 @Table(name = "restaurant_likes")
 class RestaurantLike(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 

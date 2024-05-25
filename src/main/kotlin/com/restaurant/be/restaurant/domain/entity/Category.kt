@@ -11,7 +11,7 @@ import javax.persistence.Table
 @Table(name = "categories")
 class Category(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 

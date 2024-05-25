@@ -12,7 +12,7 @@ import javax.persistence.Table
 @Table(name = "review_likes")
 class ReviewLike(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @Column(name = "user_id", nullable = false)
