@@ -140,7 +140,7 @@ class RestaurantRepositoryCustomImpl(
             val menuList = menus.filter { it.restaurantId == restaurantInfo.id }
             val review = reviews.firstOrNull { it.restaurantId == restaurantInfo.id }
             val categoryList = categories
-                .filter { it.get(restaurantCategory.restaurantId) == restaurantInfo.id }
+                .filter { it.get(restaurantCategory)?.restaurantId == restaurantInfo.id }
                 .mapNotNull { it.get(category) }
             RestaurantProjectionDto(
                 restaurantInfo,
