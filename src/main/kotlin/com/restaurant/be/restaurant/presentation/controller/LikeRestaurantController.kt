@@ -40,7 +40,7 @@ class LikeRestaurantController(
         principal: Principal,
         pageable: Pageable
     ): CommonResponse<GetLikeRestaurantsResponse> {
-        val response = likeRestaurantService.getLikeRestaurant(pageable, principal.name)
+        val response = likeRestaurantService.getMyLikeRestaurant(pageable, principal.name)
         return CommonResponse.success(response)
     }
 

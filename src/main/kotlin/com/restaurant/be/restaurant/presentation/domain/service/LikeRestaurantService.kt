@@ -6,13 +6,11 @@ import com.restaurant.be.common.exception.NotFoundUserException
 import com.restaurant.be.restaurant.domain.entity.RestaurantLike
 import com.restaurant.be.restaurant.presentation.controller.dto.GetLikeRestaurantsResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.LikeRestaurantResponse
-import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
 import com.restaurant.be.restaurant.repository.RestaurantLikeRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.restaurant.repository.dto.RestaurantProjectionDto
 import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.repository.UserRepository
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -50,13 +48,12 @@ class LikeRestaurantService(
     }
 
     @Transactional
-    fun getLikeRestaurant(pageable: Pageable, email: String): GetLikeRestaurantsResponse {
-        val user: User = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
-        val userId: Long = user.id ?: throw NotFoundUserException()
-        // user 가 좋아요한 식당 아이디에 맞는 식당 리스트 반환
-        val restaurants: Page<RestaurantDto> =
-            restaurantLikeRepository.findRestaurantLikesByUserId(userId, pageable)
+    fun getMyLikeRestaurant(pageable: Pageable, email: String): GetLikeRestaurantsResponse {
+        val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
 
-        return GetLikeRestaurantsResponse(restaurants)
+        return GetLikeRestaurantsResponse(
+            restaurantRepository.findMyLikeRestaurants(userId, pageable)
+                .map { it.toDto() }
+        )
     }
 }

@@ -153,4 +153,65 @@ class RestaurantRepositoryCustomImpl(
 
         return PageImpl(restaurantDtos, pageable, total)
     }
+
+    override fun findMyLikeRestaurants(
+        userId: Long,
+        pageable: Pageable
+    ): Page<RestaurantProjectionDto> {
+        val myLikeQuery = queryFactory
+            .select(restaurantLike.restaurantId)
+            .from(restaurantLike)
+            .where(restaurantLike.userId.eq(userId))
+
+        val total = myLikeQuery.fetchCount()
+
+        val restaurantIds = myLikeQuery
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
+            .fetch()
+
+        val restaurantInfos = queryFactory
+            .select(restaurant)
+            .from(restaurant)
+            .where(restaurant.id.`in`(restaurantIds))
+            .fetch()
+
+        val menus = queryFactory
+            .select(menu)
+            .from(menu)
+            .where(menu.restaurantId.`in`(restaurantIds))
+            .fetch()
+
+        val reviews = queryFactory
+            .select(review)
+            .from(review)
+            .where(review.restaurantId.`in`(restaurantIds))
+            .orderBy(review.likeCount.desc())
+            .fetch()
+
+        val categories = queryFactory
+            .select(restaurantCategory, category)
+            .from(restaurantCategory)
+            .leftJoin(category).on(restaurantCategory.categoryId.eq(category.id))
+            .where(restaurantCategory.restaurantId.`in`(restaurantIds))
+            .fetch()
+
+        val restaurantDtos = restaurantInfos.map { restaurantInfo ->
+            val likedUserIds = restaurantIds.map { true }
+            val menuList = menus.filter { it.restaurantId == restaurantInfo.id }
+            val review = reviews.firstOrNull { it.restaurantId == restaurantInfo.id }
+            val categoryList = categories
+                .filter { it.get(restaurantCategory)?.restaurantId == restaurantInfo.id }
+                .mapNotNull { it.get(category) }
+            RestaurantProjectionDto(
+                restaurantInfo,
+                likedUserIds.isNotEmpty(),
+                menuList,
+                review,
+                categoryList
+            )
+        }
+
+        return PageImpl(restaurantDtos, pageable, total)
+    }
 }
