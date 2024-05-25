@@ -1455,7 +1455,7 @@ class GetRestaurantControllerTest(
             }
         }
 
-        describe("#get restaurants compiste filter test") {
+        describe("#get restaurants composite filter test") {
             it("when all filter should return restaurant") {
                 // given
                 val user = userRepository.findByEmail("test@gmail.com")
@@ -1621,6 +1621,169 @@ class GetRestaurantControllerTest(
 
                 // then
                 actualResult.data!!.restaurants.content.size shouldBe 0
+            }
+        }
+
+        describe("#get restaurants pagination test") {
+            it("when no data and set size 1 should return empty") {
+                // given
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("size", "1")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content.size shouldBe 0
+            }
+
+            it("when 1 data and set size 1 should return 1") {
+                // given
+                val restaurantEntity = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점"
+                )
+                restaurantRepository.save(restaurantEntity)
+                val restaurantDocument = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity.id,
+                    name = "목구멍 율전점"
+                )
+                elasticsearchTemplate.save(restaurantDocument)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("size", "1")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content.size shouldBe 1
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점"
+            }
+
+            it("when 2 data and set size 1 page 0 should return 1's restaurant") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1"
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1"
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2"
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2"
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("size", "1")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content.size shouldBe 1
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점1"
+            }
+
+            it("when 2 data and set size 1 page 2 should return 2's restaurant") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1"
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1"
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2"
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2"
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("size", "1")
+                        .param("page", "1")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content.size shouldBe 1
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
             }
         }
     }

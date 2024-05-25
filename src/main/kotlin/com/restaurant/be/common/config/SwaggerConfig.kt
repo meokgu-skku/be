@@ -1,14 +1,17 @@
 package com.restaurant.be.common.config
 
+import com.fasterxml.classmate.TypeResolver
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpMethod
 import springfox.documentation.builders.ApiInfoBuilder
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.builders.ResponseBuilder
+import springfox.documentation.schema.AlternateTypeRule
 import springfox.documentation.service.ApiInfo
 import springfox.documentation.service.ApiKey
 import springfox.documentation.service.AuthorizationScope
@@ -22,7 +25,9 @@ import java.security.Principal
 
 @Configuration
 @EnableSwagger2
-class SwaggerConfig {
+class SwaggerConfig(
+    private val typeResolver: TypeResolver
+) {
     @Bean
     fun api(): Docket {
         val commonResponse = setCommonResponse()
@@ -32,6 +37,13 @@ class SwaggerConfig {
             .globalResponses(HttpMethod.PUT, commonResponse)
             .globalResponses(HttpMethod.PATCH, commonResponse)
             .globalResponses(HttpMethod.DELETE, commonResponse)
+            .alternateTypeRules(
+                AlternateTypeRule(
+                    typeResolver.resolve(Pageable::class.java),
+                    typeResolver.resolve(PageModel::class.java)
+                )
+            )
+            .consumes(getConsumeContentTypes()).produces(getProduceContentTypes())
             .apiInfo(apiInfo()).select()
             .apis(RequestHandlerSelectors.basePackage("com.restaurant.be"))
             .paths(PathSelectors.ant("/**"))
