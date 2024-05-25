@@ -14,7 +14,7 @@ import javax.persistence.Table
 @Table(name = "restaurants")
 class Restaurant(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long,
 
