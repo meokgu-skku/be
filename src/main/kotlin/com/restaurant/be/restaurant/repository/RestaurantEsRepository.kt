@@ -165,7 +165,7 @@ class RestaurantEsRepository(
                         sort {
                             when (request.customSort) {
                                 Sort.BASIC -> null
-                                Sort.CLOSELY_DESC -> add("_geo_distance", SortOrder.DESC) {
+                                Sort.CLOSELY_DESC -> add("_geo_distance", SortOrder.ASC) {
                                     this["location"] = mapOf(
                                         "lat" to request.latitude,
                                         "lon" to request.longitude
