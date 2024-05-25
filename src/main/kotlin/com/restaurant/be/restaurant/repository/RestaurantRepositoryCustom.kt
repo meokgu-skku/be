@@ -9,10 +9,8 @@ interface RestaurantRepositoryCustom {
 
     fun findDtoByIds(
         restaurantIds: List<Long>,
-        userId: Long,
-        isLikeFilter: Boolean?,
-        pageable: Pageable
-    ): Page<RestaurantProjectionDto>
+        userId: Long
+    ): List<RestaurantProjectionDto>
 
     fun findMyLikeRestaurants(userId: Long, pageable: Pageable): Page<RestaurantProjectionDto>
 }

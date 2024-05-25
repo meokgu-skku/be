@@ -1,6 +1,5 @@
 package com.restaurant.be.restaurant.repository
 
-import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.restaurant.domain.entity.QCategory.category
 import com.restaurant.be.restaurant.domain.entity.QMenu.menu
@@ -67,45 +66,16 @@ class RestaurantRepositoryCustomImpl(
 
     override fun findDtoByIds(
         restaurantIds: List<Long>,
-        userId: Long,
-        isLikeFilter: Boolean?,
-        pageable: Pageable
-    ): Page<RestaurantProjectionDto> {
+        userId: Long
+    ): List<RestaurantProjectionDto> {
         if (restaurantIds.isEmpty()) {
-            return PageImpl(emptyList())
+            return emptyList()
         }
 
-        val restaurantQuery = queryFactory
+        val restaurantInfos = queryFactory
             .select(restaurant)
             .from(restaurant)
-            .where(
-                restaurant.id.`in`(restaurantIds)
-                    .and(
-                        if (isLikeFilter == true) {
-                            restaurant.id.`in`(
-                                JPAExpressions
-                                    .select(restaurantLike.restaurantId)
-                                    .from(restaurantLike)
-                                    .where(restaurantLike.userId.eq(userId))
-                            )
-                        } else if (isLikeFilter == false) {
-                            restaurant.id.`in`(
-                                JPAExpressions
-                                    .select(restaurantLike.restaurantId)
-                                    .from(restaurantLike)
-                                    .where(restaurantLike.userId.eq(userId))
-                            ).not()
-                        } else {
-                            null
-                        }
-                    )
-            )
-
-        val total = restaurantQuery.fetchCount()
-
-        val restaurantInfos = restaurantQuery
-            .offset(pageable.offset)
-            .limit(pageable.pageSize.toLong())
+            .where(restaurant.id.`in`(restaurantIds))
             .fetch()
 
         val likedUsers = queryFactory
@@ -151,7 +121,7 @@ class RestaurantRepositoryCustomImpl(
             )
         }
 
-        return PageImpl(restaurantDtos, pageable, total)
+        return restaurantDtos
     }
 
     override fun findMyLikeRestaurants(

@@ -24,9 +24,31 @@ class RestaurantEsRepository(
 
     private val searchIndex = "restaurant"
 
-    fun searchRestaurants(request: GetRestaurantsRequest, pageable: Pageable): List<RestaurantEsDocument> {
+    fun searchRestaurants(
+        request: GetRestaurantsRequest,
+        pageable: Pageable,
+        restaurantIds: List<Long>?,
+        like: Boolean?
+    ): List<RestaurantEsDocument> {
         val dsl = SearchDSL()
         val termQueries: MutableList<ESQuery> = mutableListOf()
+
+        if (restaurantIds != null) {
+            if (like == true) {
+                termQueries.add(
+                    dsl.terms("id", *restaurantIds.map { it.toString() }.toTypedArray())
+                )
+            } else {
+                termQueries.add(
+                    dsl.bool {
+                        mustNot(
+                            dsl.terms("id", *restaurantIds.map { it.toString() }.toTypedArray())
+                        )
+                    }
+                )
+            }
+        }
+
         if (!request.categories.isNullOrEmpty()) {
             termQueries.add(
                 dsl.terms("category", *request.categories.toTypedArray())
@@ -139,8 +161,8 @@ class RestaurantEsRepository(
                         }
                     }
                 },
-                size = 500,
-                from = 0
+                size = pageable.pageSize,
+                from = pageable.offset.toInt()
             ).parseHits<RestaurantEsDocument>()
         }
 
