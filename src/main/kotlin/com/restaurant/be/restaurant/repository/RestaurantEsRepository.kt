@@ -5,13 +5,16 @@ import com.jillesvangurp.ktsearch.parseHits
 import com.jillesvangurp.ktsearch.search
 import com.jillesvangurp.searchdsls.querydsl.ESQuery
 import com.jillesvangurp.searchdsls.querydsl.SearchDSL
+import com.jillesvangurp.searchdsls.querydsl.SortOrder
 import com.jillesvangurp.searchdsls.querydsl.bool
 import com.jillesvangurp.searchdsls.querydsl.exists
 import com.jillesvangurp.searchdsls.querydsl.match
 import com.jillesvangurp.searchdsls.querydsl.nested
 import com.jillesvangurp.searchdsls.querydsl.range
+import com.jillesvangurp.searchdsls.querydsl.sort
 import com.jillesvangurp.searchdsls.querydsl.terms
 import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsRequest
+import com.restaurant.be.restaurant.presentation.controller.dto.Sort
 import com.restaurant.be.restaurant.repository.dto.RestaurantEsDocument
 import kotlinx.coroutines.runBlocking
 import org.springframework.data.domain.Pageable
@@ -158,6 +161,23 @@ class RestaurantEsRepository(
                                 }
                             )
                             minimumShouldMatch(1)
+                        }
+                        sort {
+                            when (request.customSort) {
+                                Sort.BASIC -> null
+                                Sort.CLOSELY_DESC -> add("_geo_distance", SortOrder.DESC) {
+                                    this["location"] = mapOf(
+                                        "lat" to request.latitude,
+                                        "lon" to request.longitude
+                                    )
+                                    this["unit"] = "m"
+                                    this["mode"] = "min"
+                                    this["distance_type"] = "arc"
+                                }
+                                Sort.RATING_DESC -> add("rating_avg", SortOrder.DESC)
+                                Sort.REVIEW_COUNT_DESC -> add("review_count", SortOrder.DESC)
+                                Sort.LIKE_COUNT_DESC -> add("like_count", SortOrder.DESC)
+                            }
                         }
                     }
                 },

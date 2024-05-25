@@ -55,11 +55,14 @@ class GetRestaurantService(
             userId
         )
 
+        val restaurantMap = restaurantProjections.associateBy { it.restaurant.id }
+        val sortedRestaurantProjections = restaurants.mapNotNull { restaurantMap[it.id] }
+
         return GetRestaurantsResponse(
             PageImpl(
-                restaurantProjections.map { it.toDto() },
+                sortedRestaurantProjections.map { it.toDto() },
                 pageable,
-                restaurantProjections.size.toLong()
+                sortedRestaurantProjections.size.toLong()
             )
         )
     }

@@ -4,6 +4,8 @@ import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType
 import javax.persistence.Id
+import org.elasticsearch.common.geo.GeoPoint
+import org.springframework.data.elasticsearch.annotations.GeoPointField
 
 @Document(indexName = "restaurant")
 data class RestaurantDocument(
@@ -48,7 +50,10 @@ data class RestaurantDocument(
     val discountContent: String?,
 
     @Field(type = FieldType.Nested, name = "menus")
-    val menus: List<MenuDocument>
+    val menus: List<MenuDocument>,
+
+    @GeoPointField
+    val location: GeoPoint,
 )
 
 data class MenuDocument(

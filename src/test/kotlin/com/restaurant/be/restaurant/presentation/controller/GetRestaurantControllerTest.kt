@@ -1786,5 +1786,276 @@ class GetRestaurantControllerTest(
                 actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
             }
         }
+
+        describe("#get restaurants sort test") {
+            it("when basic sort should return sorted restaurants by _score") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1"
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1"
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2"
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2"
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("customSort", "BASIC")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점1"
+                actualResult.data!!.restaurants.content[1].name shouldBe "목구멍 율전점2"
+            }
+
+            it("when closely_desc sort should return sorted restaurants by closely_desc") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1",
+                    longitude = 127.123457,
+                    latitude = 37.123457
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1",
+                    longitude = 127.123457,
+                    latitude = 37.123457
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2",
+                    ratingAvg = 4.0,
+                    longitude = 127.123456,
+                    latitude = 37.123456
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2",
+                    longitude = 127.123456,
+                    latitude = 37.123456
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("customSort", "CLOSELY_DESC")
+                        .param("longitude", "127.123456")
+                        .param("latitude", "37.123456")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
+                actualResult.data!!.restaurants.content[1].name shouldBe "목구멍 율전점1"
+            }
+
+            it("when rating_desc sort should return sorted restaurants by rating_desc") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1",
+                    ratingAvg = 4.0
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1",
+                    ratingAvg = 4.0
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2",
+                    ratingAvg = 4.5
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2",
+                    ratingAvg = 4.5
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("customSort", "RATING_DESC")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
+                actualResult.data!!.restaurants.content[1].name shouldBe "목구멍 율전점1"
+            }
+
+            it("when review_desc sort should return sorted restaurants by review_desc") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1",
+                    reviewCount = 100
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1",
+                    reviewCount = 100
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2",
+                    reviewCount = 200
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2",
+                    reviewCount = 200
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("customSort", "REVIEW_COUNT_DESC")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
+                actualResult.data!!.restaurants.content[1].name shouldBe "목구멍 율전점1"
+            }
+
+            it("when like_count_desc sort should return sorted restaurants by like_count_desc") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1"
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1"
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2",
+                    likeCount = 1
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2",
+                    likeCount = 1
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                val user = userRepository.findByEmail("test@gmail.com")
+                restaurantLikeRepository.save(
+                    RestaurantLike(
+                        userId = user?.id ?: 0,
+                        restaurantId = restaurantEntity2.id
+                    )
+                )
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("customSort", "LIKE_COUNT_DESC")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
+                actualResult.data!!.restaurants.content[1].name shouldBe "목구멍 율전점1"
+            }
+        }
     }
 }
