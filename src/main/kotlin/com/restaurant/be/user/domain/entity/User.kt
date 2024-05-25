@@ -16,7 +16,7 @@ import javax.persistence.Table
 class User(
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
     @Column(unique = true)
@@ -25,6 +25,7 @@ class User(
     @Column(unique = true)
     var nickname: String = "",
 
+    @Column
     var password: String = "",
 
     @Column(columnDefinition = "boolean default false")

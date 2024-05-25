@@ -1,6 +1,6 @@
-package com.restaurant.be.restaurant.presentation.domain.entity
+package com.restaurant.be.restaurant.domain.entity
 
-import com.restaurant.be.restaurant.presentation.dto.common.OperatingInfoDto
+import com.restaurant.be.restaurant.presentation.controller.dto.common.OperatingInfoDto
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -12,7 +12,7 @@ import javax.persistence.Table
 @Table(name = "operating_infos")
 class OperatingInfo(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long,
 

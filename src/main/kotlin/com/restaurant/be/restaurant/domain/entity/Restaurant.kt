@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.domain.entity
+package com.restaurant.be.restaurant.domain.entity
 
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -14,7 +14,7 @@ import javax.persistence.Table
 @Table(name = "restaurants")
 class Restaurant(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long,
 
@@ -47,6 +47,12 @@ class Restaurant(
 
     @Column(name = "discount_content")
     var discountContent: String? = null,
+
+    @Column(name = "longitude")
+    var longitude: Double,
+
+    @Column(name = "latitude")
+    var latitude: Double,
 
     @OneToMany(mappedBy = "restaurantId", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var menus: MutableList<Menu> = mutableListOf()

@@ -1,10 +1,10 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.GetLikeRestaurantsResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.LikeRestaurantRequest
+import com.restaurant.be.restaurant.presentation.controller.dto.LikeRestaurantResponse
 import com.restaurant.be.restaurant.presentation.domain.service.LikeRestaurantService
-import com.restaurant.be.restaurant.presentation.dto.GetLikeRestaurantsResponse
-import com.restaurant.be.restaurant.presentation.dto.LikeRestaurantRequest
-import com.restaurant.be.restaurant.presentation.dto.LikeRestaurantResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -58,7 +58,8 @@ class LikeRestaurantController(
         @RequestBody @Valid
         request: LikeRestaurantRequest
     ): CommonResponse<LikeRestaurantResponse> {
-        val response = likeRestaurantService.likeRestaurant(principal.name, restaurantId, request.isLike)
+        val response =
+            likeRestaurantService.likeRestaurant(principal.name, restaurantId, request.isLike)
         return CommonResponse.success(response)
     }
 }

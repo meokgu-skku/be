@@ -1,11 +1,11 @@
-package com.restaurant.be.restaurant.presentation.domain.service
+package com.restaurant.be.restaurant.domain.service
 
 import com.restaurant.be.common.exception.NotFoundRestaurantException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.common.redis.RedisRepository
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantResponse
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantResponse
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsRequest
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.repository.RestaurantEsRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.user.repository.UserRepository

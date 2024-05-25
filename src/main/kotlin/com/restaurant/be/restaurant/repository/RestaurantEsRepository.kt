@@ -11,7 +11,7 @@ import com.jillesvangurp.searchdsls.querydsl.match
 import com.jillesvangurp.searchdsls.querydsl.nested
 import com.jillesvangurp.searchdsls.querydsl.range
 import com.jillesvangurp.searchdsls.querydsl.terms
-import com.restaurant.be.restaurant.presentation.dto.GetRestaurantsRequest
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsRequest
 import com.restaurant.be.restaurant.repository.dto.RestaurantEsDocument
 import kotlinx.coroutines.runBlocking
 import org.springframework.data.domain.Pageable

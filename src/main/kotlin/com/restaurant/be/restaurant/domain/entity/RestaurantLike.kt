@@ -1,4 +1,4 @@
-package com.restaurant.be.restaurant.presentation.domain.entity
+package com.restaurant.be.restaurant.domain.entity
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -11,7 +11,7 @@ import javax.persistence.Table
 @Table(name = "restaurant_likes")
 class RestaurantLike(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
