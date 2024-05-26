@@ -13,11 +13,8 @@ import com.restaurant.be.common.util.RestaurantUtil
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
-import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.LikeReviewRequest
 import com.restaurant.be.review.presentation.dto.LikeReviewResponse
-import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
-import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.domain.entity.QUser.user
