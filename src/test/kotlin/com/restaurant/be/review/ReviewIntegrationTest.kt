@@ -9,6 +9,8 @@ import com.restaurant.be.common.IntegrationTest
 import com.restaurant.be.common.exception.DuplicateLikeException
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.common.util.RestaurantUtil
+import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
@@ -43,7 +45,8 @@ class ReviewIntegrationTest(
     @Autowired private val objectMapper: ObjectMapper,
     @Autowired private val signUpUserService: SignUpUserService,
     @Autowired private val signUpUserRepository: UserRepository,
-    @Autowired private val reviewRepository: ReviewRepository
+    @Autowired private val reviewRepository: ReviewRepository,
+    @Autowired private val restaurantRepository: RestaurantRepository
 ) : CustomDescribeSpec() {
     private val mockRestaurantID = "1"
     private val resource = "reviews"
@@ -52,6 +55,9 @@ class ReviewIntegrationTest(
     @Transactional
     @Test
     fun `사진 없는 리뷰 작성(RequestDto에서 Image List만 비어있을 경우)시 성공한다`() {
+        val restaurantEntity = RestaurantUtil.generateRestaurantEntity(name = "목구멍 율전점")
+        val savedRestaurant = restaurantRepository.save(restaurantEntity)
+
         signUpUserService.signUpUser(
             SignUpUserRequest(
                 email = "test@gmail.com",
@@ -65,7 +71,7 @@ class ReviewIntegrationTest(
             imageUrls = listOf()
         )
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", savedRestaurant.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -83,6 +89,16 @@ class ReviewIntegrationTest(
         actualResult.data!!.review.isLike shouldBe false
         actualResult.data!!.review.imageUrls.size shouldBe 0
 
+        val reviewRequest2 = ReviewRequestDto(
+            rating = 1.0,
+            content = "맛없어요",
+            imageUrls = listOf()
+        )
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", savedRestaurant.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewRequest2))
+        )
         val getResult = mockMvc.perform(
             MockMvcRequestBuilders.get(
                 "/v1/restaurants/reviews/{reviewId}",
@@ -97,12 +113,17 @@ class ReviewIntegrationTest(
                 object : TypeReference<CommonResponse<GetReviewResponse>>() {}
             )
         reviewResult.data!!.review.content shouldBe "맛있어요"
+        val restaurant = restaurantRepository.findById(reviewResult.data!!.review.restaurantId)
+        restaurant.get().reviewCount shouldBe 2
+        restaurant.get().ratingAvg shouldBe (4.0 + 1.0) / 2
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
     @Transactional
     @Test
     fun `리뷰 수정 성공`() {
+        val restaurantEntity = RestaurantUtil.generateRestaurantEntity(name = "목구멍 율전점")
+        val savedRestaurant = restaurantRepository.save(restaurantEntity)
         signUpUserService.signUpUser(
             SignUpUserRequest(
                 email = "test@gmail.com",
@@ -117,7 +138,7 @@ class ReviewIntegrationTest(
         )
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", savedRestaurant.id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewRequest))
         )
@@ -157,12 +178,17 @@ class ReviewIntegrationTest(
 
         actualResult.data!!.review.content shouldBe reviewUpdateRequest.review.content
         actualResult.data!!.review.imageUrls.size shouldBe reviewUpdateRequest.review.imageUrls.size
+
+        val restaurant = restaurantRepository.findById(actualResult.data!!.review.restaurantId)
+        restaurant.get().ratingAvg shouldBe 1.0
     }
 
     @WithMockUser(username = "test@gmail.com", roles = ["USER"], password = "a12345678")
     @Transactional
     @Test
     fun `리뷰 삭제 성공`() {
+        val restaurantEntity = RestaurantUtil.generateRestaurantEntity(name = "목구멍 율전점")
+        val savedRestaurant = restaurantRepository.save(restaurantEntity)
         signUpUserService.signUpUser(
             SignUpUserRequest(
                 email = "test@gmail.com",
@@ -177,7 +203,7 @@ class ReviewIntegrationTest(
         )
 
         val result = mockMvc.perform(
-            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+            MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", savedRestaurant.id)
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewRequest))
         ).andReturn()
 
@@ -195,6 +221,9 @@ class ReviewIntegrationTest(
                 reviewId
             )
         ).andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS"))
+        val restaurant = restaurantRepository.findById(savedRestaurant.id)
+        restaurant.get().reviewCount shouldBe 0
+        restaurant.get().ratingAvg shouldBe 0
 
         mockMvc.perform(
             MockMvcRequestBuilders.get(
