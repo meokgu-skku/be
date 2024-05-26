@@ -19,12 +19,12 @@ import java.security.Principal
 
 @Api(tags = ["03. Review Info"], description = "리뷰 서비스")
 @RestController
-@RequestMapping("/v1/restaurants/reviews")
+@RequestMapping("/v1/restaurants")
 class GetReviewController(
     private val getReviewService: GetReviewService
 ) {
 
-    @GetMapping
+    @GetMapping("/{restaurantId}/reviews")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "리뷰 리스트 조회 API")
     @ApiResponse(
@@ -34,13 +34,14 @@ class GetReviewController(
     )
     fun getReviews(
         principal: Principal,
+        @PathVariable restaurantId: Long,
         pageable: Pageable
     ): CommonResponse<GetReviewsResponse> {
-        val response = getReviewService.getReviews(pageable, principal.name)
+        val response = getReviewService.getReviews(pageable, restaurantId, principal.name)
         return CommonResponse.success(response)
     }
 
-    @GetMapping("/{reviewId}")
+    @GetMapping("/reviews/{reviewId}")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "리뷰 단건 조회 API")
     @ApiResponse(

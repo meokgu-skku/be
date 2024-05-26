@@ -10,6 +10,8 @@ import com.restaurant.be.review.domain.entity.QReviewLike.reviewLike
 import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.user.domain.entity.User
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 
 class ReviewRepositoryCustomImpl(
@@ -38,7 +40,7 @@ class ReviewRepositoryCustomImpl(
             .fetchOne()
     }
 
-    override fun findReviews(user: User, pageable: Pageable): List<ReviewWithLikesDto> {
+    override fun findReviews(user: User, restaurantId: Long, pageable: Pageable): Page<ReviewWithLikesDto> {
         val orderSpecifier = setOrderSpecifier(pageable)
 
         val reviewsWithLikes = queryFactory
@@ -55,16 +57,21 @@ class ReviewRepositoryCustomImpl(
                 reviewLike.reviewId.eq(review.id)
                     .and(reviewLike.userId.eq(user.id))
             )
+            .where(review.restaurantId.eq(restaurantId))
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .orderBy(*orderSpecifier.toTypedArray())
             .fetchJoin()
             .fetch()
 
-        return reviewsWithLikes
+        return PageImpl(
+            reviewsWithLikes,
+            pageable,
+            reviewsWithLikes.size.toLong()
+        )
     }
 
-    override fun findMyReviews(user: User, pageable: Pageable): List<ReviewWithLikesDto> {
+    override fun findMyReviews(user: User, pageable: Pageable): Page<ReviewWithLikesDto> {
         val orderSpecifier = setOrderSpecifier(pageable)
 
         val reviewsWithLikes = queryFactory
@@ -88,7 +95,11 @@ class ReviewRepositoryCustomImpl(
             .fetchJoin()
             .fetch()
 
-        return reviewsWithLikes
+        return PageImpl(
+            reviewsWithLikes,
+            pageable,
+            reviewsWithLikes.size.toLong()
+        )
     }
 
     private fun setOrderSpecifier(pageable: Pageable): List<OrderSpecifier<*>> {

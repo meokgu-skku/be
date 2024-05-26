@@ -5,7 +5,6 @@ import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.presentation.dto.GetMyReviewsResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewsResponse
-import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
@@ -20,15 +19,20 @@ class GetReviewService(
 
 ) {
     @Transactional(readOnly = true)
-    fun getReviews(pageable: Pageable, email: String): GetReviewsResponse {
+    fun getReviews(pageable: Pageable, restaurantId: Long, email: String): GetReviewsResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
-        val reviewsWithLikes = reviewRepository.findReviews(user, pageable)
+        val reviewsWithLikes = reviewRepository.findReviews(user, restaurantId, pageable)
 
-        val responseDtos = convertResponeDto(reviewsWithLikes)
-
-        return GetReviewsResponse(responseDtos)
+        return GetReviewsResponse(
+            reviewsWithLikes.map {
+                ReviewResponseDto.toDto(
+                    it.review,
+                    it.isLikedByUser
+                )
+            }
+        )
     }
 
     @Transactional
@@ -58,18 +62,13 @@ class GetReviewService(
 
         val reviewsWithLikes = reviewRepository.findMyReviews(user, pageable)
 
-        val reviewResponses = convertResponeDto(reviewsWithLikes)
-
-        return GetMyReviewsResponse(reviewResponses)
-    }
-
-    private fun convertResponeDto(reviewsWithLikes: List<ReviewWithLikesDto>): List<ReviewResponseDto> {
-        val reviewResponses = reviewsWithLikes.map {
-            ReviewResponseDto.toDto(
-                it.review,
-                it.isLikedByUser
-            )
-        }
-        return reviewResponses
+        return GetMyReviewsResponse(
+            reviewsWithLikes.map {
+                ReviewResponseDto.toDto(
+                    it.review,
+                    it.isLikedByUser
+                )
+            }
+        )
     }
 }

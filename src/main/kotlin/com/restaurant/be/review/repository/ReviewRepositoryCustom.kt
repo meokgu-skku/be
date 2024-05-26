@@ -2,6 +2,7 @@ package com.restaurant.be.review.repository
 
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
 import com.restaurant.be.user.domain.entity.User
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface ReviewRepositoryCustom {
@@ -12,11 +13,12 @@ interface ReviewRepositoryCustom {
 
     fun findReviews(
         user: User,
+        restaurantId: Long,
         pageable: Pageable
-    ): List<ReviewWithLikesDto>
+    ): Page<ReviewWithLikesDto>
 
     fun findMyReviews(
         user: User,
         pageable: Pageable
-    ): List<ReviewWithLikesDto>
+    ): Page<ReviewWithLikesDto>
 }

@@ -58,19 +58,24 @@ class Restaurant(
     var menus: MutableList<Menu> = mutableListOf()
 
 ) {
-    fun plusReviewCount() {
-        this.reviewCount += this.reviewCount
+    fun createReview(newRating: Double) {
+        val beforeCount = reviewCount
+        reviewCount++
+        ratingAvg = (ratingAvg * beforeCount + newRating) / (beforeCount + 1)
     }
 
-    fun minusReviewCount() {
-        this.reviewCount -= this.reviewCount
+    fun deleteReview(beforeRating: Double) {
+        val beforeCount = reviewCount
+        if (beforeCount <= 1) {
+            ratingAvg = 0.0
+            reviewCount = 0
+        } else {
+            ratingAvg = (ratingAvg * beforeCount - beforeRating) / (beforeCount - 1)
+            reviewCount = beforeCount - 1
+        }
     }
 
-    fun plusLikeCount() {
-        this.likeCount += this.likeCount
-    }
-
-    fun minusLikeCount() {
-        this.likeCount -= this.likeCount
+    fun updateReview(beforeRating: Double, newRating: Double) {
+        ratingAvg = ((ratingAvg * reviewCount) - beforeRating + newRating) / reviewCount
     }
 }
