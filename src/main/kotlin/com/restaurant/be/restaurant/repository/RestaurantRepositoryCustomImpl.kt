@@ -1,11 +1,13 @@
 package com.restaurant.be.restaurant.repository
 
+import com.querydsl.core.types.dsl.PathBuilderFactory
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.restaurant.be.restaurant.domain.entity.QCategory.category
 import com.restaurant.be.restaurant.domain.entity.QMenu.menu
 import com.restaurant.be.restaurant.domain.entity.QRestaurant.restaurant
 import com.restaurant.be.restaurant.domain.entity.QRestaurantCategory.restaurantCategory
 import com.restaurant.be.restaurant.domain.entity.QRestaurantLike.restaurantLike
+import com.restaurant.be.restaurant.domain.entity.RestaurantLike
 import com.restaurant.be.restaurant.repository.dto.RestaurantProjectionDto
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.user.domain.entity.QUser.user
@@ -128,6 +130,13 @@ class RestaurantRepositoryCustomImpl(
         userId: Long,
         pageable: Pageable
     ): Page<RestaurantProjectionDto> {
+        val orderSpecifier = if (pageable.sort.isSorted) {
+            emptyList()
+        } else {
+            val restaurantLikePath = PathBuilderFactory().create(RestaurantLike::class.java)
+            listOf(restaurantLikePath.getNumber("id", Long::class.java).desc())
+        }
+
         val myLikeQuery = queryFactory
             .select(restaurantLike.restaurantId)
             .from(restaurantLike)
@@ -144,6 +153,9 @@ class RestaurantRepositoryCustomImpl(
             .select(restaurant)
             .from(restaurant)
             .where(restaurant.id.`in`(restaurantIds))
+            .leftJoin(restaurantLike).on(restaurant.id.eq(restaurantLike.restaurantId))
+            .orderBy(*orderSpecifier.toTypedArray())
+            .fetchJoin()
             .fetch()
 
         val menus = queryFactory

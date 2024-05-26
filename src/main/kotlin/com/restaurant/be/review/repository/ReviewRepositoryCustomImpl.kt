@@ -72,7 +72,12 @@ class ReviewRepositoryCustomImpl(
     }
 
     override fun findMyReviews(user: User, pageable: Pageable): Page<ReviewWithLikesDto> {
-        val orderSpecifier = setOrderSpecifier(pageable)
+        val orderSpecifier = if (pageable.sort.isSorted) {
+            setOrderSpecifier(pageable)
+        } else {
+            val reviewPath = PathBuilderFactory().create(Review::class.java)
+            listOf(reviewPath.getNumber("id", Long::class.java).desc())
+        }
 
         val reviewsWithLikes = queryFactory
             .select(

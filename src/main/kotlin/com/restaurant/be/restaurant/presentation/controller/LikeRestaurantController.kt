@@ -1,10 +1,10 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.domain.service.LikeRestaurantService
 import com.restaurant.be.restaurant.presentation.controller.dto.GetLikeRestaurantsResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.LikeRestaurantRequest
 import com.restaurant.be.restaurant.presentation.controller.dto.LikeRestaurantResponse
-import com.restaurant.be.restaurant.presentation.domain.service.LikeRestaurantService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
