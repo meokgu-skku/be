@@ -12,6 +12,7 @@ interface ReviewRepositoryCustom {
 
     fun findReviews(
         user: User,
+        restaurantId: Long,
         pageable: Pageable
     ): List<ReviewWithLikesDto>
 

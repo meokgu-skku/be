@@ -38,7 +38,7 @@ class ReviewRepositoryCustomImpl(
             .fetchOne()
     }
 
-    override fun findReviews(user: User, pageable: Pageable): List<ReviewWithLikesDto> {
+    override fun findReviews(user: User, restaurantId: Long, pageable: Pageable): List<ReviewWithLikesDto> {
         val orderSpecifier = setOrderSpecifier(pageable)
 
         val reviewsWithLikes = queryFactory
@@ -55,6 +55,7 @@ class ReviewRepositoryCustomImpl(
                 reviewLike.reviewId.eq(review.id)
                     .and(reviewLike.userId.eq(user.id))
             )
+            .where(review.restaurantId.eq(restaurantId))
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .orderBy(*orderSpecifier.toTypedArray())

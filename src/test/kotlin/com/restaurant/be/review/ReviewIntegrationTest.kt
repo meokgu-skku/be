@@ -241,7 +241,7 @@ class ReviewIntegrationTest(
             val reviews = (1..20).map { index ->
                 Review(
                     user = savedUser,
-                    restaurantId = index.toLong(),
+                    restaurantId = 1,
                     content = "맛있어요 $index",
                     rating = 5.0,
                     images = mutableListOf()
@@ -264,13 +264,13 @@ class ReviewIntegrationTest(
                 imageUrls = listOf()
             )
             mockMvc.perform(
-                MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", mockRestaurantID)
+                MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", 2)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(reviewRequest))
             )
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", mockRestaurantID)
                     .param("page", "0")
                     .param("size", "5")
                     .param("sort", "createdAt,DESC")
@@ -291,7 +291,7 @@ class ReviewIntegrationTest(
             reviews.get(0)?.get("viewCount") shouldBe 0
 
             val result2 = mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", mockRestaurantID)
                     .param("page", "4")
                     .param("size", "5")
                     .param("sort", "createdAt,DESC")
@@ -304,7 +304,7 @@ class ReviewIntegrationTest(
             val reviews2 = data2["reviews"] as List<Map<String, Any>>
             val pagination2 = data2["pageable"] as Map<String, Any>
 
-            reviews2.size shouldBe 1
+            reviews2.size shouldBe 0
             pagination2.get("pageNumber") shouldBe 4
         }
 
@@ -334,7 +334,7 @@ class ReviewIntegrationTest(
             }
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", mockRestaurantID)
                     .param("page", "0")
                     .param("size", "5")
                     .param("sort", "viewCount,DESC")
@@ -350,6 +350,41 @@ class ReviewIntegrationTest(
             val reviews = data["reviews"] as List<Map<String, Any>>
 
             reviews.size shouldBe 5
+            reviews.get(0)?.get("viewCount") shouldBe 0
+        }
+
+        @Test
+        @WithMockUser(username = "test@gmail.com", roles = ["USER"])
+        @Transactional
+        open fun `리뷰 리스트 조회는 특정 식당 ID만 가능하다`() {
+            val newRestaurantId = 10
+            val reviewRequest = ReviewRequestDto(
+                rating = 4.0,
+                content = "맛있어요",
+                imageUrls = listOf()
+            )
+            mockMvc.perform(
+                MockMvcRequestBuilders.post("/v1/restaurants/{restaurantID}/$resource", newRestaurantId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(reviewRequest))
+            )
+            val result = mockMvc.perform(
+                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", newRestaurantId)
+                    .param("page", "0")
+                    .param("size", "5")
+                    .param("sort", "viewCount,DESC")
+            )
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.result").value("SUCCESS"))
+                .andReturn()
+
+            val mapper = jacksonObjectMapper()
+            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
+
+            val data = jsonMap["data"] as Map<String, Any>
+            val reviews = data["reviews"] as List<Map<String, Any>>
+
+            reviews.size shouldBe 1
             reviews.get(0)?.get("viewCount") shouldBe 0
         }
 
@@ -386,7 +421,7 @@ class ReviewIntegrationTest(
             }
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", mockRestaurantID)
                     .param("page", "0")
                     .param("size", "5")
                     .param("sort", "viewCount,DESC")
@@ -420,6 +455,7 @@ class ReviewIntegrationTest(
             )
             val getReviews = reviewRepository.findAll()
             val firstReviewId = getReviews.get(1).id
+            val reviewRestaurantId = getReviews.get(1).restaurantId
 
             val likeRequest = LikeReviewRequest(true)
 
@@ -429,7 +465,7 @@ class ReviewIntegrationTest(
             )
 
             val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/restaurants/reviews")
+                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", reviewRestaurantId)
                     .param("page", "0")
                     .param("size", "5")
                     .param("sort", "likeCount,DESC")
