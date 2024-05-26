@@ -302,8 +302,10 @@ class ReviewIntegrationTest(
             val jsonMap2 = mapper.readValue<Map<String, Any>>(result2.response.contentAsString)
             val data2 = jsonMap2["data"] as Map<String, Any>
             val reviews2 = data2["reviews"] as List<Map<String, Any>>
+            val pagination2 = data2["pageable"] as Map<String, Any>
 
             reviews2.size shouldBe 1
+            pagination2.get("pageNumber") shouldBe 4
         }
 
         @Test
@@ -441,10 +443,12 @@ class ReviewIntegrationTest(
 
             val data = jsonMap["data"] as Map<String, Any>
             val reviews = data["reviews"] as List<Map<String, Any>>
+            val pagination = data["pageable"] as Map<String, Any>
 
             reviews.size shouldBe 5
             reviews.get(0)?.get("likeCount") shouldBe 1
             reviews.get(1)?.get("likeCount") shouldBe 0
+            pagination.get("pageNumber") shouldBe 0
         }
 
         @Test
