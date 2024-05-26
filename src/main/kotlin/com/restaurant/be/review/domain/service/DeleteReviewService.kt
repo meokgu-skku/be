@@ -22,7 +22,7 @@ class DeleteReviewService(
     fun deleteReview(reviewId: Long, email: String) {
         val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
-        var review = reviewRepository.findById(reviewId).getOrNull() ?: throw NotFoundReviewException()
+        val review = reviewRepository.findById(reviewId).getOrNull() ?: throw NotFoundReviewException()
 
         applyReviewCountAndAvgRating(review.restaurantId)
 
@@ -34,13 +34,6 @@ class DeleteReviewService(
     private fun applyReviewCountAndAvgRating(restaurantId: Long) {
         val restaurant = restaurantRepository.findById(restaurantId).getOrNull()
             ?: throw NotFoundRestaurantException()
-        val beforeCount = restaurant.reviewCount
-        if (beforeCount <= 1) {
-            restaurant.ratingAvg = 0.0
-            restaurant.reviewCount = 0
-        } else {
-            restaurant.ratingAvg = (restaurant.ratingAvg * beforeCount) / (beforeCount - 1)
-            restaurant.reviewCount = beforeCount - 1
-        }
+        restaurant.deleteReview()
     }
 }

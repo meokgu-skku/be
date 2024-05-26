@@ -50,8 +50,6 @@ class UpdateReviewService(
     private fun applyReviewCountAndAvgRating(restaurantId: Long, rating: Double, updateRating: Double) {
         val restaurant = restaurantRepository.findById(restaurantId).getOrNull()
             ?: throw NotFoundRestaurantException()
-        val reviewCount = restaurant.reviewCount
-
-        restaurant.ratingAvg = (restaurant.ratingAvg * reviewCount - rating + updateRating) / reviewCount 
+        restaurant.updateReview(rating, updateRating)
     }
 }
