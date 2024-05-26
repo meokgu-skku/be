@@ -1,6 +1,7 @@
 package com.restaurant.be.restaurant.presentation.controller
 
 import com.restaurant.be.common.response.CommonResponse
+import com.restaurant.be.restaurant.domain.service.RecommendRestaurantService
 import com.restaurant.be.restaurant.presentation.controller.dto.RecommendRestaurantResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -16,7 +17,9 @@ import java.security.Principal
 @Api(tags = ["02. Restaurant Info"], description = "음식점 서비스")
 @RestController
 @RequestMapping("/v1/restaurants")
-class RecommendRestaurantController {
+class RecommendRestaurantController(
+    private val recommendRestaurantService: RecommendRestaurantService
+) {
 
     @GetMapping("recommend")
     @PreAuthorize("hasRole('USER')")
@@ -29,6 +32,7 @@ class RecommendRestaurantController {
     fun getRecommendRestaurants(
         principal: Principal
     ): CommonResponse<RecommendRestaurantResponse> {
-        return CommonResponse.success()
+        val response = recommendRestaurantService.recommendRestaurants(principal.name)
+        return CommonResponse.success(response)
     }
 }

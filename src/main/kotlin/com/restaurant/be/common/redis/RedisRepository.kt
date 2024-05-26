@@ -11,9 +11,28 @@ class RedisRepository(
     companion object {
         private const val SEARCH_PREFIX = "SR:" // 검색어를 저장할 때 사용할 키 접두사
         private const val MAX_HISTORY = 5 // 저장할 최대 검색어 수
+        private const val RECOMMENDATION_PREFIX = "RECOMMENDATION:"
     }
 
     val REFRESH_PREFIX: String = "RT:"
+
+    // 사용자별 추천 식당을 조회하는 메서드
+    fun getRecommendation(userId: Long): List<Long> {
+        val values = redisTemplate.opsForValue()
+        val key = "$RECOMMENDATION_PREFIX$userId"
+        val recommendations = values.get(key)
+        if (recommendations != null) {
+            return recommendations.split(",").map { it.toLong() }
+        }
+
+        val defaultKey = RECOMMENDATION_PREFIX + "0"
+        val defaultRecommendations = values.get(defaultKey)
+        if (defaultRecommendations != null) {
+            return defaultRecommendations.split(",").map { it.toLong() }
+        }
+
+        return emptyList()
+    }
 
     // 사용자별 검색어를 추가하는 메서드
     fun addSearchQuery(userId: Long, query: String) {
