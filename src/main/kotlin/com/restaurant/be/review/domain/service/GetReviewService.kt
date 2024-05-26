@@ -28,7 +28,7 @@ class GetReviewService(
 
         val responseDtos = convertResponeDto(reviewsWithLikes)
 
-        return GetReviewsResponse(responseDtos)
+        return GetReviewsResponse(responseDtos, pageable)
     }
 
     @Transactional
@@ -60,7 +60,7 @@ class GetReviewService(
 
         val reviewResponses = convertResponeDto(reviewsWithLikes)
 
-        return GetMyReviewsResponse(reviewResponses)
+        return GetMyReviewsResponse(reviewResponses, pageable)
     }
 
     private fun convertResponeDto(reviewsWithLikes: List<ReviewWithLikesDto>): List<ReviewResponseDto> {
