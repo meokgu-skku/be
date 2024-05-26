@@ -30,6 +30,11 @@ data class RestaurantDto(
     @Schema(description = "latitude")
     val latitude: Double,
 
+    @Schema(description = "네이버 평점 평균")
+    val naverRatingAvg: Double,
+    @Schema(description = "네이버 리뷰 수")
+    val naverReviewCount: Int,
+
     @Schema(description = "식당 상세 정보")
     val detailInfo: RestaurantDetailDto
 )

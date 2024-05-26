@@ -29,6 +29,8 @@ data class RestaurantProjectionDto(
             discountContent = restaurant.discountContent,
             longitude = restaurant.longitude,
             latitude = restaurant.latitude,
+            naverRatingAvg = restaurant.naverRatingAvg,
+            naverReviewCount = restaurant.naverReviewCount,
             detailInfo = RestaurantDetailDto(
                 contactNumber = restaurant.contactNumber,
                 address = restaurant.address,
