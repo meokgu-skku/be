@@ -20,11 +20,11 @@ class GetReviewService(
 
 ) {
     @Transactional(readOnly = true)
-    fun getReviews(pageable: Pageable, email: String): GetReviewsResponse {
+    fun getReviews(pageable: Pageable, restaurantId: Long, email: String): GetReviewsResponse {
         val user = userRepository.findByEmail(email)
             ?: throw NotFoundUserEmailException()
 
-        val reviewsWithLikes = reviewRepository.findReviews(user, pageable)
+        val reviewsWithLikes = reviewRepository.findReviews(user, restaurantId, pageable)
 
         val responseDtos = convertResponeDto(reviewsWithLikes)
 
