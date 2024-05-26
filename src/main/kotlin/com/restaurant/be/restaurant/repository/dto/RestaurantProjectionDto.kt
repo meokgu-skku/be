@@ -24,8 +24,6 @@ data class RestaurantProjectionDto(
             likeCount = restaurant.likeCount,
             categories = categories.map { it.name },
             representativeMenu = menus.firstOrNull()?.toDto(),
-            operatingStartTime = "",
-            operatingEndTime = "",
             representativeReviewContent = review?.content,
             isLike = isLike,
             discountContent = restaurant.discountContent,
@@ -34,8 +32,7 @@ data class RestaurantProjectionDto(
             detailInfo = RestaurantDetailDto(
                 contactNumber = restaurant.contactNumber,
                 address = restaurant.address,
-                menus = menus.map { it.toDto() },
-                operatingInfos = emptyList()
+                menus = menus.map { it.toDto() }
             )
         )
     }

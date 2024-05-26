@@ -31,18 +31,15 @@ data class RestaurantEsDocument(
         likeCount = 0, // RDB
         categories = category.split(",").map { it.trim() },
         representativeMenu = menus.firstOrNull()?.toDto(),
-        operatingStartTime = "", // 나중에 추가
-        operatingEndTime = "", // 나중에 추가
         representativeReviewContent = "", // RDB
         isLike = false, // RDB
-        discountContent = discountContent, // 나중에 추가,
+        discountContent = discountContent,
         longitude = 0.0, // RDB
         latitude = 0.0, // RDB
         detailInfo = RestaurantDetailDto(
             contactNumber = "",
             address = address,
-            menus = menus.map { it.toDto() },
-            operatingInfos = emptyList() // 나중에 추가
+            menus = menus.map { it.toDto() }
         )
     )
 }
