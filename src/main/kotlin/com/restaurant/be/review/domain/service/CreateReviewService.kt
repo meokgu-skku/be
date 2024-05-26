@@ -1,7 +1,9 @@
 package com.restaurant.be.review.domain.service
 
+import com.restaurant.be.common.exception.NotFoundRestaurantException
 import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
+import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.review.domain.entity.ReviewImage
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
@@ -10,11 +12,13 @@ import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class CreateReviewService(
     private val reviewRepository: ReviewRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val restaurantRepository: RestaurantRepository
 ) {
     @Transactional
     fun createReview(
@@ -37,6 +41,8 @@ class CreateReviewService(
 
         reviewRepository.save(review)
 
+        applyReviewCountAndAvgRating(restaurantId, reviewRequest.rating)
+
         val reviewWithLikes = reviewRepository.findReview(user, review.id ?: 0)
             ?: throw NotFoundReviewException()
 
@@ -46,5 +52,13 @@ class CreateReviewService(
         )
 
         return CreateReviewResponse(responseDto)
+    }
+
+    private fun applyReviewCountAndAvgRating(restaurantId: Long, requestRating: Double) {
+        val restaurant = restaurantRepository.findById(restaurantId).getOrNull()
+            ?: throw NotFoundRestaurantException()
+        val beforeCount = restaurant.reviewCount
+        restaurant.reviewCount = beforeCount + 1
+        restaurant.ratingAvg = (restaurant.ratingAvg * beforeCount + requestRating) / (beforeCount + 1)
     }
 }
