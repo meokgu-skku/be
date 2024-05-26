@@ -73,7 +73,9 @@ object RestaurantUtil {
             discountContent = discountContent,
             menus = menus,
             longitude = longitude,
-            latitude = latitude
+            latitude = latitude,
+            naverRatingAvg = 0.0,
+            naverReviewCount = 0
         )
     }
 

@@ -36,6 +36,8 @@ data class RestaurantEsDocument(
         discountContent = discountContent,
         longitude = 0.0, // RDB
         latitude = 0.0, // RDB
+        naverRatingAvg = naverRating ?: 0.0,
+        naverReviewCount = naverReviewCount.toInt(),
         detailInfo = RestaurantDetailDto(
             contactNumber = "",
             address = address,

@@ -54,6 +54,12 @@ class Restaurant(
     @Column(name = "latitude")
     var latitude: Double,
 
+    @Column(name = "naver_rating_avg")
+    var naverRatingAvg: Double,
+
+    @Column(name = "naver_review_count")
+    var naverReviewCount: Int,
+
     @OneToMany(mappedBy = "restaurantId", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var menus: MutableList<Menu> = mutableListOf()
 
