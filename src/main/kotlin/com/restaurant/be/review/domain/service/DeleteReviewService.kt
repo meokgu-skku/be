@@ -24,16 +24,16 @@ class DeleteReviewService(
 
         val review = reviewRepository.findById(reviewId).getOrNull() ?: throw NotFoundReviewException()
 
-        applyReviewCountAndAvgRating(review.restaurantId)
+        applyReviewCountAndAvgRating(review.restaurantId, review.rating)
 
         if (user.id != review.user.id) throw UnAuthorizedDeleteException()
 
         reviewRepository.deleteById(reviewId)
     }
 
-    private fun applyReviewCountAndAvgRating(restaurantId: Long) {
+    private fun applyReviewCountAndAvgRating(restaurantId: Long, beforeRating: Double) {
         val restaurant = restaurantRepository.findById(restaurantId).getOrNull()
             ?: throw NotFoundRestaurantException()
-        restaurant.deleteReview()
+        restaurant.deleteReview(beforeRating)
     }
 }

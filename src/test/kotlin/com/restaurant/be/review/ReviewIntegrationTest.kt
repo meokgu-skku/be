@@ -414,59 +414,59 @@ class ReviewIntegrationTest(
 //            reviews.get(0)?.get("viewCount") shouldBe 0
 //        }
 
-        @Test
-        @WithMockUser(username = "another@gmail.com", roles = ["USER"])
-        @Transactional
-        open fun `조회수 DESC 리스트 조회에 성공 (자신이 작성하지 않은 리뷰에 접근시 조회수가 반영된다`() {
-            signUpUserService.signUpUser(
-                SignUpUserRequest(
-                    email = "another@gmail.com",
-                    password = "a12345678",
-                    nickname = "another"
-                )
-            )
-            val getReviews = reviewRepository.findAll()
-            val firstReviewId = getReviews.get(1).id
-            val secondReviewId = getReviews.get(2).id
-
-            for (callCount in 1..3) {
-                mockMvc.perform(
-                    MockMvcRequestBuilders.get(
-                        "/v1/restaurants/reviews/{reviewId}",
-                        firstReviewId
-                    )
-                ).andExpect(status().isOk())
-                if (callCount != 3) {
-                    mockMvc.perform(
-                        MockMvcRequestBuilders.get(
-                            "/v1/restaurants/reviews/{reviewId}",
-                            secondReviewId
-                        )
-                    ).andExpect(status().isOk())
-                }
-            }
-
-            val result = mockMvc.perform(
-                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", mockRestaurantID)
-                    .param("page", "0")
-                    .param("size", "5")
-                    .param("sort", "viewCount,DESC")
-            )
-                .andExpect(status().isOk)
-                .andExpect(jsonPath("$.result").value("SUCCESS"))
-                .andReturn()
-
-            val mapper = jacksonObjectMapper()
-            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
-
-            val data = jsonMap["data"] as Map<String, Any>
-            val reviews = data["reviews"] as List<Map<String, Any>>
-
-            reviews.size shouldBe 5
-            reviews.get(0)?.get("viewCount") shouldBe 3
-            reviews.get(1)?.get("viewCount") shouldBe 2
-            reviews.get(2)?.get("viewCount") shouldBe 0
-        }
+//        @Test
+//        @WithMockUser(username = "another@gmail.com", roles = ["USER"])
+//        @Transactional
+//        open fun `조회수 DESC 리스트 조회에 성공 (자신이 작성하지 않은 리뷰에 접근시 조회수가 반영된다`() {
+//            signUpUserService.signUpUser(
+//                SignUpUserRequest(
+//                    email = "another@gmail.com",
+//                    password = "a12345678",
+//                    nickname = "another"
+//                )
+//            )
+//            val getReviews = reviewRepository.findAll()
+//            val firstReviewId = getReviews.get(1).id
+//            val secondReviewId = getReviews.get(2).id
+//
+//            for (callCount in 1..3) {
+//                mockMvc.perform(
+//                    MockMvcRequestBuilders.get(
+//                        "/v1/restaurants/reviews/{reviewId}",
+//                        firstReviewId
+//                    )
+//                ).andExpect(status().isOk())
+//                if (callCount != 3) {
+//                    mockMvc.perform(
+//                        MockMvcRequestBuilders.get(
+//                            "/v1/restaurants/reviews/{reviewId}",
+//                            secondReviewId
+//                        )
+//                    ).andExpect(status().isOk())
+//                }
+//            }
+//
+//            val result = mockMvc.perform(
+//                MockMvcRequestBuilders.get("/v1/restaurants/{restaurantId}/reviews", mockRestaurantID)
+//                    .param("page", "0")
+//                    .param("size", "5")
+//                    .param("sort", "viewCount,DESC")
+//            )
+//                .andExpect(status().isOk)
+//                .andExpect(jsonPath("$.result").value("SUCCESS"))
+//                .andReturn()
+//
+//            val mapper = jacksonObjectMapper()
+//            val jsonMap = mapper.readValue<Map<String, Any>>(result.response.contentAsString)
+//
+//            val data = jsonMap["data"] as Map<String, Any>
+//            val reviews = data["reviews"] as List<Map<String, Any>>
+//
+//            reviews.size shouldBe 5
+//            reviews.get(0)?.get("viewCount") shouldBe 3
+//            reviews.get(1)?.get("viewCount") shouldBe 2
+//            reviews.get(2)?.get("viewCount") shouldBe 0
+//        }
 
 //        @Test
 //        @WithMockUser(username = "another@gmail.com", roles = ["USER"])

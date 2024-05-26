@@ -54,9 +54,9 @@ class CreateReviewService(
         return CreateReviewResponse(responseDto)
     }
 
-    private fun applyReviewCountAndAvgRating(restaurantId: Long, requestRating: Double) {
+    private fun applyReviewCountAndAvgRating(restaurantId: Long, newRating: Double) {
         val restaurant = restaurantRepository.findById(restaurantId).getOrNull()
             ?: throw NotFoundRestaurantException()
-        restaurant.createReview()
+        restaurant.createReview(newRating)
     }
 }
