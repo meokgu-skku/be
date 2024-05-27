@@ -2106,7 +2106,7 @@ class GetRestaurantControllerTest(
                         println(it.andReturn().response.contentAsString)
                     }
                     .andExpect(status().isNotFound)
-                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andExpect(jsonPath("$.result").value("FAIL"))
                     .andReturn()
 
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
