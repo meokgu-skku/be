@@ -145,8 +145,6 @@ class RestaurantRepositoryCustomImpl(
         val total = myLikeQuery.fetchCount()
 
         val restaurantIds = myLikeQuery
-            .offset(pageable.offset)
-            .limit(pageable.pageSize.toLong())
             .fetch()
 
         val restaurantInfos = queryFactory
@@ -156,6 +154,8 @@ class RestaurantRepositoryCustomImpl(
             .leftJoin(restaurantLike).on(restaurant.id.eq(restaurantLike.restaurantId))
             .orderBy(*orderSpecifier.toTypedArray())
             .fetchJoin()
+            .offset(pageable.offset)
+            .limit(pageable.pageSize.toLong())
             .fetch()
 
         val menus = queryFactory
