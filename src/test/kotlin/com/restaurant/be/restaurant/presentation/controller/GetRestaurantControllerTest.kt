@@ -14,6 +14,7 @@ import com.restaurant.be.common.util.setUpUser
 import com.restaurant.be.restaurant.domain.entity.Category
 import com.restaurant.be.restaurant.domain.entity.RestaurantCategory
 import com.restaurant.be.restaurant.domain.entity.RestaurantLike
+import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
 import com.restaurant.be.restaurant.repository.CategoryRepository
@@ -2055,6 +2056,135 @@ class GetRestaurantControllerTest(
                 // then
                 actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
                 actualResult.data!!.restaurants.content[1].name shouldBe "목구멍 율전점1"
+            }
+        }
+
+        describe("#get restaurant test") {
+            it("when restaurant exist should return restaurant") {
+                // given
+                val restaurantEntity = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점"
+                )
+                restaurantRepository.save(restaurantEntity)
+                val restaurantDocument = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity.id,
+                    name = "목구멍 율전점"
+                )
+                elasticsearchTemplate.save(restaurantDocument)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get("$restaurantUrl/${restaurantEntity.id}")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurant.name shouldBe "목구멍 율전점"
+            }
+
+            it("when restaurant not exist should return empty") {
+                // given
+                // when
+                val result = mockMvc.perform(
+                    get("$restaurantUrl/1")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isNotFound)
+                    .andExpect(jsonPath("$.result").value("FAIL"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data shouldBe null
+                actualResult.message shouldBe "해당 식당 정보가 존재하지 않습니다."
+            }
+
+            it("when liked restaurant should return liked true") {
+                // given
+                val user = userRepository.findByEmail("test@gmail.com")
+                val restaurantEntity = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점"
+                )
+                restaurantRepository.save(restaurantEntity)
+                restaurantLikeRepository.save(
+                    RestaurantLike(
+                        userId = user?.id ?: 0,
+                        restaurantId = restaurantEntity.id
+                    )
+                )
+
+                val result = mockMvc.perform(
+                    get("$restaurantUrl/${restaurantEntity.id}")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurant.isLike shouldBe true
+            }
+
+            it("when not liked restaurant should return liked false") {
+                // given
+                val restaurantEntity = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점"
+                )
+                restaurantRepository.save(restaurantEntity)
+
+                val result = mockMvc.perform(
+                    get("$restaurantUrl/${restaurantEntity.id}")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurant.isLike shouldBe false
             }
         }
     }
