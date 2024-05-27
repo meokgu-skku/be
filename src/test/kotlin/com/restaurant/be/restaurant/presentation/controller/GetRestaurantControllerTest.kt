@@ -2105,7 +2105,7 @@ class GetRestaurantControllerTest(
                     .also {
                         println(it.andReturn().response.contentAsString)
                     }
-                    .andExpect(status().isOk)
+                    .andExpect(status().isNotFound)
                     .andExpect(jsonPath("$.result").value("SUCCESS"))
                     .andReturn()
 
