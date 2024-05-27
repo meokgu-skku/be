@@ -1737,7 +1737,7 @@ class GetRestaurantControllerTest(
                 actualResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점1"
             }
 
-            it("when 2 data and set size 1 page 2 should return 2's restaurant") {
+            it("when 2 data and set size 1 page 1 should return 2's restaurant") {
                 // given
                 val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
                     name = "목구멍 율전점1"

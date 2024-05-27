@@ -8,8 +8,6 @@ import com.restaurant.be.restaurant.presentation.controller.dto.GetLikeRestauran
 import com.restaurant.be.restaurant.presentation.controller.dto.LikeRestaurantResponse
 import com.restaurant.be.restaurant.repository.RestaurantLikeRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
-import com.restaurant.be.restaurant.repository.dto.RestaurantProjectionDto
-import com.restaurant.be.user.domain.entity.User
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -23,31 +21,36 @@ class LikeRestaurantService(
 ) {
     @Transactional
     fun likeRestaurant(email: String, restaurantId: Long, isLike: Boolean): LikeRestaurantResponse {
-        val user: User = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
-        val userId: Long = user.id ?: throw NotFoundUserException()
+        val userId: Long = userRepository.findByEmail(email)?.id ?: throw NotFoundUserException()
 
-        val restaurant: RestaurantProjectionDto = restaurantRepository.findDtoById(restaurantId)
+        val restaurantDto = restaurantRepository.findDtoById(restaurantId)
             ?: throw NotFoundRestaurantException()
 
-        // 좋아요 요청
+        val restaurant = restaurantRepository.findById(restaurantId)
+            .orElseThrow { NotFoundRestaurantException() }
+
         if (isLike) {
-            // 실제 좋아요가 아닐 시 Insert
-            if (!restaurant.isLike) {
+            if (!restaurantDto.isLike) {
                 restaurantLikeRepository.save(
                     RestaurantLike(
                         restaurantId = restaurantId,
                         userId = userId
                     )
                 )
+                restaurant.likeCount += 1
             }
         } else {
-            restaurantLikeRepository.deleteByUserIdAndRestaurantId(userId, restaurantId)
+            if (restaurantDto.isLike) {
+                restaurant.likeCount -= 1
+                restaurantLikeRepository.deleteByUserIdAndRestaurantId(userId, restaurantId)
+            }
         }
 
+        restaurantRepository.save(restaurant)
         return LikeRestaurantResponse(restaurantRepository.findDtoById(restaurantId)!!.toDto())
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     fun getMyLikeRestaurant(pageable: Pageable, email: String): GetLikeRestaurantsResponse {
         val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
 
