@@ -44,7 +44,7 @@ class LikeRestaurantService(
             restaurantLikeRepository.deleteByUserIdAndRestaurantId(userId, restaurantId)
         }
 
-        return LikeRestaurantResponse(restaurant.toDto())
+        return LikeRestaurantResponse(restaurantRepository.findDtoById(restaurantId)!!.toDto())
     }
 
     @Transactional
