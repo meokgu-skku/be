@@ -16,7 +16,7 @@ import io.kotest.matchers.shouldBe
 import org.springframework.data.domain.Page
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.transaction.annotation.Transactional
 import java.nio.charset.Charset
 
