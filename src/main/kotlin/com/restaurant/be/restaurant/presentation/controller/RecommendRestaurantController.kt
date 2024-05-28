@@ -21,7 +21,7 @@ class RecommendRestaurantController(
     private val recommendRestaurantService: RecommendRestaurantService
 ) {
 
-    @GetMapping("recommend")
+    @GetMapping("/recommend")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "gpt 기반 추천 음식점 리스트 조회 API")
     @ApiResponse(
