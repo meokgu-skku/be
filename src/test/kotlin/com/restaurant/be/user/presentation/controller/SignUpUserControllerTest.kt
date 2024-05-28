@@ -13,18 +13,19 @@ import com.restaurant.be.restaurant.presentation.controller.dto.common.Restauran
 import com.restaurant.be.user.presentation.dto.SignUpUserResponse
 import com.restaurant.be.user.repository.UserRepository
 import io.kotest.matchers.shouldBe
-import java.nio.charset.Charset
 import org.springframework.data.domain.Page
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.transaction.annotation.Transactional
+import java.nio.charset.Charset
 
 @IntegrationTest
 @Transactional
 class SignUpUserControllerTest(
-    private val mockMvc: MockMvc, private val userRepository: UserRepository
+    private val mockMvc: MockMvc,
+    private val userRepository: UserRepository
 ) : CustomDescribeSpec() {
     private val baseUrl = "/v1/users"
     private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule()).apply {
@@ -66,7 +67,8 @@ class SignUpUserControllerTest(
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
                 val responseType = object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
                 val actualResult: CommonResponse<SignUpUserResponse> = objectMapper.readValue(
-                    responseContent, responseType
+                    responseContent,
+                    responseType
                 )
 
                 // then
@@ -98,7 +100,8 @@ class SignUpUserControllerTest(
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
                 val responseType = object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
                 val actualResult: CommonResponse<SignUpUserResponse> = objectMapper.readValue(
-                    responseContent, responseType
+                    responseContent,
+                    responseType
                 )
 
                 // then
@@ -129,7 +132,8 @@ class SignUpUserControllerTest(
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
                 val responseType = object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
                 val actualResult: CommonResponse<SignUpUserResponse> = objectMapper.readValue(
-                    responseContent, responseType
+                    responseContent,
+                    responseType
                 )
 
                 // then
