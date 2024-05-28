@@ -165,6 +165,44 @@ class RecommendRestaurantControllerTest(
                 // then
                 actualResult.data!!.restaurants.size shouldBe 3
             }
+
+            it("when no restaurant saved in redis should recommended 5 restaurants") {
+                // given
+                val restaurantIds = (1..5).map { i ->
+                    val restaurant = restaurantRepository.save(
+                        RestaurantUtil.generateRestaurantEntity(
+                            name = "restaurant$i"
+                        )
+                    )
+
+                    restaurant.id
+                }
+
+                val key = "RECOMMENDATION:0"
+                redisTemplate.opsForValue().set(key, restaurantIds.joinToString(","))
+
+                // when
+                val result = mockMvc.perform(
+                    MockMvcRequestBuilders.get(baseUrl)
+                ).also {
+                    println(it.andReturn().response.contentAsString)
+                }
+                    .andExpect(MockMvcResultMatchers.status().isOk)
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<RecommendRestaurantResponse>>() {}
+                val actualResult: CommonResponse<RecommendRestaurantResponse> =
+                    objectMapper.readValue(
+                        responseContent,
+                        responseType
+                    )
+
+                // then
+                actualResult.data!!.restaurants.size shouldBe 5
+            }
         }
     }
 }
