@@ -2,7 +2,7 @@ package com.restaurant.be.restaurant.repository
 
 import com.querydsl.core.types.dsl.PathBuilderFactory
 import com.querydsl.jpa.impl.JPAQueryFactory
-import com.restaurant.be.restaurant.domain.entity.QCategory.category
+import com.restaurant.be.category.domain.entity.QCategory.category
 import com.restaurant.be.restaurant.domain.entity.QMenu.menu
 import com.restaurant.be.restaurant.domain.entity.QRestaurant.restaurant
 import com.restaurant.be.restaurant.domain.entity.QRestaurantCategory.restaurantCategory
