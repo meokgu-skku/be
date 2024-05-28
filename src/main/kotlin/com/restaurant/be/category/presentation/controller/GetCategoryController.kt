@@ -1,8 +1,8 @@
-package com.restaurant.be.restaurant.presentation.controller
+package com.restaurant.be.category.presentation.controller
 
+import com.restaurant.be.category.domain.service.GetCategoryService
+import com.restaurant.be.category.presentation.controller.dto.GetCategoriesResponse
 import com.restaurant.be.common.response.CommonResponse
-import com.restaurant.be.restaurant.domain.service.GetCategoryService
-import com.restaurant.be.restaurant.presentation.controller.dto.GetCategoryResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.v3.oas.annotations.media.Content
@@ -26,9 +26,9 @@ class GetCategoryController(
     @ApiResponse(
         responseCode = "200",
         description = "성공",
-        content = [Content(schema = Schema(implementation = GetCategoryResponse::class))]
+        content = [Content(schema = Schema(implementation = GetCategoriesResponse::class))]
     )
-    fun getCategory(): CommonResponse<GetCategoryResponse> {
+    fun getCategories(): CommonResponse<GetCategoriesResponse> {
         val response = getCategoryService.getCategories()
         return CommonResponse.success(response)
     }
