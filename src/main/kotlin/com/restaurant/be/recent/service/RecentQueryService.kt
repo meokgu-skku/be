@@ -15,9 +15,9 @@ class RecentQueryService(
 ) {
 
     fun getRecentQueries(email: String): RecentQueriesResponse {
-        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
+        val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
 
-        val queries = redisRepository.getSearchQueries(user.id ?: 0)
+        val queries = redisRepository.getSearchQueries(userId)
 
         return RecentQueriesResponse(
             recentQueries = queries?.map { RecentQueriesDto(it) } ?: listOf()
@@ -28,15 +28,15 @@ class RecentQueryService(
         email: String,
         request: DeleteRecentQueriesRequest
     ): RecentQueriesResponse {
-        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
+        val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
 
         if (request.query == null) {
-            redisRepository.deleteSearchQueries(user.id ?: 0)
+            redisRepository.deleteSearchQueries(userId)
         } else {
-            redisRepository.deleteSpecificQuery(user.id ?: 0, request.query)
+            redisRepository.deleteSpecificQuery(userId, request.query)
         }
 
-        val queries = redisRepository.getSearchQueries(user.id ?: 0)
+        val queries = redisRepository.getSearchQueries(userId)
 
         return RecentQueriesResponse(
             recentQueries = queries?.map { RecentQueriesDto(it) } ?: listOf()
