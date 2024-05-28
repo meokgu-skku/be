@@ -13,18 +13,18 @@ import com.restaurant.be.restaurant.presentation.controller.dto.common.Restauran
 import com.restaurant.be.user.presentation.dto.SignUpUserResponse
 import com.restaurant.be.user.repository.UserRepository
 import io.kotest.matchers.shouldBe
+import java.nio.charset.Charset
 import org.springframework.data.domain.Page
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.transaction.annotation.Transactional
-import java.nio.charset.Charset
 
 @IntegrationTest
 @Transactional
 class SignUpUserControllerTest(
-    private val mockMvc: MockMvc,
-    private val userRepository: UserRepository
+    private val mockMvc: MockMvc, private val userRepository: UserRepository
 ) : CustomDescribeSpec() {
     private val baseUrl = "/v1/users"
     private val objectMapper: ObjectMapper = ObjectMapper().registerModule(KotlinModule()).apply {
@@ -48,30 +48,25 @@ class SignUpUserControllerTest(
 
                 // when
                 val result = mockMvc.perform(
-                    post("$baseUrl/email/sign-up")
-                        .content(
-                            objectMapper.writeValueAsString(
-                                mapOf(
-                                    "email" to email,
-                                    "password" to password,
-                                    "nickname" to nickname,
-                                    "profileImageUrl" to profileImageUrl
-                                )
+                    post("$baseUrl/email/sign-up").content(
+                        objectMapper.writeValueAsString(
+                            mapOf(
+                                "email" to email,
+                                "password" to password,
+                                "nickname" to nickname,
+                                "profileImageUrl" to profileImageUrl
                             )
                         )
-                        .contentType("application/json")
+                    ).contentType("application/json")
                 ).also {
                     println(it.andReturn().response.contentAsString)
-                }.andExpect(status().isOk)
-                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                }.andExpect(status().isOk).andExpect(jsonPath("$.result").value("SUCCESS"))
                     .andReturn()
 
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
-                val responseType =
-                    object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
+                val responseType = object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
                 val actualResult: CommonResponse<SignUpUserResponse> = objectMapper.readValue(
-                    responseContent,
-                    responseType
+                    responseContent, responseType
                 )
 
                 // then
@@ -85,31 +80,25 @@ class SignUpUserControllerTest(
 
                 // when
                 val result = mockMvc.perform(
-                    post("$baseUrl/email/sign-up")
-                        .content(
-                            objectMapper.writeValueAsString(
-                                mapOf(
-                                    "email" to "test@test.com",
-                                    "password" to "123456789",
-                                    "nickname" to existedUserNickname,
-                                    "profileImageUrl" to ""
-                                )
+                    post("$baseUrl/email/sign-up").content(
+                        objectMapper.writeValueAsString(
+                            mapOf(
+                                "email" to "test@test.com",
+                                "password" to "123456789",
+                                "nickname" to existedUserNickname,
+                                "profileImageUrl" to ""
                             )
                         )
-                        .contentType("application/json")
+                    ).contentType("application/json")
                 ).also {
                     println(it.andReturn().response.contentAsString)
-                }
-                    .andExpect(status().isBadRequest)
-                    .andExpect(jsonPath("$.result").value("FAIL"))
+                }.andExpect(status().isBadRequest).andExpect(jsonPath("$.result").value("FAIL"))
                     .andReturn()
 
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
-                val responseType =
-                    object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
+                val responseType = object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
                 val actualResult: CommonResponse<SignUpUserResponse> = objectMapper.readValue(
-                    responseContent,
-                    responseType
+                    responseContent, responseType
                 )
 
                 // then
@@ -122,31 +111,25 @@ class SignUpUserControllerTest(
 
                 // when
                 val result = mockMvc.perform(
-                    post("$baseUrl/email/sign-up")
-                        .content(
-                            objectMapper.writeValueAsString(
-                                mapOf(
-                                    "email" to existedUserEmail,
-                                    "password" to "123456789",
-                                    "nickname" to "test",
-                                    "profileImageUrl" to ""
-                                )
+                    post("$baseUrl/email/sign-up").content(
+                        objectMapper.writeValueAsString(
+                            mapOf(
+                                "email" to existedUserEmail,
+                                "password" to "123456789",
+                                "nickname" to "test",
+                                "profileImageUrl" to ""
                             )
                         )
-                        .contentType("application/json")
+                    ).contentType("application/json")
                 ).also {
                     println(it.andReturn().response.contentAsString)
-                }
-                    .andExpect(status().isBadRequest)
-                    .andExpect(jsonPath("$.result").value("FAIL"))
+                }.andExpect(status().isBadRequest).andExpect(jsonPath("$.result").value("FAIL"))
                     .andReturn()
 
                 val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
-                val responseType =
-                    object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
+                val responseType = object : TypeReference<CommonResponse<SignUpUserResponse>>() {}
                 val actualResult: CommonResponse<SignUpUserResponse> = objectMapper.readValue(
-                    responseContent,
-                    responseType
+                    responseContent, responseType
                 )
 
                 // then
