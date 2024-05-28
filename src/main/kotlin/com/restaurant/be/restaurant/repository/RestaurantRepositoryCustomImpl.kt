@@ -130,12 +130,8 @@ class RestaurantRepositoryCustomImpl(
         userId: Long,
         pageable: Pageable
     ): Page<RestaurantProjectionDto> {
-        val orderSpecifier = if (pageable.sort.isSorted) {
-            emptyList()
-        } else {
-            val restaurantLikePath = PathBuilderFactory().create(RestaurantLike::class.java)
-            listOf(restaurantLikePath.getNumber("id", Long::class.java).desc())
-        }
+        val restaurantLikePath = PathBuilderFactory().create(RestaurantLike::class.java)
+        val orderSpecifier = listOf(restaurantLikePath.getNumber("id", Long::class.java).desc())
 
         val myLikeQuery = queryFactory
             .select(restaurantLike.restaurantId)
