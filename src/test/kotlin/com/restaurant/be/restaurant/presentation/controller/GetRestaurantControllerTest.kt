@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.restaurant.be.category.domain.entity.Category
+import com.restaurant.be.category.repository.CategoryRepository
 import com.restaurant.be.common.CustomDescribeSpec
 import com.restaurant.be.common.IntegrationTest
 import com.restaurant.be.common.PageDeserializer
@@ -11,13 +13,11 @@ import com.restaurant.be.common.response.CommonResponse
 import com.restaurant.be.common.util.RestaurantDocument
 import com.restaurant.be.common.util.RestaurantUtil
 import com.restaurant.be.common.util.setUpUser
-import com.restaurant.be.restaurant.domain.entity.Category
 import com.restaurant.be.restaurant.domain.entity.RestaurantCategory
 import com.restaurant.be.restaurant.domain.entity.RestaurantLike
 import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsResponse
 import com.restaurant.be.restaurant.presentation.controller.dto.common.RestaurantDto
-import com.restaurant.be.restaurant.repository.CategoryRepository
 import com.restaurant.be.restaurant.repository.RestaurantCategoryRepository
 import com.restaurant.be.restaurant.repository.RestaurantLikeRepository
 import com.restaurant.be.restaurant.repository.RestaurantRepository
