@@ -44,3 +44,6 @@ aws:
 es:
   host: localhost
   port: 9201
+
+discord:
+  monitor: ${DISCORD_MONITOR:https:test}
