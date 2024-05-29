@@ -70,6 +70,9 @@ dependencies {
     // AWS SES
     implementation("software.amazon.awssdk:ses:2.20.114")
 
+    // Discord
+    implementation("club.minnced:discord-webhooks:0.8.4")
+
     // Kotlin
     val coroutineVersion = "1.6.3"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutineVersion")
