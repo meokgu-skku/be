@@ -4,6 +4,7 @@ import com.restaurant.be.review.domain.entity.Review
 import com.restaurant.be.user.domain.entity.User
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -51,7 +52,11 @@ data class ReviewResponseDto(
     @Schema(description = "좋아요 받은 횟수")
     val likeCount: Long,
     @Schema(description = "리뷰 조회 수")
-    val viewCount: Long
+    val viewCount: Long,
+    @Schema(description = "리뷰 생성 시간")
+    val createdAt: LocalDateTime,
+    @Schema(description = "리뷰 수정 시간")
+    val modifiedAt: LocalDateTime
 ) {
     companion object {
         fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
@@ -66,7 +71,9 @@ data class ReviewResponseDto(
                 imageUrls = review.images.map { it.imageUrl },
                 isLike = isLikedByUser ?: false,
                 likeCount = review.likeCount,
-                viewCount = review.viewCount
+                viewCount = review.viewCount,
+                createdAt = review.createdAt,
+                modifiedAt = review.modifiedAt
             )
         }
     }

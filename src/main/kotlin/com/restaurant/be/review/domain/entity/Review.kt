@@ -96,7 +96,9 @@ class Review(
             imageUrls = images.map { it.imageUrl },
             isLike = doesUserLike,
             viewCount = viewCount,
-            likeCount = likeCount
+            likeCount = likeCount,
+            createdAt = createdAt,
+            modifiedAt = modifiedAt
         )
     }
 }
