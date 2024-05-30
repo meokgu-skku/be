@@ -33,7 +33,7 @@ jwt:
   header: Authorization
   secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
   token-validity-in-seconds: 86400
-  access-token-validity-in-seconds: 7200
+  access-token-validity-in-seconds: 32140800
   refresh-token-validity-in-seconds: 1209600
 
 aws:
