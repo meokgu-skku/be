@@ -1,7 +1,5 @@
 package com.restaurant.be.common.jwt
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.restaurant.be.common.redis.RedisRepository
 import mu.KotlinLogging
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -14,13 +12,11 @@ import javax.servlet.http.HttpServletResponse
 
 class JwtFilter(
     private val tokenProvider: TokenProvider,
-    private val jwtUserRepository: JwtUserRepository,
-    private val redisRepository: RedisRepository,
-    private val objectMapper: ObjectMapper
+    private val jwtUserRepository: JwtUserRepository
 ) : OncePerRequestFilter() {
 
     private val log = KotlinLogging.logger {}
-    override fun doFilterInternal(
+    public override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain

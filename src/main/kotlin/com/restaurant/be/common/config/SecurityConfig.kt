@@ -54,9 +54,7 @@ class SecurityConfig(
             .apply(
                 JwtSecurityConfig(
                     tokenProvider,
-                    jwtUserRepository,
-                    redisRepository,
-                    objectMapper
+                    jwtUserRepository
                 )
             )
     }

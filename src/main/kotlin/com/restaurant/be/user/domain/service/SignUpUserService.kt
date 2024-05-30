@@ -35,7 +35,7 @@ class SignUpUserService(
             val token = tokenProvider.createTokens(email, newUser.roles)
 
             redisRepository.setValue(
-                redisRepository.REFRESH_PREFIX + email,
+                "RT:$email",
                 token.refreshToken,
                 tokenProvider.refreshTokenValidityInMilliseconds,
                 TimeUnit.MILLISECONDS
