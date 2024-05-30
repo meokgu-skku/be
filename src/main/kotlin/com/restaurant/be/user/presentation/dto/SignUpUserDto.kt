@@ -15,23 +15,23 @@ data class SignUpUserRequest(
     @field:Email(message = "이메일 형식이 아닙니다.")
     @field:NotBlank(message = "아이디를 입력해 주세요.")
     @ApiModelProperty(value = "이메일 아이디", example = "test@gmail.com", required = true)
-    val email: String = "",
+    val email: String,
 
     @field:Size(min = 8, max = 20, message = "8~20자 이내로 입력해 주세요.")
     @field:NotBlank(message = "비밀번호를 입력해 주세요.")
     @ApiModelProperty(value = "비밀번호", example = "test12!@", required = true)
-    val password: String = "",
+    val password: String,
 
     @field:NotBlank(message = "닉네임을 입력해 주세요.")
     @ApiModelProperty(value = "닉네임", example = "닉네임", required = true)
-    val nickname: String = "",
+    val nickname: String,
 
     @ApiModelProperty(
         value = "프로필 이미지 URL",
         example = "https://test.com/test.jpg",
         required = true
     )
-    val profileImageUrl: String = ""
+    val profileImageUrl: String
 ) {
 
     fun toEntity() = User(

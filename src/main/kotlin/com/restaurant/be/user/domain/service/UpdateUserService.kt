@@ -21,8 +21,7 @@ class UpdateUserService(
 
     @Transactional
     fun updatePassword(request: UpdatePasswordRequest) {
-        val user = userRepository.findByEmail(request.email)
-            ?: throw NotFoundUserEmailException()
+        val user = userRepository.findByEmail(request.email) ?: throw NotFoundUserEmailException()
         val token = redisRepository
             .getValue(
                 "user:${request.email}:${EmailSendType
