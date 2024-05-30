@@ -21,19 +21,18 @@ class SignUpUserService(
     @Transactional
     fun signUpUser(request: SignUpUserRequest): SignUpUserResponse {
         with(request) {
-            userRepository.findByNicknameOrEmail(nickname, email)?.let {
-                if (it.nickname == nickname) {
-                    throw DuplicateUserNicknameException()
-                }
-
-                if (it.email == email) {
-                    throw DuplicateUserEmailException()
-                }
+            val user = userRepository.findByNicknameOrEmail(nickname, email)
+            if (user?.nickname == nickname) {
+                throw DuplicateUserNicknameException()
             }
 
-            val user = userRepository.save(toEntity())
+            if (user?.email == email) {
+                throw DuplicateUserEmailException()
+            }
 
-            val token = tokenProvider.createTokens(email, user.roles)
+            val newUser = userRepository.save(toEntity())
+
+            val token = tokenProvider.createTokens(email, newUser.roles)
 
             redisRepository.setValue(
                 redisRepository.REFRESH_PREFIX + email,
@@ -41,7 +40,7 @@ class SignUpUserService(
                 tokenProvider.refreshTokenValidityInMilliseconds,
                 TimeUnit.MILLISECONDS
             )
-            return SignUpUserResponse(user = user, token = token)
+            return SignUpUserResponse(user = newUser, token = token)
         }
     }
 }

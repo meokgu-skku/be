@@ -37,7 +37,7 @@ class UpdateUserController(
         @Valid @RequestBody
         request: UpdateUserRequest
     ): CommonResponse<UpdateUserResponse> {
-        updateUserService.updateUser(request, principal.name)
-        return CommonResponse.success()
+        val response = updateUserService.updateUser(request, principal.name)
+        return CommonResponse.success(response)
     }
 }
