@@ -5,6 +5,7 @@ import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.presentation.dto.GetMyReviewsResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewsResponse
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.data.domain.Pageable
@@ -24,7 +25,10 @@ class GetReviewService(
 
         return GetReviewsResponse(
             reviewsWithLikes.map {
-                it.review.toDto(it.isLikedByUser)
+                ReviewResponseDto.toDto(
+                    it.review,
+                    it.isLikedByUser
+                )
             }
         )
     }
@@ -40,7 +44,8 @@ class GetReviewService(
             reviewWithLikes.review.incrementViewCount()
         }
 
-        val responseDto = reviewWithLikes.review.toDto(
+        val responseDto = ReviewResponseDto.toDto(
+            reviewWithLikes.review,
             reviewWithLikes.isLikedByUser
         )
 
@@ -55,7 +60,10 @@ class GetReviewService(
 
         return GetMyReviewsResponse(
             reviewsWithLikes.map {
-                it.review.toDto(it.isLikedByUser)
+                ReviewResponseDto.toDto(
+                    it.review,
+                    it.isLikedByUser
+                )
             }
         )
     }

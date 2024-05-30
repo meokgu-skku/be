@@ -7,6 +7,7 @@ import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.presentation.dto.LikeReviewRequest
 import com.restaurant.be.review.presentation.dto.LikeReviewResponse
 import com.restaurant.be.review.presentation.dto.ReviewWithLikesDto
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewLikeRepository
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.domain.entity.User
@@ -32,7 +33,10 @@ class LikeReviewService(
         val reviewWithLikes: ReviewWithLikesDto = reviewRepository.findReview(user, reviewId)
             ?: throw NotFoundReviewException()
 
-        val responseDto = reviewWithLikes.review.toDto(reviewWithLikes.isLikedByUser)
+        val responseDto = ReviewResponseDto.toDto(
+            reviewWithLikes.review,
+            reviewWithLikes.isLikedByUser
+        )
 
         return LikeReviewResponse(responseDto)
     }

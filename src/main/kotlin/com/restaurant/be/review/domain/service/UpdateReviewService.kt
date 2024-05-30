@@ -6,6 +6,7 @@ import com.restaurant.be.common.exception.UnAuthorizedUpdateException
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
 import com.restaurant.be.review.presentation.dto.UpdateReviewResponse
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewLikeRepository
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
@@ -44,8 +45,10 @@ class UpdateReviewService(
 
         reviewRepository.save(review)
 
-        val responseDto =
-            review.toDto(reviewLikeRepository.existsByReviewIdAndUserId(reviewId, user.id))
+        val responseDto = ReviewResponseDto.toDto(
+            review,
+            reviewLikeRepository.existsByReviewIdAndUserId(reviewId, user.id)
+        )
 
         return UpdateReviewResponse(responseDto)
     }

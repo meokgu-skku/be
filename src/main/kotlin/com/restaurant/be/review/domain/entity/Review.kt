@@ -4,7 +4,6 @@ import com.restaurant.be.common.entity.BaseEntity
 import com.restaurant.be.common.exception.InvalidLikeCountException
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
-import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.user.domain.entity.User
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -81,23 +80,5 @@ class Review(
             throw InvalidLikeCountException()
         }
         this.likeCount--
-    }
-
-    fun toDto(isLikedByUser: Boolean): ReviewResponseDto {
-        return ReviewResponseDto(
-            id = id ?: 0,
-            userId = user.id ?: 0,
-            username = user.nickname,
-            profileImageUrl = user.profileImageUrl,
-            restaurantId = restaurantId,
-            rating = rating,
-            content = content,
-            imageUrls = images.map { it.imageUrl },
-            isLike = isLikedByUser,
-            likeCount = likeCount,
-            viewCount = viewCount,
-            createdAt = createdAt,
-            modifiedAt = modifiedAt
-        )
     }
 }

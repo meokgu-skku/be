@@ -6,6 +6,7 @@ import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.review.domain.entity.ReviewImage
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
+import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -42,7 +43,10 @@ class CreateReviewService(
 
         val reviewWithLikes = reviewRepository.findReview(user, review.id ?: 0)!!
 
-        val responseDto = review.toDto(reviewWithLikes.isLikedByUser)
+        val responseDto = ReviewResponseDto.toDto(
+            reviewWithLikes.review,
+            reviewWithLikes.isLikedByUser
+        )
 
         return CreateReviewResponse(responseDto)
     }
