@@ -145,7 +145,7 @@ koverReport {
             classes(
                 "com.restaurant.be.common.exception.GlobalExceptionHandler",
                 "com.restaurant.be.common.jwt.JwtFilter",
-                "com.restaurant.be.common.jwt.TokenProvider",
+                "com.restaurant.be.common.jwt.TokenProvider"
             )
         }
     }
