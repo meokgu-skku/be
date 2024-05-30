@@ -4,10 +4,7 @@ import com.restaurant.be.common.entity.BaseEntity
 import com.restaurant.be.common.exception.InvalidLikeCountException
 import com.restaurant.be.review.domain.entity.QReview.review
 import com.restaurant.be.review.presentation.dto.UpdateReviewRequest
-import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
-import com.restaurant.be.user.domain.entity.QUser.user
 import com.restaurant.be.user.domain.entity.User
-import kotlinx.serialization.json.JsonNull.content
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -47,7 +44,6 @@ class Review(
     @Column(name = "view_count", nullable = false)
     var viewCount: Long = 0,
 
-    // 부모 (Review Entity)가 주인이되어 Image참조 가능. 반대는 불가능
     @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "review_id")
     var images: MutableList<ReviewImage> = mutableListOf()
@@ -74,31 +70,15 @@ class Review(
     fun incrementViewCount() {
         this.viewCount++
     }
+
     fun incrementLikeCount() {
         this.likeCount++
     }
+
     fun decrementLikeCount() {
         if (this.likeCount == 0L) {
             throw InvalidLikeCountException()
         }
         this.likeCount--
-    }
-
-    fun toResponseDTO(doesUserLike: Boolean): ReviewResponseDto {
-        return ReviewResponseDto(
-            id = id ?: 0,
-            userId = user.id ?: 0,
-            username = user.nickname,
-            profileImageUrl = user.profileImageUrl,
-            restaurantId = restaurantId,
-            rating = rating,
-            content = content,
-            imageUrls = images.map { it.imageUrl },
-            isLike = doesUserLike,
-            viewCount = viewCount,
-            likeCount = likeCount,
-            createdAt = createdAt,
-            modifiedAt = modifiedAt
-        )
     }
 }

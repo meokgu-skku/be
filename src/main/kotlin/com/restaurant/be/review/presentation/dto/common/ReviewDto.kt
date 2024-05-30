@@ -59,7 +59,7 @@ data class ReviewResponseDto(
     val modifiedAt: LocalDateTime
 ) {
     companion object {
-        fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
+        fun toDto(review: Review, isLikedByUser: Boolean): ReviewResponseDto {
             return ReviewResponseDto(
                 id = review.id ?: 0,
                 userId = review.user.id ?: 0,
@@ -69,7 +69,7 @@ data class ReviewResponseDto(
                 rating = review.rating,
                 content = review.content,
                 imageUrls = review.images.map { it.imageUrl },
-                isLike = isLikedByUser ?: false,
+                isLike = isLikedByUser,
                 likeCount = review.likeCount,
                 viewCount = review.viewCount,
                 createdAt = review.createdAt,
