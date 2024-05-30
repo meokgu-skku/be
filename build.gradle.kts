@@ -138,3 +138,15 @@ tasks {
 tasks.jar { enabled = false }
 
 tasks.bootJar { enabled = true }
+
+koverReport {
+    filters {
+        excludes {
+            classes(
+                "com.restaurant.be.common.exception.GlobalExceptionHandler",
+                "com.restaurant.be.common.jwt.JwtFilter",
+                "com.restaurant.be.common.jwt.TokenProvider",
+            )
+        }
+    }
+}
