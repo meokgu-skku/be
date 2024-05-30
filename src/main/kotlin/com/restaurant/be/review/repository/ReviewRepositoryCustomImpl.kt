@@ -36,12 +36,16 @@ class ReviewRepositoryCustomImpl(
                     .and(reviewLike.userId.eq(user.id))
             )
             .where(review.id.eq(reviewId))
-            .fetchJoin()
             .fetchOne()
     }
 
     override fun findReviews(user: User, restaurantId: Long, pageable: Pageable): Page<ReviewWithLikesDto> {
-        val orderSpecifier = setOrderSpecifier(pageable)
+        val orderSpecifier = if (!pageable.sort.isEmpty) {
+            setOrderSpecifier(pageable)
+        } else {
+            val reviewPath = PathBuilderFactory().create(Review::class.java)
+            listOf(reviewPath.getNumber("id", Long::class.java).desc())
+        }
 
         val reviewsWithLikes = queryFactory
             .select(
@@ -72,7 +76,7 @@ class ReviewRepositoryCustomImpl(
     }
 
     override fun findMyReviews(user: User, pageable: Pageable): Page<ReviewWithLikesDto> {
-        val orderSpecifier = if (pageable.sort.isSorted) {
+        val orderSpecifier = if (!pageable.sort.isEmpty) {
             setOrderSpecifier(pageable)
         } else {
             val reviewPath = PathBuilderFactory().create(Review::class.java)

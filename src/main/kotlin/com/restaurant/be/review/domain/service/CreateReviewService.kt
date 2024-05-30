@@ -1,13 +1,11 @@
 package com.restaurant.be.review.domain.service
 
 import com.restaurant.be.common.exception.NotFoundRestaurantException
-import com.restaurant.be.common.exception.NotFoundReviewException
 import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.restaurant.repository.RestaurantRepository
 import com.restaurant.be.review.domain.entity.ReviewImage
 import com.restaurant.be.review.presentation.dto.CreateReviewResponse
 import com.restaurant.be.review.presentation.dto.common.ReviewRequestDto
-import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -26,8 +24,7 @@ class CreateReviewService(
         reviewRequest: ReviewRequestDto,
         email: String
     ): CreateReviewResponse {
-        val user = userRepository.findByEmail(email)
-            ?: throw NotFoundUserEmailException()
+        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
         val review = reviewRequest.toEntity(user, restaurantId)
 
@@ -43,13 +40,9 @@ class CreateReviewService(
 
         applyReviewCountAndAvgRating(restaurantId, reviewRequest.rating)
 
-        val reviewWithLikes = reviewRepository.findReview(user, review.id ?: 0)
-            ?: throw NotFoundReviewException()
+        val reviewWithLikes = reviewRepository.findReview(user, review.id ?: 0)!!
 
-        val responseDto = ReviewResponseDto.toDto(
-            reviewWithLikes.review,
-            reviewWithLikes.isLikedByUser
-        )
+        val responseDto = review.toDto(reviewWithLikes.isLikedByUser)
 
         return CreateReviewResponse(responseDto)
     }

@@ -5,7 +5,6 @@ import com.restaurant.be.common.exception.NotFoundUserEmailException
 import com.restaurant.be.review.presentation.dto.GetMyReviewsResponse
 import com.restaurant.be.review.presentation.dto.GetReviewResponse
 import com.restaurant.be.review.presentation.dto.GetReviewsResponse
-import com.restaurant.be.review.presentation.dto.common.ReviewResponseDto
 import com.restaurant.be.review.repository.ReviewRepository
 import com.restaurant.be.user.repository.UserRepository
 import org.springframework.data.domain.Pageable
@@ -16,29 +15,23 @@ import org.springframework.transaction.annotation.Transactional
 class GetReviewService(
     private val userRepository: UserRepository,
     private val reviewRepository: ReviewRepository
-
 ) {
     @Transactional(readOnly = true)
     fun getReviews(pageable: Pageable, restaurantId: Long, email: String): GetReviewsResponse {
-        val user = userRepository.findByEmail(email)
-            ?: throw NotFoundUserEmailException()
+        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
         val reviewsWithLikes = reviewRepository.findReviews(user, restaurantId, pageable)
 
         return GetReviewsResponse(
             reviewsWithLikes.map {
-                ReviewResponseDto.toDto(
-                    it.review,
-                    it.isLikedByUser
-                )
+                it.review.toDto(it.isLikedByUser)
             }
         )
     }
 
     @Transactional
     fun getReview(reviewId: Long, email: String): GetReviewResponse {
-        val user = userRepository.findByEmail(email)
-            ?: throw NotFoundUserEmailException()
+        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
         val reviewWithLikes = reviewRepository.findReview(user, reviewId)
             ?: throw NotFoundReviewException()
@@ -47,8 +40,7 @@ class GetReviewService(
             reviewWithLikes.review.incrementViewCount()
         }
 
-        val responseDto = ReviewResponseDto.toDto(
-            reviewWithLikes.review,
+        val responseDto = reviewWithLikes.review.toDto(
             reviewWithLikes.isLikedByUser
         )
 
@@ -57,17 +49,13 @@ class GetReviewService(
 
     @Transactional(readOnly = true)
     fun getMyReviews(pageable: Pageable, email: String): GetMyReviewsResponse {
-        val user = userRepository.findByEmail(email)
-            ?: throw NotFoundUserEmailException()
+        val user = userRepository.findByEmail(email) ?: throw NotFoundUserEmailException()
 
         val reviewsWithLikes = reviewRepository.findMyReviews(user, pageable)
 
         return GetMyReviewsResponse(
             reviewsWithLikes.map {
-                ReviewResponseDto.toDto(
-                    it.review,
-                    it.isLikedByUser
-                )
+                it.review.toDto(it.isLikedByUser)
             }
         )
     }

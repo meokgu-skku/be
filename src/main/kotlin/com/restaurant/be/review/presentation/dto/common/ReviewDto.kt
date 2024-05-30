@@ -57,24 +57,4 @@ data class ReviewResponseDto(
     val createdAt: LocalDateTime,
     @Schema(description = "리뷰 수정 시간")
     val modifiedAt: LocalDateTime
-) {
-    companion object {
-        fun toDto(review: Review, isLikedByUser: Boolean? = null): ReviewResponseDto {
-            return ReviewResponseDto(
-                id = review.id ?: 0,
-                userId = review.user.id ?: 0,
-                username = review.user.nickname,
-                profileImageUrl = review.user.profileImageUrl,
-                restaurantId = review.restaurantId,
-                rating = review.rating,
-                content = review.content,
-                imageUrls = review.images.map { it.imageUrl },
-                isLike = isLikedByUser ?: false,
-                likeCount = review.likeCount,
-                viewCount = review.viewCount,
-                createdAt = review.createdAt,
-                modifiedAt = review.modifiedAt
-            )
-        }
-    }
-}
+)
