@@ -61,11 +61,11 @@ class GlobalExceptionHandler(
         e: ServerWebInputException,
         request: HttpServletRequest
     ): CommonResponse<String?> {
-        val data = if (e.cause?.cause is MissingKotlinParameterException) {
-            val param = (e.cause?.cause as MissingKotlinParameterException).parameter.name
+        val data = if (e.cause is MissingKotlinParameterException) {
+            val param = (e.cause as MissingKotlinParameterException).parameter.name
             "항목 ${param}을 확인해주세요"
-        } else if (e.cause?.cause is MismatchedInputException) {
-            e.message
+        } else if (e.cause is MismatchedInputException) {
+            "Mismatched input"
         } else {
             null
         }
