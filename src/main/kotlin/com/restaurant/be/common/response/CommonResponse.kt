@@ -8,15 +8,6 @@ data class CommonResponse<T>(
 ) {
 
     companion object {
-        // status 200 + success (message가 있을 경우)
-        fun <T> success(data: T, message: String): CommonResponse<T> {
-            return CommonResponse(
-                result = Result.SUCCESS,
-                data = data,
-                message = message,
-                errorCode = null
-            )
-        }
 
         // status 200 + success (message가 없을 경우)
         fun <T> success(data: T): CommonResponse<T> {

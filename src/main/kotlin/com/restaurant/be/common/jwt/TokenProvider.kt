@@ -39,7 +39,7 @@ class TokenProvider(
     private final val tokenValidityInMilliseconds: Long
     private final val accessTokenValidityInMilliseconds: Long
     final val refreshTokenValidityInMilliseconds: Long
-    private var key: Key? = null
+    var key: Key? = null
 
     init {
         accessTokenValidityInMilliseconds = accessTokenValidityInSeconds * 1000
@@ -47,7 +47,7 @@ class TokenProvider(
         this.tokenValidityInMilliseconds = tokenValidityInMilliseconds
     }
 
-    private val log = KotlinLogging.logger {}
+    val log = KotlinLogging.logger {}
 
     fun createTokens(email: String, roles: List<String>): Token {
         val claims: MutableMap<String, Any?> = HashMap()
@@ -116,7 +116,7 @@ class TokenProvider(
     ): Token {
         val createdDate = Date()
         val email = getEmailFromToken(accessToken)
-        val refreshTokenInDBMS = redisRepository.getValue(redisRepository.REFRESH_PREFIX + email)
+        val refreshTokenInDBMS = redisRepository.getValue("RT:$email")
         if (!refreshTokenInDBMS.equals(refreshToken)) {
             throw InvalidTokenException()
         }

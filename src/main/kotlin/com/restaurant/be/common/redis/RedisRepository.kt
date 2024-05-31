@@ -14,8 +14,6 @@ class RedisRepository(
         private const val RECOMMENDATION_PREFIX = "RECOMMENDATION:"
     }
 
-    val REFRESH_PREFIX: String = "RT:"
-
     // 사용자별 추천 식당을 조회하는 메서드
     fun getRecommendation(userId: Long): List<Long> {
         val values = redisTemplate.opsForValue()
