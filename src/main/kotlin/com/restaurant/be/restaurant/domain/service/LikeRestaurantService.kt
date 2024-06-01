@@ -23,7 +23,7 @@ class LikeRestaurantService(
     fun likeRestaurant(email: String, restaurantId: Long, isLike: Boolean): LikeRestaurantResponse {
         val userId: Long = userRepository.findByEmail(email)?.id ?: throw NotFoundUserException()
 
-        val restaurantDto = restaurantRepository.findDtoById(restaurantId)
+        val restaurantDto = restaurantRepository.findDtoById(restaurantId, userId)
             ?: throw NotFoundRestaurantException()
 
         val restaurant = restaurantRepository.findById(restaurantId)
@@ -47,7 +47,7 @@ class LikeRestaurantService(
         }
 
         restaurantRepository.save(restaurant)
-        return LikeRestaurantResponse(restaurantRepository.findDtoById(restaurantId)!!.toDto())
+        return LikeRestaurantResponse(restaurantRepository.findDtoById(restaurantId, userId)!!.toDto())
     }
 
     @Transactional(readOnly = true)

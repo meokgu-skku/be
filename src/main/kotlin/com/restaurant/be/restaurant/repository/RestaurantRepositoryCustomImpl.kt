@@ -18,7 +18,7 @@ import org.springframework.data.domain.Pageable
 class RestaurantRepositoryCustomImpl(
     private val queryFactory: JPAQueryFactory
 ) : RestaurantRepositoryCustom {
-    override fun findDtoById(restaurantId: Long): RestaurantProjectionDto? {
+    override fun findDtoById(restaurantId: Long, userId: Long): RestaurantProjectionDto? {
         val restaurantInfo = queryFactory
             .select(restaurant)
             .from(restaurant)
@@ -29,7 +29,10 @@ class RestaurantRepositoryCustomImpl(
             .select(user.id)
             .from(restaurantLike)
             .leftJoin(user).on(restaurantLike.userId.eq(user.id))
-            .where(restaurantLike.restaurantId.eq(restaurantId))
+            .where(
+                restaurantLike.restaurantId.eq(restaurantId)
+                    .and(restaurantLike.userId.eq(userId))
+            )
             .fetch()
 
         val menus = queryFactory

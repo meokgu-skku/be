@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface RestaurantRepositoryCustom {
-    fun findDtoById(restaurantId: Long): RestaurantProjectionDto?
+    fun findDtoById(restaurantId: Long, userId: Long): RestaurantProjectionDto?
 
     fun findDtoByIds(
         restaurantIds: List<Long>,
