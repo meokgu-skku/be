@@ -17,6 +17,8 @@ import com.restaurant.be.restaurant.presentation.controller.dto.GetRestaurantsRe
 import com.restaurant.be.restaurant.presentation.controller.dto.Sort
 import com.restaurant.be.restaurant.repository.dto.RestaurantEsDocument
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonPrimitive
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
@@ -32,7 +34,7 @@ class RestaurantEsRepository(
         pageable: Pageable,
         restaurantIds: List<Long>?,
         like: Boolean?
-    ): List<RestaurantEsDocument> {
+    ): Pair<List<RestaurantEsDocument>, List<Double>?> {
         val dsl = SearchDSL()
         val termQueries: MutableList<ESQuery> = mutableListOf()
 
@@ -128,9 +130,12 @@ class RestaurantEsRepository(
         }
 
         val result = runBlocking {
-            client.search(
+            val res = client.search(
                 target = searchIndex,
                 block = {
+                    if (request.cursor != null) {
+                        searchAfter = request.cursor
+                    }
                     query = bool {
                         filter(
                             termQueries
@@ -164,7 +169,7 @@ class RestaurantEsRepository(
                         }
                         sort {
                             when (request.customSort) {
-                                Sort.BASIC -> null
+                                Sort.BASIC -> add("_score", SortOrder.DESC)
                                 Sort.CLOSELY_DESC -> add("_geo_distance", SortOrder.ASC) {
                                     this["location"] = mapOf(
                                         "lat" to request.latitude,
@@ -177,13 +182,24 @@ class RestaurantEsRepository(
                                 Sort.RATING_DESC -> add("rating_avg", SortOrder.DESC)
                                 Sort.REVIEW_COUNT_DESC -> add("review_count", SortOrder.DESC)
                                 Sort.LIKE_COUNT_DESC -> add("like_count", SortOrder.DESC)
+                                Sort.ID_ASC -> null
                             }
+
+                            add("id", SortOrder.ASC)
                         }
                     }
                 },
                 size = pageable.pageSize,
-                from = pageable.offset.toInt()
-            ).parseHits<RestaurantEsDocument>()
+                from = if (request.cursor != null) null else pageable.offset.toInt(),
+                trackTotalHits = true
+            )
+
+            val nextCursor: List<Double>? = res.hits?.hits?.lastOrNull()?.sort?.mapNotNull {
+                    jsonElement ->
+                jsonElement.jsonPrimitive.contentOrNull?.toDouble()
+            }
+
+            Pair(res.parseHits<RestaurantEsDocument>(), nextCursor)
         }
 
         return result
