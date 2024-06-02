@@ -70,7 +70,8 @@ class GetRestaurantService(
 
     @Transactional(readOnly = true)
     fun getRestaurant(restaurantId: Long, email: String): GetRestaurantResponse {
-        val restaurant = restaurantRepository.findDtoById(restaurantId)
+        val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
+        val restaurant = restaurantRepository.findDtoById(restaurantId, userId)
             ?: throw NotFoundRestaurantException()
         return GetRestaurantResponse(restaurant.toDto())
     }
