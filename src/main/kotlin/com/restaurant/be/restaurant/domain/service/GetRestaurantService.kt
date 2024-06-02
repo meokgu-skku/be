@@ -30,6 +30,7 @@ class GetRestaurantService(
         pageable: Pageable,
         email: String
     ): GetRestaurantsResponse {
+        var startTime = System.currentTimeMillis()
         val userId = userRepository.findByEmail(email)?.id ?: throw NotFoundUserEmailException()
         val restaurantIds =
             if (request.like != null) {
@@ -39,21 +40,33 @@ class GetRestaurantService(
                 null
             }
 
+        var endTime = System.currentTimeMillis()
+        println("getRestaurants: ${endTime - startTime}ms")
+
+        startTime = System.currentTimeMillis()
         val (restaurants, nextCursor) = restaurantEsRepository.searchRestaurants(
             request,
             pageable,
             restaurantIds,
             request.like
         )
+        endTime = System.currentTimeMillis()
+        println("searchRestaurants: ${endTime - startTime}ms")
 
+        startTime = System.currentTimeMillis()
         if (!request.query.isNullOrEmpty()) {
             redisRepository.addSearchQuery(userId, request.query)
         }
+        endTime = System.currentTimeMillis()
+        println("addSearchQuery: ${endTime - startTime}ms")
 
+        startTime = System.currentTimeMillis()
         val restaurantProjections = restaurantRepository.findDtoByIds(
             restaurants.map { it.id },
             userId
         )
+        endTime = System.currentTimeMillis()
+        println("findDtoByIds: ${endTime - startTime}ms")
 
         val restaurantMap = restaurantProjections.associateBy { it.restaurant.id }
         val sortedRestaurantProjections = restaurants.mapNotNull { restaurantMap[it.id] }
