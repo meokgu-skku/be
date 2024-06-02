@@ -82,7 +82,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutineVersion")
 
     // Es
-    implementation("com.jillesvangurp:search-client:2.1.29")
+    implementation("com.jillesvangurp:search-client:2.2.0")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

@@ -34,7 +34,10 @@ data class GetRestaurantsRequest(
     @ApiModelProperty(value = "경도(거리순 정렬 할 때 사용)", example = "126.123456", required = false)
     val longitude: Double?,
     @ApiModelProperty(value = "위도(거리순 정렬 할 때 사용)", example = "37.123456", required = false)
-    val latitude: Double?
+    val latitude: Double?,
+
+    @ApiModelProperty(value = "페이지 커서(리스트 검색에서만 사용)", example = "['1', '2']", required = false)
+    val cursor: List<Double>?
 )
 
 enum class Sort {
@@ -42,12 +45,15 @@ enum class Sort {
     CLOSELY_DESC,
     RATING_DESC,
     REVIEW_COUNT_DESC,
-    LIKE_COUNT_DESC
+    LIKE_COUNT_DESC,
+    ID_ASC
 }
 
 data class GetRestaurantsResponse(
     @Schema(description = "식당 리스트")
-    val restaurants: Page<RestaurantDto>
+    val restaurants: Page<RestaurantDto>,
+    @Schema(description = "다음 페이지")
+    val nextCursor: List<Double>?
 )
 
 data class GetRestaurantResponse(

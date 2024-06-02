@@ -39,7 +39,7 @@ class GetRestaurantService(
                 null
             }
 
-        val restaurants = restaurantEsRepository.searchRestaurants(
+        val (restaurants, nextCursor) = restaurantEsRepository.searchRestaurants(
             request,
             pageable,
             restaurantIds,
@@ -63,7 +63,8 @@ class GetRestaurantService(
                 sortedRestaurantProjections.map { it.toDto() },
                 pageable,
                 sortedRestaurantProjections.size.toLong()
-            )
+            ),
+            nextCursor
         )
     }
 

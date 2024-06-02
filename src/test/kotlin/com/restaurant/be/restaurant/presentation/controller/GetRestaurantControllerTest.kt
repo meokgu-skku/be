@@ -2059,6 +2059,80 @@ class GetRestaurantControllerTest(
             }
         }
 
+        describe("#get restaurants search after test") {
+            it("when search after should return next page") {
+                // given
+                val restaurantEntity1 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점1"
+                )
+                restaurantRepository.save(restaurantEntity1)
+                val restaurantDocument1 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity1.id,
+                    name = "목구멍 율전점1"
+                )
+                elasticsearchTemplate.save(restaurantDocument1)
+
+                val restaurantEntity2 = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점2"
+                )
+                restaurantRepository.save(restaurantEntity2)
+                val restaurantDocument2 = RestaurantUtil.generateRestaurantDocument(
+                    id = restaurantEntity2.id,
+                    name = "목구멍 율전점2"
+                )
+                elasticsearchTemplate.save(restaurantDocument2)
+                elasticsearchTemplate.indexOps(RestaurantDocument::class.java).refresh()
+
+                // when
+                val result = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("size", "1")
+                        .param("customSort", "ID_ASC")
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andExpect(jsonPath("$.data.restaurants.content[0].name").value("목구멍 율전점1"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val firstPageResult: CommonResponse<GetRestaurantsResponse> =
+                    objectMapper.readValue(
+                        responseContent,
+                        responseType
+                    )
+
+                // when
+                val result2 = mockMvc.perform(
+                    get(restaurantUrl)
+                        .param("size", "1")
+                        .param("customSort", "ID_ASC")
+                        .param("cursor", firstPageResult.data!!.nextCursor?.joinToString(","))
+                )
+                    .also {
+                        println(it.andReturn().response.contentAsString)
+                    }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andExpect(jsonPath("$.data.restaurants.content[0].name").value("목구멍 율전점2"))
+                    .andReturn()
+
+                val responseContent2 = result2.response.getContentAsString(Charset.forName("UTF-8"))
+                val secondPageResult: CommonResponse<GetRestaurantsResponse> =
+                    objectMapper.readValue(
+                        responseContent2,
+                        responseType
+                    )
+
+                // then
+                secondPageResult.data!!.restaurants.content[0].name shouldBe "목구멍 율전점2"
+            }
+        }
+
         describe("#get restaurant test") {
             it("when restaurant exist should return restaurant") {
                 // given
