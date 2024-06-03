@@ -152,7 +152,6 @@ class RestaurantRepositoryCustomImpl(
             .where(restaurant.id.`in`(restaurantIds))
             .leftJoin(restaurantLike).on(restaurant.id.eq(restaurantLike.restaurantId))
             .orderBy(*orderSpecifier.toTypedArray())
-            .fetchJoin()
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
@@ -177,7 +176,9 @@ class RestaurantRepositoryCustomImpl(
             .where(restaurantCategory.restaurantId.`in`(restaurantIds))
             .fetch()
 
-        val restaurantDtos = restaurantInfos.map { restaurantInfo ->
+        val uniqueRestaurantInfos = restaurantInfos.distinctBy { it.id }
+
+        val restaurantDtos = uniqueRestaurantInfos.map { restaurantInfo ->
             val likedUserIds = restaurantIds.map { true }
             val menuList = menus.filter { it.restaurantId == restaurantInfo.id }
             val review = reviews.firstOrNull { it.restaurantId == restaurantInfo.id }
