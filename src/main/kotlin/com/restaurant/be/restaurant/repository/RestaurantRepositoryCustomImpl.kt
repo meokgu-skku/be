@@ -33,6 +33,7 @@ class RestaurantRepositoryCustomImpl(
                 restaurantLike.restaurantId.eq(restaurantId)
                     .and(restaurantLike.userId.eq(userId))
             )
+            .distinct()
             .fetch()
 
         val menus = queryFactory
@@ -54,6 +55,7 @@ class RestaurantRepositoryCustomImpl(
             .from(restaurantCategory)
             .leftJoin(category).on(restaurantCategory.categoryId.eq(category.id))
             .where(restaurantCategory.restaurantId.eq(restaurantId))
+            .distinct()
             .fetch()
 
         return if (restaurantInfo != null) {
@@ -107,6 +109,7 @@ class RestaurantRepositoryCustomImpl(
             .from(restaurantCategory)
             .leftJoin(category).on(restaurantCategory.categoryId.eq(category.id))
             .where(restaurantCategory.restaurantId.`in`(restaurantIds))
+            .distinct()
             .fetch()
 
         val restaurantDtos = restaurantInfos.map { restaurantInfo ->
@@ -155,6 +158,7 @@ class RestaurantRepositoryCustomImpl(
             .fetchJoin()
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
+            .distinct()
             .fetch()
 
         val menus = queryFactory
@@ -175,6 +179,7 @@ class RestaurantRepositoryCustomImpl(
             .from(restaurantCategory)
             .leftJoin(category).on(restaurantCategory.categoryId.eq(category.id))
             .where(restaurantCategory.restaurantId.`in`(restaurantIds))
+            .distinct()
             .fetch()
 
         val restaurantDtos = restaurantInfos.map { restaurantInfo ->

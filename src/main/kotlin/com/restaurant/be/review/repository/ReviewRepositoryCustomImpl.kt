@@ -36,6 +36,7 @@ class ReviewRepositoryCustomImpl(
                     .and(reviewLike.userId.eq(user.id))
             )
             .where(review.id.eq(reviewId))
+            .distinct()
             .fetchOne()
     }
 
@@ -66,6 +67,7 @@ class ReviewRepositoryCustomImpl(
             .limit(pageable.pageSize.toLong())
             .orderBy(*orderSpecifier.toTypedArray())
             .fetchJoin()
+            .distinct()
             .fetch()
 
         return PageImpl(
@@ -102,6 +104,7 @@ class ReviewRepositoryCustomImpl(
             .limit(pageable.pageSize.toLong())
             .orderBy(*orderSpecifier.toTypedArray())
             .fetchJoin()
+            .distinct()
             .fetch()
 
         return PageImpl(
