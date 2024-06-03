@@ -346,6 +346,57 @@ class LikeRestaurantControllerTest(
             }
         }
 
+        describe("#getMyLikeRestaurants cartesian product bug test") {
+            it("when two user like same restaurant should return only one") {
+                // given
+                val newUser = userRepository.save(
+                    User(
+                        email = "test2@gmail.com",
+                        profileImageUrl = "test",
+                    )
+                )
+                val originalUser = userRepository.findByEmail("test@gmail.com")!!
+
+                val restaurantEntity = RestaurantUtil.generateRestaurantEntity(
+                    name = "목구멍 율전점"
+                )
+                restaurantRepository.save(restaurantEntity)
+                restaurantLikeRepository.save(
+                    RestaurantLike(
+                        userId = originalUser.id ?: 0,
+                        restaurantId = restaurantEntity.id
+                    )
+                )
+                restaurantLikeRepository.save(
+                    RestaurantLike(
+                        userId = newUser.id ?: 0,
+                        restaurantId = restaurantEntity.id
+                    )
+                )
+
+                // when
+                val result = mockMvc.perform(
+                    get("$baseUrl/my-like")
+                ).also {
+                    println(it.andReturn().response.contentAsString)
+                }
+                    .andExpect(status().isOk)
+                    .andExpect(jsonPath("$.result").value("SUCCESS"))
+                    .andReturn()
+
+                val responseContent = result.response.getContentAsString(Charset.forName("UTF-8"))
+                val responseType =
+                    object : TypeReference<CommonResponse<GetRestaurantsResponse>>() {}
+                val actualResult: CommonResponse<GetRestaurantsResponse> = objectMapper.readValue(
+                    responseContent,
+                    responseType
+                )
+
+                // then
+                actualResult.data!!.restaurants.content.size shouldBe 1
+            }
+        }
+
         describe("#likeRestaurant basic test") {
             it("when like restaurant should success like") {
                 // given
