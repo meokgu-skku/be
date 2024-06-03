@@ -352,7 +352,7 @@ class LikeRestaurantControllerTest(
                 val newUser = userRepository.save(
                     User(
                         email = "test2@gmail.com",
-                        profileImageUrl = "test",
+                        profileImageUrl = "test"
                     )
                 )
                 val originalUser = userRepository.findByEmail("test@gmail.com")!!
